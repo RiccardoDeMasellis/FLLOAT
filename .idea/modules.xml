@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/FLLOAT.iml" filepath="$PROJECT_DIR$/FLLOAT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-master/jautomata-core/jautomata-core.iml" filepath="$PROJECT_DIR$/../jautomata-master/jautomata-core/jautomata-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-master/jautomata-ext/jautomata-ext.iml" filepath="$PROJECT_DIR$/../jautomata-master/jautomata-ext/jautomata-ext.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-master/jautomata-graph/jautomata-graph.iml" filepath="$PROJECT_DIR$/../jautomata-master/jautomata-graph/jautomata-graph.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-master/jautomata-io/jautomata-io.iml" filepath="$PROJECT_DIR$/../jautomata-master/jautomata-io/jautomata-io.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-master/jautomata-master.iml" filepath="$PROJECT_DIR$/../jautomata-master/jautomata-master.iml" />
+    </modules>
+  </component>
+</project>

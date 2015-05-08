@@ -22,35 +22,64 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="jautomata-ext" />
       </profile>
       <profile default="false" name="Annotation profile for jautomata-io" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="jautomata-io" />
       </profile>
       <profile default="false" name="Annotation profile for jautomata-graph" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="jautomata-graph" />
       </profile>
       <profile default="false" name="Annotation profile for jautomata-core" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="jautomata-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for jautomata-core (1)" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jautomata-core (1)" />
+      </profile>
+      <profile default="false" name="Annotation profile for jautomata-graph (1)" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jautomata-graph (1)" />
+      </profile>
+      <profile default="false" name="Annotation profile for jautomata-ext (1)" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jautomata-ext (1)" />
+      </profile>
+      <profile default="false" name="Annotation profile for jautomata-io (1)" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jautomata-io (1)" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="jautomata (1)" target="1.7" />
       <module name="jautomata-core" target="1.6" />
+      <module name="jautomata-core (1)" target="1.7" />
       <module name="jautomata-ext" target="1.6" />
+      <module name="jautomata-ext (1)" target="1.7" />
       <module name="jautomata-graph" target="1.6" />
+      <module name="jautomata-graph (1)" target="1.7" />
       <module name="jautomata-io" target="1.6" />
+      <module name="jautomata-io (1)" target="1.7" />
       <module name="jautomata-master" target="1.6" />
     </bytecodeTargetLevel>
   </component>

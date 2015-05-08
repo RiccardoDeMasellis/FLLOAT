@@ -7,7 +7,17 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/../jautomata-master/pom.xml" />
+        <option value="$PROJECT_DIR$/../jautomata-fork/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../jautomata-master/jautomata-core/pom.xml" />
+        <option value="$PROJECT_DIR$/../jautomata-master/jautomata-ext/pom.xml" />
+        <option value="$PROJECT_DIR$/../jautomata-master/jautomata-graph/pom.xml" />
+        <option value="$PROJECT_DIR$/../jautomata-master/jautomata-io/pom.xml" />
+        <option value="$PROJECT_DIR$/../jautomata-master/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">

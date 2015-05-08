@@ -21,7 +21,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="jautomata-core" />
-    <orderEntry type="module" module-name="jautomata-graph" />
+    <orderEntry type="module" module-name="jautomata-core (1)" />
+    <orderEntry type="module" module-name="jautomata-graph (1)" />
   </component>
 </module>

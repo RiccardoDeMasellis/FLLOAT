@@ -3,11 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FLLOAT.iml" filepath="$PROJECT_DIR$/FLLOAT.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata (1).iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata (1).iml" />
-      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata-core/jautomata-core (1).iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata-core/jautomata-core (1).iml" />
-      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata-ext/jautomata-ext (1).iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata-ext/jautomata-ext (1).iml" />
-      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata-graph/jautomata-graph (1).iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata-graph/jautomata-graph (1).iml" />
-      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata-io/jautomata-io (1).iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata-io/jautomata-io (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata.iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata-core/jautomata-core.iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata-core/jautomata-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata-ext/jautomata-ext.iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata-ext/jautomata-ext.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata-graph/jautomata-graph.iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata-graph/jautomata-graph.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jautomata-fork/jautomata-io/jautomata-io.iml" filepath="$PROJECT_DIR$/../jautomata-fork/jautomata-io/jautomata-io.iml" />
     </modules>
   </component>
 </project>

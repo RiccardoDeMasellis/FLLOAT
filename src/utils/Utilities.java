@@ -65,16 +65,16 @@ public class Utilities {
 
 
 	private static <S extends Symbol<?>> Set<Set<S>> powerSet(Set<S> originalSet) {
-		Set<Set<S>> sets = new HashSet<Set<S>>();
+		Set<Set<S>> sets = new HashSet<>();
 		if (originalSet.isEmpty()) {
-			sets.add(new HashSet<S>());
+			sets.add(new HashSet<>());
 			return sets;
 		}
-		List<S> list = new ArrayList<S>(originalSet);
+		List<S> list = new ArrayList<>(originalSet);
 		S head = list.get(0);
-		Set<S> rest = new HashSet<S>(list.subList(1, list.size())); 
+		Set<S> rest = new HashSet<>(list.subList(1, list.size()));
 		for (Set<S> set : powerSet(rest)) {
-			Set<S> newSet = new HashSet<S>();
+			Set<S> newSet = new HashSet<>();
 			newSet.add(head);
 			newSet.addAll(set);
 			sets.add(newSet);
@@ -87,10 +87,10 @@ public class Utilities {
 	// It also adds the EpsilonEvaluation!
 	public static <S extends Symbol<?>> Set<Evaluation<S>> evalPowerSet(Set<S> originalSet) {
 		Set<Set<S>> setsetS = powerSet(originalSet);
-		Set<Evaluation<S>> result = new HashSet<Evaluation<S>>();
+		Set<Evaluation<S>> result = new HashSet<>();
 
 		for (Set<S> setEval : setsetS) {
-			Evaluation<S> eval = new Evaluation<S>(setEval);
+			Evaluation<S> eval = new Evaluation<>(setEval);
 			result.add(eval);
 		}
 

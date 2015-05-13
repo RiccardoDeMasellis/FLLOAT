@@ -5,13 +5,28 @@ import java.util.Set;
 
 import symbols.Symbol;
 
+
+/**
+ * This class represent (propositional) evaluations to symbols of a given <@link>Alphabet</link>.
+ * Actually, since automata transitions are labeled by evaluations of symbols to the alphabet, such a class
+ * is used for labeling automata transitions. For this reason there are <@link>SpecialEvaluation</@link>
+ * which are <@link>TrueEvaluation</link> or <@link>EpsilonEvaluation</link>, even if they are not, formally,
+ * evaluations for the symbols.
+ * An evaluation is simply a set of Symbols, those that are set to TRUE, the other Symbols are assumed to be FALSE
+ * (unless it is a SpecialEvaluation that are treated differently).
+ *
+ * Given an alphabet alph, the set of interpretation for alph is obtained by
+ * <code>utils.Utilities.evalPowerset(alph.getAlphabet())</code>, which also adds the epsilonEvaluation.
+ *
+ * @param <S> the Symbols the alphabet.
+ */
 public class Evaluation<S extends Symbol<?>> {
 
 	Set<S> eval;
 	
 	
 	public Evaluation() {
-		eval = new HashSet<S>();
+		eval = new HashSet<>();
 	}
 	
 	public Evaluation(Set<S> eval) {

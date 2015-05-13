@@ -8,16 +8,15 @@ package symbols;
  * @author Riccardo De Masellis
  * @version 1.0
  * @since January 8, 2015
- *
- * @param <StringS>
  */
+
 public class StringSymbol implements Symbol<String> {
 	
 	protected final String symbol;	
 	
 	/**
 	 * Constructs a symbol with the given String input
-	 * @param string the label of the new StringSymbol
+	 * @param symbol the string of the new StringSymbol
 	 */
 	public StringSymbol(String symbol) {
 		this.symbol=symbol;
@@ -31,7 +30,7 @@ public class StringSymbol implements Symbol<String> {
 	
 	/**
 	 * 
-	 * @return the string associated to the label.
+	 * @return the String associated to the Symbol.
 	 */
 	public String getSymbol() {
 		return this.symbol;

@@ -52,7 +52,7 @@ public abstract class Formula<S extends Symbol<?>> implements Serializable, Clon
 	 * @return The alphabet, i.e., a set of symbols contained in the formula.
 	 */
 	public Alphabet<S> getFormulaAlphabet() {
-		Alphabet<S> alphabet = new Alphabet<S>();
+		Alphabet<S> alphabet = new Alphabet<>();
 		
 		if(this instanceof AtomicFormula) {
 			if (this instanceof SpecialAtomicFormula) {

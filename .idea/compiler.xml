@@ -71,14 +71,15 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="jautomata" target="1.7" />
       <module name="jautomata (1)" target="1.7" />
-      <module name="jautomata-core" target="1.6" />
+      <module name="jautomata-core" target="1.7" />
       <module name="jautomata-core (1)" target="1.7" />
-      <module name="jautomata-ext" target="1.6" />
+      <module name="jautomata-ext" target="1.7" />
       <module name="jautomata-ext (1)" target="1.7" />
-      <module name="jautomata-graph" target="1.6" />
+      <module name="jautomata-graph" target="1.7" />
       <module name="jautomata-graph (1)" target="1.7" />
-      <module name="jautomata-io" target="1.6" />
+      <module name="jautomata-io" target="1.7" />
       <module name="jautomata-io (1)" target="1.7" />
       <module name="jautomata-master" target="1.6" />
     </bytecodeTargetLevel>

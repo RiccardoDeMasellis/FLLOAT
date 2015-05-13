@@ -2,8 +2,8 @@ package symbols;
 
 
 /**
- * This interface defines the functionalities each symbol must have. A symbol is an element of the alphabet
- * the automaton is defined over.
+ * A symbol is an element of the alphabet
+ * the automaton is defined over. This interface defines the functionalities each symbol must have.
  * <p>
  * A symbol is considered a type, hence it must overrides equals and hashcode.
  * 
@@ -11,7 +11,7 @@ package symbols;
  * @version 1.0
  * @since January 8, 2015
  *
- * @param <S>
+ * @param <T>
  */
 public interface Symbol<T> {
 	
@@ -21,9 +21,10 @@ public interface Symbol<T> {
 	@Override
 	public int hashCode();
 	
+
 	/**
 	 * @return The Object (that in each instantiation of this interface will be substituted with a class)
-	 * that is the Symbol contains.
+	 * that the Symbol contains (ore represents).
 	 */
 	public T getSymbol();
 	

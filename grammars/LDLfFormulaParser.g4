@@ -1,51 +1,45 @@
 grammar LDLfFormulaParser;
 
-@header{
-	package ldlfParser;
-}
+import PropFormulaParser;
 
-options {
-    //language = java;
-}
-
-@parser::members{
+/*@parser::members{
 	
-}
+}*/
 
 start
     :   expression EOF
     ;
 
 expression
-	:   checkdoubleImplication
+	:   doubleImplicationTemp
     ;
 
-checkdoubleImplication
-    :   checkImplication (DOUBLEIMPLY checkImplication)*	
+doubleImplicationTemp
+    :   implicationTemp (DOUBLEIMPLY implicationTemp)*
     ;
 
-checkImplication
-	:   checkOr (IMPLY checkOr)*	
+implicationTemp
+	:   orTemp (IMPLY orTemp)*
     ;
 
-checkOr
-    :   checkAnd (OR checkAnd)*	
+orTemp
+    :   andTemp (OR andTemp)*
     ;
 
-checkAnd
-    :   checkBox (AND checkBox)*
+andTemp
+    :   ldlfBox (AND ldlfBox)*
     ;
 
-checkBox
-	:   (BOXLSEPARATOR regularExpression BOXRSEPARATOR)? checkDiamond		
+ldlfBox
+	:   (BOXLSEPARATOR regularExpression BOXRSEPARATOR)? ldlfDiamond
     ;
 
-checkDiamond
-    :   (DIAMONDLSEPARATOR regularExpression DIAMONDRSEPARATOR)? checkNot		
+ldlfDiamond
+    :   (DIAMONDLSEPARATOR regularExpression DIAMONDRSEPARATOR)? notTemp
     ;  
 
-checkNot
-	:   NOT? ldlfAtom
+notTemp
+	:   ldlfAtom
     |   NOT? LSEPARATOR expression RSEPARATOR 
     ;
 
@@ -56,90 +50,44 @@ ldlfAtom
     |	END
     |	propositionalFormula
     ;
-    
-regularExpression
-	:	checkOrRegExp
-	;
 
-checkOrRegExp
-	: 	checkConcatenationRegExp (REGEXPOR checkConcatenationRegExp)*
-	;
-	
-checkConcatenationRegExp
-    :	checkStar (CONCATENATION checkStar)*   
-	; 
+    regularExpression
+    	:	alternation
+    	;
 
-checkStar
-	: 	checkTest STAR?
-	|	LSEPARATOR regularExpression RSEPARATOR STAR?
-	;
+    alternation
+    	: 	concatenation (ALTERNATION concatenation)*
+    	;
 
-checkTest
-	: 	LSEPARATOR expression RSEPARATOR TEST
-	|	ldlfAtom TEST
-	| 	propositionalFormula
-	|	EPSILON
-	;
-	
-propositionalFormula
-	: 	checkdoubleImplicationProp
-	;
-	
-checkdoubleImplicationProp
-    :   checkImplicationProp (DOUBLEIMPLY checkImplicationProp)*	
-    ;
+    concatenation
+        :	star (CONCATENATION star)*
+    	;
 
-checkImplicationProp
-    :   checkOrProp (IMPLY checkOrProp)*	
-    ;
+    star
+    	: 	test STAR?
+    	|	LSEPARATOR regularExpression RSEPARATOR STAR?
+    	;
 
-checkOrProp
-    :   checkAndProp (OR checkAndProp)*	
-    ;
-
-checkAndProp
-    :   checkNotProp (AND checkNotProp)*
-    ; 
-
-checkNotProp
-    :   NOT? atom
-    |   NOT? LSEPARATOR propositionalFormula RSEPARATOR 
-    ;	
-    
-atom
-	:   ID*
-	|	TRUE
-	|	FALSE
-    ;
-
-//ID is a lower case literal from 'a' to 'z'
-//ID : ('a'..'z')|('O');
-ID : ('a'..'z');
-TRUE : ('True')|('TRUE')|('true')|('T');
-FALSE : ('False')|('FALSE')|('false');
-LAST : ('Last')|('LAST')|('last');
-EPSILON : ('eps');
-TT : ('tt');
-FF : ('ff');
-END : ('end')|('END')|('End');
-
-//The definition of all the operators
-DOUBLEIMPLY : ('<->');
-IMPLY : ('->');
-OR  : ('||'|'|');
-AND : ('&&'|'&');
-NOT : ('!');
-LSEPARATOR : ('(');
-RSEPARATOR : (')');
-BOXLSEPARATOR : ('[');
-BOXRSEPARATOR : (']');
-DIAMONDLSEPARATOR : ('<');
-DIAMONDRSEPARATOR : ('>');
-STAR : ('*');
-TEST : ('?');
-REGEXPOR : ('+');
-CONCATENATION : (';');
+    test
+    	: 	LSEPARATOR expression RSEPARATOR TEST
+    	|	atom TEST
+    	| 	propositionalFormula
+    	|	EPSILON
+    	;
 
 
-//We will ignore all the white spaces
-WS : (' ' | '\t' | '\r' | '\n')+ -> skip;
+	LAST : ('Last')|('LAST')|('last');
+    EPSILON : ('eps');
+    TT : ('tt');
+    FF : ('ff');
+    END : ('end')|('END')|('End');
+
+    BOXLSEPARATOR : ('[');
+    BOXRSEPARATOR : (']');
+    DIAMONDLSEPARATOR : ('<');
+    DIAMONDRSEPARATOR : ('>');
+
+    STAR : ('*');
+    TEST : ('?');
+    ALTERNATION : ('+');
+    CONCATENATION : (';');

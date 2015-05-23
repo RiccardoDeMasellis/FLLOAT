@@ -1,3 +1,3 @@
 package alternating;
 
-public enum FormulaType {LTLF,LDLF}
+public enum FormulaType {LTLF, LDLF}

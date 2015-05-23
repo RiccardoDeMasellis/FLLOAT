@@ -1,98 +1,76 @@
 grammar LTLfFormulaParser;
 
-@header{
-	package ltlfParser;
-}
-
-options {
-    //language = java;
-}
+import PropFormulaParser;
 
 start
     :   expression EOF
     ;
 
 expression
-    :   checkdoubleImplication
+    :   doubleImplicationTemp
     ;
 
-checkdoubleImplication
-    :   checkImplication (DOUBLEIMPLY checkImplication)*	
+doubleImplicationTemp
+    :   implicationTemp (DOUBLEIMPLY implicationTemp)*
     ;
 
-checkImplication
-    :   checkOr (IMPLY checkOr)*	
+implicationTemp
+    :   orTemp (IMPLY orTemp)*
     ;
 
-checkOr
-    :   checkAnd (OR checkAnd)*	
+orTemp
+    :   andTemp (OR andTemp)*
     ;
 
-checkAnd
-    :   checkWeakUntil (AND checkWeakUntil)* 
+andTemp
+    :   weakUntil (AND weakUntil)*
     ;
 
-checkWeakUntil
-    :   checkRelease (WEAKUNTIL checkRelease)*	
+weakUntil
+    :   release (WEAKUNTIL release)*
     ;
 
-checkRelease
-    :   checkUntil(RELEASE checkUntil)*	
+release
+    :   until(RELEASE until)*
     ;
   
-checkUntil
-    :   checkGlobally(UNTIL checkGlobally)*	
+until
+    :   globally(UNTIL globally)*
     ;
 
-checkGlobally
-    :   GLOBALLY? checkEventually			
+globally
+    :   GLOBALLY? eventually
     ;
 
-checkEventually
-    :   EVENTUALLY? checkWeakNext		
+eventually
+    :   EVENTUALLY? weakNext		
     ;
 
-checkWeakNext
-    :   WEAKNEXT? checkNext		
+weakNext
+    :   WEAKNEXT? next
     ;
 
-checkNext
-    :   NEXT? checkNot		
+next
+    :   NEXT? notTemp
     ;  
 
-checkNot
-    :   NOT? atom
-    |   NOT? LSEPARATOR expression RSEPARATOR 
+notTemp
+    :   ltlfAtom
+    |   NOT? LSEPARATOR expression RSEPARATOR
     ;
 
-atom
-    :   ID*
-    |	TRUE
-    |	FALSE
-    |  	LAST
+ltlfAtom
+    :   LAST
+    |   propositionalFormula
     ;
 
-//ID is a lower case literal from 'a' to 'z'
-ID : ('a'..'z');
-TRUE : ('True')|('TRUE')|('true');
-FALSE : ('False')|('FALSE')|('false');
-LAST : ('Last')|('LAST')|('last');
 
-//The definition of all the operators
-DOUBLEIMPLY : ('<->');
-IMPLY : ('->');
-OR  : ('||'|'|');
-AND : ('&&'|'&');
-WEAKUNTIL : ('WU'|'W');
-UNTIL : ('U');
-RELEASE : ('R');
-GLOBALLY : ('[]'|'G');
-EVENTUALLY : ('<>'|'F');
-WEAKNEXT : ('WX');
-NEXT : ('X');
-NOT : ('!');
-LSEPARATOR : ('(');
-RSEPARATOR : (')');
+    LAST : ('Last')|('LAST')|('last');
 
-//We will ignore all the white spaces
-WS : (' ' | '\t' | '\r' | '\n')+ -> skip;
+    WEAKUNTIL : ('WU'|'W');
+    UNTIL : ('U');
+    RELEASE : ('R');
+    GLOBALLY : ('[]'|'G');
+    EVENTUALLY : ('<>'|'F');
+    WEAKNEXT : ('WX');
+    NEXT : ('X');

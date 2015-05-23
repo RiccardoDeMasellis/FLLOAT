@@ -1,314 +1,261 @@
 package visitors.LTLfVisitors;
 
-import ltlfParser.LTLfFormulaParserBaseVisitor;
-import ltlfParser.LTLfFormulaParserParser;
+import formula.ltlf.*;
+import generatedParsers.LTLfFormulaParserBaseVisitor;
+import generatedParsers.LTLfFormulaParserParser;
+import generatedParsers.PropFormulaParserLexer;
+import generatedParsers.PropFormulaParserParser;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.NotNull;
-
-import symbols.*;
-import formula.*;
-import operator.*;
-import utils.*;
-
-import java.lang.reflect.*;
-import java.util.Arrays;
-
-public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisitor<Formula<S>> {
-
-	private Alphabet<S> alphabet;
-	private Class<S> generic;
-
-	public LTLfVisitor(Class<S> generic) {
-		alphabet = new Alphabet<S>();
-		this.generic = generic;
-	}
-
-	public Class<S> getGeneric() {
-		return generic;
-	}
-
-	public Alphabet<S> getAlphabet() {
-		return alphabet;
-	}
+import org.antlr.v4.runtime.tree.ParseTree;
+import symbols.Alphabet;
+import symbols.Symbol;
+import visitors.PropVisitor.PropVisitor;
 
 
-	@Override 
-	public Formula<S> visitExpression(@NotNull LTLfFormulaParserParser.ExpressionContext ctx) {return visitChildren(ctx);}
+public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisitor<LTLfFormula<S>> {
 
-	@Override 
-	public Formula<S> visitAtom(@NotNull LTLfFormulaParserParser.AtomContext ctx){
-		//When I visit an "Atom",
-		//if it is equal "TRUE" then return the "trueFormula",
-		//else if it is equal "FALSE" then return the "falseFormula"
-		//else if it is equal "LAST" then return the "WeakNextFormula" that has like "unaryFormula" the "falseFormula"
-		//else I instantiate a new "Symbol" 
-		//add it to the "Alphabet"
-		//return the "AtomicFormula" associated to the "Symbol"
-		if((ctx.getText().equals("TRUE"))||(ctx.getText().equals("True"))||(ctx.getText().equals("true"))){
-			return AtomicFormula.trueFormula();
-		}
-		else
-		{
-			if((ctx.getText().equals("FALSE"))||(ctx.getText().equals("False"))||(ctx.getText().equals("false"))){
-				return AtomicFormula.falseFormula();
-			}
-			else{
-				if((ctx.getText().equals("LAST"))||(ctx.getText().equals("Last"))||(ctx.getText().equals("last"))){
-					return new WeakNextFormula<S>(AtomicFormula.falseFormula());
-				}
-				else{
-					//Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-					//Class sClass = (Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    private Alphabet<S> alphabet;
+    private Class<S> genericSymbol;
 
-					//Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    public LTLfVisitor(Class<S> genericSymbol) {
+        alphabet = new Alphabet<>();
+        this.genericSymbol = genericSymbol;
+    }
+
+    public Alphabet<S> getAlphabet() {
+        return alphabet;
+    }
 
 
-					S symbol=null;
-					try {
-						symbol = (S) generic.getConstructor(String.class).newInstance(ctx.getText());
-					} catch (InstantiationException | IllegalAccessException
-							| IllegalArgumentException
-							| InvocationTargetException | NoSuchMethodException
-							| SecurityException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					alphabet.addSymbol(symbol);
-					return new AtomicFormula<S>(symbol);
-				}
-			}
-		}
-	}
+    @Override
+    public LTLfFormula<S> visitExpression(@NotNull LTLfFormulaParserParser.ExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public LTLfFormula<S> visitLtlfAtom(@NotNull LTLfFormulaParserParser.LtlfAtomContext ctx) {
+        if ((ctx.getText().equals("LAST")) || (ctx.getText().equals("Last")) || (ctx.getText().equals("last"))) {
+            return new LTLfTempNotFormula<>(new LTLfNextFormula<>(new LTLfPropTrueFormula<>()));
+        } else {
+/*            S symbol = null;
+            try {
+                symbol = genericSymbol.getConstructor(String.class).newInstance(ctx.getText());
+            } catch (InstantiationException | IllegalAccessException
+                    | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException
+                    | SecurityException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            alphabet.addSymbol(symbol);
+            return new LDLfAtomicFormula<>(symbol);*/
+
+            PropFormulaParserLexer lexer = new PropFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
+            PropFormulaParserParser parser = new PropFormulaParserParser(new CommonTokenStream(lexer));
+            ParseTree tree = parser.propositionalFormula();
+            PropVisitor<S, LTLfPropFormula<S>> implementation = new PropVisitor(genericSymbol, LTLfPropFormula.class, alphabet);
+            //PropVisitor<S, LTLfPropFormula<S>>  implementation = new PropVisitor<>(genericSymbol, LTLfPropFormula.class, alphabet);
+            LTLfPropFormula<S> f = implementation.visit(tree);
+            return f;
+        }
+    }
 
 
+    @Override
+    public LTLfFormula<S> visitAndTemp(@NotNull LTLfFormulaParserParser.AndTempContext ctx) {
 
-	@Override 
-	public Formula<S> visitCheckAnd(@NotNull LTLfFormulaParserParser.CheckAndContext ctx) { 
+        LTLfFormula<S> left;
+        LTLfFormula<S> right;
+        LTLfFormula<S> result = null;
 
-		Formula<S> left;
-		Formula<S> right;
-		Formula<S> result=null;
+        if (ctx.getChildCount() > 1) {
+            for (int i = ctx.getChildCount() - 1; i >= 2; i = i - 2) {
+                if (i == ctx.getChildCount() - 1) {
+                    left = visit(ctx.getChild(i - 2));
+                    right = visit(ctx.getChild(i));
+                } else {
+                    left = visit(ctx.getChild(i - 2));
+                    right = result;
+                }
+                result = new LTLfTempAndFormula<>(left, right);
+            }
 
-		if(ctx.getChildCount()>1){
-			for(int i=ctx.getChildCount()-1;i>=2;i=i-2){
-				if(i==ctx.getChildCount()-1){
-					left= visit(ctx.getChild(i-2));
-					right= visit(ctx.getChild(i));
-				}
-				else{
-					left= visit(ctx.getChild(i-2));
-					right=result;
-				}
-				result=FormulaFactory.createBinaryFormula(Operator.andOperator,left,right);
-			}
+            return result;
 
-			return result;	
-
-		}
-		else
-		{			
-			return visitChildren(ctx);
-		}
-	}
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
 
+    @Override
+    public LTLfFormula<S> visitImplicationTemp(@NotNull LTLfFormulaParserParser.ImplicationTempContext ctx) {
 
-	@Override 
-	public Formula<S> visitCheckImplication(@NotNull LTLfFormulaParserParser.CheckImplicationContext ctx){ 
+        if (ctx.getChildCount() == 3) {
+            LTLfFormula<S> left = visit(ctx.getChild(0));
+            LTLfFormula<S> right = visit(ctx.getChild(2));
 
-		//If "CheckImplication" finds an "implication",
-		//then returns the corresponding "BinaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==3){
-			Formula<S> left= visit(ctx.getChild(0));
-			Formula<S> right= visit(ctx.getChild(2));
-
-			return FormulaFactory.createBinaryFormula(Operator.implicationOperator,left,right);
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+            return new LTLfTempImplFormula<>(left, right);
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
 
-	@Override 
-	public Formula<S> visitCheckNot(@NotNull LTLfFormulaParserParser.CheckNotContext ctx){
+//    @Override
+//    public LTLfFormula<S> visitNotTemp(@NotNull LTLfFormulaParserParser.NotTempContext ctx) {
+//
+//        if (ctx.getChildCount() == 2) {
+//            return new LTLfTempNotFormula<>(visit(ctx.getChild(1)));
+//        } else {
+//            if (ctx.getChildCount() == 4) {
+//                return new LTLfTempNotFormula<>(visit(ctx.getChild(2)));
+//            } else {
+//                if (ctx.getChildCount() == 3) {
+//                    return visit(ctx.getChild(1));
+//                } else {
+//                    return visitChildren(ctx);
+//                }
+//            }
+//        }
+//    }
 
-		//If "CheckNot" finds a "not",
-		//then returns the corresponding "UnaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==2){
-			return FormulaFactory.createUnaryFormula(Operator.notOperator, visit(ctx.getChild(1)));
-		}
-		else{
-			if(ctx.getChildCount()==4){
-				return FormulaFactory.createUnaryFormula(Operator.notOperator, visit(ctx.getChild(2)));
-			}else{
-				if(ctx.getChildCount()==3){
-					return visit(ctx.getChild(1));
-				}
-				else{
-					return visitChildren(ctx);
-				}
-			}
-		}
-	}
+    @Override
+    public LTLfFormula<S> visitNotTemp(@NotNull LTLfFormulaParserParser.NotTempContext ctx) {
+
+        if (ctx.getChildCount() == 1)
+            return visit(ctx.getChild(0));
+        else {
+            if (ctx.getChildCount() == 4)
+                return new LTLfTempNotFormula<>(visit(ctx.getChild(2)));
+            else // ctx.getChildCount() == 3
+                return visit(ctx.getChild(1));
+        }
+    }
 
 
+    @Override
+    public LTLfFormula<S> visitUntil(@NotNull LTLfFormulaParserParser.UntilContext ctx) {
 
-	@Override 
-	public Formula<S> visitCheckUntil(@NotNull LTLfFormulaParserParser.CheckUntilContext ctx){ 
+        if (ctx.getChildCount() == 3) {
+            LTLfFormula<S> left = visit(ctx.getChild(0));
+            LTLfFormula<S> right = visit(ctx.getChild(2));
 
-		//If "CheckUntil" finds an "until",
-		//then returns the corresponding "BinaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==3){
-			Formula<S> left= visit(ctx.getChild(0));
-			Formula<S> right= visit(ctx.getChild(2));
+            return new LTLfUntilFormula<>(left, right);
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
-			return FormulaFactory.createBinaryFormula(Operator.untilOperator,left,right);
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+    @Override
+    public LTLfFormula<S> visitNext(@NotNull LTLfFormulaParserParser.NextContext ctx) {
+        if (ctx.getChildCount() == 2) {
+            return new LTLfNextFormula<>(visit(ctx.getChild(1)));
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
-	@Override 
-	public Formula<S> visitCheckNext(@NotNull LTLfFormulaParserParser.CheckNextContext ctx){
+    @Override
+    public LTLfFormula<S> visitWeakUntil(@NotNull LTLfFormulaParserParser.WeakUntilContext ctx) {
 
-		//If "CheckNext" finds a "next",
-		//then returns the corresponding "UnaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==2){
-			return FormulaFactory.createUnaryFormula(Operator.nextOperator, visit(ctx.getChild(1)));
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+        if (ctx.getChildCount() == 3) {
+            LTLfFormula<S> left = visit(ctx.getChild(0));
+            LTLfFormula<S> right = visit(ctx.getChild(2));
 
-	@Override 
-	public Formula<S> visitCheckWeakUntil(@NotNull LTLfFormulaParserParser.CheckWeakUntilContext ctx){ 
+            return new LTLfWeakUntilFormula<>(left, right);
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
-		//If "CheckUntil" finds a "weakUntil",
-		//then returns the corresponding "BinaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==3){
-			Formula<S> left= visit(ctx.getChild(0));
-			Formula<S> right= visit(ctx.getChild(2));
+    @Override
+    public LTLfFormula<S> visitGlobally(@NotNull LTLfFormulaParserParser.GloballyContext ctx) {
 
-			return FormulaFactory.createBinaryFormula(Operator.weakUntilOperator,left,right);
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+        if (ctx.getChildCount() == 2) {
+            return new LTLfGloballyFormula<>(visit(ctx.getChild(1)));
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
-	@Override 
-	public Formula<S> visitCheckGlobally(@NotNull LTLfFormulaParserParser.CheckGloballyContext ctx){
+    @Override
+    public LTLfFormula<S> visitEventually(@NotNull LTLfFormulaParserParser.EventuallyContext ctx) {
 
-		//If "CheckGlobally" finds a "globally",
-		//then returns the corresponding "UnaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==2){
-			return FormulaFactory.createUnaryFormula(Operator.globallyOperator, visit(ctx.getChild(1)));
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+        if (ctx.getChildCount() == 2) {
+            return new LTLfEventuallyFormula<>(visit(ctx.getChild(1)));
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
-	@Override 
-	public Formula<S> visitCheckEventually(@NotNull LTLfFormulaParserParser.CheckEventuallyContext ctx){
+    @Override
+    public LTLfFormula<S> visitWeakNext(@NotNull LTLfFormulaParserParser.WeakNextContext ctx) {
 
-		//If "CheckEventually" finds an "eventually",
-		//then returns the corresponding "UnaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==2){
-			return FormulaFactory.createUnaryFormula(Operator.eventuallyOperator, visit(ctx.getChild(1)));
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+        if (ctx.getChildCount() == 2) {
+            return new LTLfWeakNextFormula<>(visit(ctx.getChild(1)));
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
-	@Override 
-	public Formula<S> visitCheckWeakNext(@NotNull LTLfFormulaParserParser.CheckWeakNextContext ctx){
+    @Override
+    public LTLfFormula<S> visitStart(@NotNull LTLfFormulaParserParser.StartContext ctx) {
+        return visitChildren(ctx);
+    }
 
-		//If "CheckWeakNext" finds a "weakNext",
-		//then returns the corresponding "UnaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==2){
-			return FormulaFactory.createUnaryFormula(Operator.weakNextOperator, visit(ctx.getChild(1)));
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+    @Override
+    public LTLfFormula<S> visitDoubleImplicationTemp(@NotNull LTLfFormulaParserParser.DoubleImplicationTempContext ctx) {
 
-	@Override 
-	public Formula<S> visitStart(@NotNull LTLfFormulaParserParser.StartContext ctx){return visitChildren(ctx);}
+        if (ctx.getChildCount() == 3) {
+            LTLfFormula<S> left = visit(ctx.getChild(0));
+            LTLfFormula<S> right = visit(ctx.getChild(2));
 
-	@Override 
-	public Formula<S> visitCheckdoubleImplication(@NotNull LTLfFormulaParserParser.CheckdoubleImplicationContext ctx){
+            return new LTLfTempDoubleImplFormula<>(left, right);
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
-		//If "CheckdoubleImplication" finds a "doubleImplication",
-		//then returns the corresponding "BinaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==3){
-			Formula<S> left= visit(ctx.getChild(0));
-			Formula<S> right= visit(ctx.getChild(2));
+    @Override
+    public LTLfFormula<S> visitRelease(@NotNull LTLfFormulaParserParser.ReleaseContext ctx) {
 
-			return FormulaFactory.createBinaryFormula(Operator.doubleImplicationOperator,left,right);
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+        if (ctx.getChildCount() == 3) {
+            LTLfFormula<S> left = visit(ctx.getChild(0));
+            LTLfFormula<S> right = visit(ctx.getChild(2));
 
-	@Override 
-	public Formula<S> visitCheckRelease(@NotNull LTLfFormulaParserParser.CheckReleaseContext ctx){
+            return new LTLfReleaseFormula<>(left, right);
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
-		//If "CheckRelease" finds a "release",
-		//then returns the corresponding "BinaryFormula"
-		//else continues the visit
-		if(ctx.getChildCount()==3){
-			Formula<S> left= visit(ctx.getChild(0));
-			Formula<S> right= visit(ctx.getChild(2));
+    @Override
+    public LTLfFormula<S> visitOrTemp(@NotNull LTLfFormulaParserParser.OrTempContext ctx) {
 
-			return FormulaFactory.createBinaryFormula(Operator.releaseOperator,left,right);
-		}
-		else{			
-			return visitChildren(ctx);
-		}
-	}
+        LTLfFormula<S> left;
+        LTLfFormula<S> right;
+        LTLfFormula<S> result = null;
 
-	@Override 
-	public Formula<S> visitCheckOr(@NotNull LTLfFormulaParserParser.CheckOrContext ctx){
+        if (ctx.getChildCount() > 1) {
+            for (int i = ctx.getChildCount() - 1; i >= 2; i = i - 2) {
+                if (i == ctx.getChildCount() - 1) {
+                    left = visit(ctx.getChild(i - 2));
+                    right = visit(ctx.getChild(i));
+                } else {
+                    left = visit(ctx.getChild(i - 2));
+                    right = result;
+                }
+                result = new LTLfTempOrFormula<>(left, right);
+            }
 
-		Formula<S> left;
-		Formula<S> right;
-		Formula<S> result=null;
+            return result;
 
-		if(ctx.getChildCount()>1){
-			for(int i=ctx.getChildCount()-1;i>=2;i=i-2){
-				if(i==ctx.getChildCount()-1){
-					left= visit(ctx.getChild(i-2));
-					right= visit(ctx.getChild(i));
-				}
-				else{
-					left= visit(ctx.getChild(i-2));
-					right=result;
-				}
-				result=FormulaFactory.createBinaryFormula(Operator.orOperator,left,right);
-			}
-
-			return result;	
-
-		}
-		else
-		{			
-			return visitChildren(ctx);
-		}
-	}
+        } else {
+            return visitChildren(ctx);
+        }
+    }
 
 }

@@ -18,33 +18,33 @@ import java.util.HashSet;
  * <code>getFormulaAlphabet()</code> which recursively scans the formula structures up to atomic formulas (which
  * contains the alphabet symbols) and returns a new alphabet of those. Among the two, the first usage is preferred
  * as it does not require to re-scan the whole formula.
- *
+ * <p>
  * "Special" symbols as TRUE or FALSE are absolutiely not considered alphabet symbols, and they are not, indeed.
  * Such symbols can be used in input formulas but they are automatically translated in
  * <code>SpecialAtomicFormula</code>s during the parsing and not added to the alphabet.
- *
+ * <p>
  * This class is considered an Object, hence it *does not* override equals and hashCode.
  *
  * @param <S> the Objects which compose the alphabet.
  */
 public class Alphabet<S extends Symbol<?>> {
 
-	//This set will be filled with elements of the alphabet.
-	//Each element is an instance of S implementing the Symbol class.
-	private HashSet<S> alphabet;
+    //This set will be filled with elements of the alphabet.
+    //Each element is an instance of S implementing the Symbol class.
+    private HashSet<S> alphabet;
 
 
-	public Alphabet() {
-		alphabet = new HashSet<>();
-	}
+    public Alphabet() {
+        alphabet = new HashSet<>();
+    }
 
 
-	//Add a "Symbol" to the alphabet, if it is the first "Symbol", then add also the "OtherSymbol",
-	//which meaning is any OTHER Symbol, no matter which
+    //Add a "Symbol" to the alphabet, if it is the first "Symbol", then add also the "OtherSymbol",
+    //which meaning is any OTHER Symbol, no matter which
 
-	public void addSymbol(S symbol) {
+    public void addSymbol(S symbol) {
 /*		OtherSymbol<?> otherSymbol = new OtherSymbol<Object>();
-		EpsilonSymbol<?> epsilonSymbol = new EpsilonSymbol<Object>();
+        EpsilonSymbol<?> epsilonSymbol = new EpsilonSymbol<Object>();
 		
 		if(!(alphabet.contains(otherSymbol)))
 			alphabet.add((S)otherSymbol);
@@ -52,20 +52,32 @@ public class Alphabet<S extends Symbol<?>> {
 		if(!(alphabet.contains(epsilonSymbol)))
 			alphabet.add((S)epsilonSymbol);*/
 
-		alphabet.add(symbol);
-	}
-	
-	public HashSet<S> getAlphabet() {
-		return alphabet;
-	}
-	
-	public void setAlphabet(HashSet<S> alphabet) {
-		this.alphabet = alphabet;
-	}
-	
-	@Override
-	public String toString() {
-		return this.alphabet.toString();
-	}
+        alphabet.add(symbol);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Alphabet<?> alphabet1 = (Alphabet<?>) o;
+
+        return !(getAlphabet() != null ? !getAlphabet().equals(alphabet1.getAlphabet()) : alphabet1.getAlphabet() != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getAlphabet() != null ? getAlphabet().hashCode() : 0;
+    }
+
+    public HashSet<S> getAlphabet() {
+        return alphabet;
+    }
+
+    @Override
+    public String toString() {
+        return this.alphabet.toString();
+    }
 
 }

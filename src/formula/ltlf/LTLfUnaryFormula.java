@@ -1,3 +1,11 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package formula.ltlf;
 
 import formula.UnaryFormula;
@@ -16,13 +24,12 @@ public abstract class LTLfUnaryFormula<S extends Symbol<?>> implements UnaryForm
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LTLfUnaryFormula<?> that = (LTLfUnaryFormula<?>) o;
-
-        return !(getNestedFormula() != null ? !getNestedFormula().equals(that.getNestedFormula()) : that.getNestedFormula() != null);
+        if (o != null && this.getClass().equals(o.getClass())) {
+            LTLfUnaryFormula<S> other = (LTLfUnaryFormula<S>) o;
+            return this.getNestedFormula().equals(other.getNestedFormula());
+        } else return false;
     }
+
 
     @Override
     public int hashCode() {
@@ -34,8 +41,15 @@ public abstract class LTLfUnaryFormula<S extends Symbol<?>> implements UnaryForm
         return nestedFormula;
     }
 
+
     public String toString() {
         return this.stringOperator() + "(" + getNestedFormula() + ")";
+    }
+
+
+    @Override
+    public LTLfUnaryFormula<S> clone() {
+        return (LTLfUnaryFormula) this.formulaFactory(this.getFormulaType(), (LTLfFormula<S>) this.getNestedFormula().clone(), null, null);
     }
 
 }

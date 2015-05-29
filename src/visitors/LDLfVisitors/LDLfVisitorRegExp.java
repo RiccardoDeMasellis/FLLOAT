@@ -1,8 +1,16 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package visitors.LDLfVisitors;
 
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
-import formula.ldlf.LDLfPropTrueFormula;
+import formula.ldlf.LDLfLocalTrueFormula;
 import formula.ldlf.LDLfttFormula;
 import formula.regExp.*;
 import generatedParsers.*;
@@ -12,7 +20,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
 import symbols.Alphabet;
 import symbols.Symbol;
-import visitors.PropVisitor.PropVisitor;
+import visitors.PropVisitor.LocalVisitor;
 
 public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBaseVisitor<RegExp<S>> {
 
@@ -111,9 +119,9 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
                 LDLfFormula<S> f = null;
                 String atom = ctx.getChild(0).getText();
                 if (atom.equals("True") || atom.equals("TRUE") || atom.equals("true") || atom.equals("T"))
-                    f = new LDLfDiamondFormula<>(new RegExpPropTrue<>(), new LDLfttFormula<>());
+                    f = new LDLfDiamondFormula<>(new RegExpLocalTrue<>(), new LDLfttFormula<>());
                 if (atom.equals("False") || atom.equals("FALSE") || atom.equals("false"))
-                    f = new LDLfDiamondFormula<>(new RegExpPropFalse<>(), new LDLfttFormula<>());
+                    f = new LDLfDiamondFormula<>(new RegExpLocalFalse<>(), new LDLfttFormula<>());
                 return new RegExpTest<>(f);
             }
 
@@ -121,7 +129,7 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
             else {
                 // EPSILON
                 if (ctx.getChild(0).getText().equals("eps")) {
-                    return new RegExpTest<>(new LDLfPropTrueFormula<>());
+                    return new RegExpTest<>(new LDLfLocalTrueFormula<>());
                 }
 
                 // propositionalFormula
@@ -129,9 +137,9 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
                     PropFormulaParserLexer lexer = new PropFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
                     PropFormulaParserParser parser = new PropFormulaParserParser(new CommonTokenStream(lexer));
                     ParseTree tree = parser.propositionalFormula();
-                    PropVisitor<S, RegExpProp<S>> implementation = new PropVisitor(genericSymbol, RegExpProp.class, alphabet);
-                    //PropVisitor<S, LTLfPropFormula<S>>  implementation = new PropVisitor<>(genericSymbol, LTLfPropFormula.class, alphabet);
-                    RegExpProp<S> f = implementation.visit(tree);
+                    LocalVisitor<S, RegExpLocal<S>> implementation = new LocalVisitor(genericSymbol, RegExpLocal.class, alphabet);
+                    //LocalVisitor<S, LTLfLocalFormula<S>>  implementation = new LocalVisitor<>(genericSymbol, LTLfLocalFormula.class, alphabet);
+                    RegExpLocal<S> f = implementation.visit(tree);
                     return f;
                 }
             }

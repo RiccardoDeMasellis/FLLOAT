@@ -1,8 +1,16 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package visitors.LDLfVisitors;
 
 import formula.ldlf.*;
 import formula.regExp.RegExp;
-import formula.regExp.RegExpPropTrue;
+import formula.regExp.RegExpLocalTrue;
 import formula.regExp.RegExpTest;
 import generatedParsers.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -11,7 +19,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
 import symbols.Alphabet;
 import symbols.Symbol;
-import visitors.PropVisitor.PropVisitor;
+import visitors.PropVisitor.LocalVisitor;
 
 
 public class LDLfVisitor<S extends Symbol<?>> extends LDLfFormulaParserBaseVisitor<LDLfFormula<S>> {
@@ -47,17 +55,17 @@ public class LDLfVisitor<S extends Symbol<?>> extends LDLfFormulaParserBaseVisit
                 return new LDLfffFormula<>();
             } else {
                 if ((ctx.getText().equals("END")) || (ctx.getText().equals("end")) || (ctx.getText().equals("End"))) {
-                    return new LDLfBoxFormula<>(new RegExpTest<>(new LDLfPropTrueFormula<>()), new LDLfffFormula<>());
+                    return new LDLfBoxFormula<>(new RegExpTest<>(new LDLfLocalTrueFormula<>()), new LDLfffFormula<>());
                 } else {
                     if ((ctx.getText().equals("LAST")) || (ctx.getText().equals("Last")) || (ctx.getText().equals("last"))) {
-                        return new LDLfDiamondFormula<>(new RegExpPropTrue<>(), new LDLfBoxFormula<>(new RegExpTest<>(new LDLfPropTrueFormula<>()), new LDLfffFormula<>()));
+                        return new LDLfDiamondFormula<>(new RegExpLocalTrue<>(), new LDLfBoxFormula<>(new RegExpTest<>(new LDLfLocalTrueFormula<>()), new LDLfffFormula<>()));
                     } else {
                         PropFormulaParserLexer lexer = new PropFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
                         PropFormulaParserParser parser = new PropFormulaParserParser(new CommonTokenStream(lexer));
                         ParseTree tree = parser.propositionalFormula();
-                        PropVisitor<S, LDLfPropFormula<S>> implementation = new PropVisitor(genericSymbol, LDLfPropFormula.class, alphabet);
-                        //PropVisitor<S, LTLfPropFormula<S>>  implementation = new PropVisitor<>(genericSymbol, LTLfPropFormula.class, alphabet);
-                        LDLfPropFormula<S> f = implementation.visit(tree);
+                        LocalVisitor<S, LDLfLocalFormula<S>> implementation = new LocalVisitor(genericSymbol, LDLfLocalFormula.class, alphabet);
+                        //LocalVisitor<S, LTLfLocalFormula<S>>  implementation = new LocalVisitor<>(genericSymbol, LTLfLocalFormula.class, alphabet);
+                        LDLfLocalFormula<S> f = implementation.visit(tree);
                         //f.nnf();
                         return f;
                     }

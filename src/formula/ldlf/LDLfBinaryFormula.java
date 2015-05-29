@@ -1,3 +1,11 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package formula.ldlf;
 
 import formula.BinaryFormula;
@@ -16,16 +24,20 @@ public abstract class LDLfBinaryFormula<S extends Symbol<?>> implements BinaryFo
         this.right = right;
     }
 
+
+    @Override
+    public LDLfBinaryFormula<S> clone() {
+        return (LDLfBinaryFormula<S>) this.formulaFactory(this.getFormulaType(), (LDLfFormula<S>) this.getLeftFormula().clone(), (LDLfFormula<S>) this.getRightFormula().clone(), null);
+    }
+
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LDLfBinaryFormula<?> that = (LDLfBinaryFormula<?>) o;
-
-        if (left != null ? !left.equals(that.left) : that.left != null) return false;
-        return !(right != null ? !right.equals(that.right) : that.right != null);
-
+        if (o != null && this.getClass().equals(o.getClass())) {
+            LDLfBinaryFormula<S> other = (LDLfBinaryFormula<S>) o;
+            return this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula());
+        }
+        return false;
     }
 
     @Override

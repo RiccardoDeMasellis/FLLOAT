@@ -1,3 +1,11 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package formula.ltlf;
 
 import formula.BinaryFormula;
@@ -18,15 +26,13 @@ public abstract class LTLfBinaryFormula<S extends Symbol<?>> implements BinaryFo
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LTLfBinaryFormula<?> that = (LTLfBinaryFormula<?>) o;
-
-        if (left != null ? !left.equals(that.left) : that.left != null) return false;
-        return !(right != null ? !right.equals(that.right) : that.right != null);
-
+        if (o != null && this.getClass().equals(o.getClass())) {
+            LTLfBinaryFormula<S> other = (LTLfBinaryFormula<S>) o;
+            return this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula());
+        }
+        return false;
     }
+
 
     @Override
     public int hashCode() {
@@ -45,5 +51,10 @@ public abstract class LTLfBinaryFormula<S extends Symbol<?>> implements BinaryFo
 
     public String toString() {
         return "(" + this.getLeftFormula() + ") " + this.stringOperator() + " (" + this.getRightFormula() + ")";
+    }
+
+    @Override
+    public LTLfBinaryFormula<S> clone() {
+        return (LTLfBinaryFormula<S>) this.formulaFactory(this.getFormulaType(), (LTLfFormula<S>) this.getLeftFormula().clone(), (LTLfFormula<S>) this.getRightFormula().clone(), null);
     }
 }

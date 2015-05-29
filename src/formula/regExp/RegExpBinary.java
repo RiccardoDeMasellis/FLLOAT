@@ -1,6 +1,15 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package formula.regExp;
 
 import formula.BinaryFormula;
+import formula.Formula;
 import symbols.Symbol;
 
 /**
@@ -44,5 +53,10 @@ public abstract class RegExpBinary<S extends Symbol<?>> implements RegExp<S>, Bi
 
     public String toString() {
         return "(" + this.getLeftFormula() + ") " + this.stringOperator() + " (" + this.getRightFormula() + ")";
+    }
+
+    @Override
+    public RegExpBinary<S> clone() {
+        return (RegExpBinary<S>) this.formulaFactory(this.getFormulaType(), (Formula<S>) this.getLeftFormula().clone(), (Formula<S>) this.getRightFormula().clone(), null);
     }
 }

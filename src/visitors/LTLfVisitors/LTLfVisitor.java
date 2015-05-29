@@ -1,3 +1,11 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package visitors.LTLfVisitors;
 
 import formula.ltlf.*;
@@ -11,7 +19,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
 import symbols.Alphabet;
 import symbols.Symbol;
-import visitors.PropVisitor.PropVisitor;
+import visitors.PropVisitor.LocalVisitor;
 
 
 public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisitor<LTLfFormula<S>> {
@@ -37,7 +45,7 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
     @Override
     public LTLfFormula<S> visitLtlfAtom(@NotNull LTLfFormulaParserParser.LtlfAtomContext ctx) {
         if ((ctx.getText().equals("LAST")) || (ctx.getText().equals("Last")) || (ctx.getText().equals("last"))) {
-            return new LTLfTempNotFormula<>(new LTLfNextFormula<>(new LTLfPropTrueFormula<>()));
+            return new LTLfTempNotFormula<>(new LTLfNextFormula<>(new LTLfLocalTrueFormula<>()));
         } else {
 /*            S symbol = null;
             try {
@@ -55,9 +63,9 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
             PropFormulaParserLexer lexer = new PropFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
             PropFormulaParserParser parser = new PropFormulaParserParser(new CommonTokenStream(lexer));
             ParseTree tree = parser.propositionalFormula();
-            PropVisitor<S, LTLfPropFormula<S>> implementation = new PropVisitor(genericSymbol, LTLfPropFormula.class, alphabet);
-            //PropVisitor<S, LTLfPropFormula<S>>  implementation = new PropVisitor<>(genericSymbol, LTLfPropFormula.class, alphabet);
-            LTLfPropFormula<S> f = implementation.visit(tree);
+            LocalVisitor<S, LTLfLocalFormula<S>> implementation = new LocalVisitor(genericSymbol, LTLfLocalFormula.class, alphabet);
+            //LocalVisitor<S, LTLfLocalFormula<S>>  implementation = new LocalVisitor<>(genericSymbol, LTLfLocalFormula.class, alphabet);
+            LTLfLocalFormula<S> f = implementation.visit(tree);
             return f;
         }
     }

@@ -1,3 +1,11 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package symbols;
 
 
@@ -19,16 +27,16 @@ package symbols;
 public interface Symbol<T> {
 
     @Override
-    public boolean equals(Object obj);
+    boolean equals(Object obj);
 
     @Override
-    public int hashCode();
+    int hashCode();
 
 
     /**
      * @return The Object (that in each instantiation of this interface will be substituted with a class)
      * that the Symbol contains (or represents).
      */
-    public T getSymbol();
+    T getSymbol();
 
 }

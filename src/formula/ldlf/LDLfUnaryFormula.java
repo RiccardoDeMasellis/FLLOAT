@@ -1,3 +1,11 @@
+/*
+ * FFLOAT  Copyright (C) 2015  Riccardo De Masellis.
+ *
+ * This program comes with ABSOLUTELY NO WARRANTY.
+ * This is free software, and you are welcome to redistribute it
+ * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
+ */
+
 package formula.ldlf;
 
 import formula.UnaryFormula;
@@ -15,14 +23,16 @@ public abstract class LDLfUnaryFormula<S extends Symbol<?>> implements UnaryForm
     }
 
     @Override
+    public LDLfUnaryFormula<S> clone() {
+        return (LDLfUnaryFormula) this.formulaFactory(this.getFormulaType(), (LDLfFormula<S>) this.getNestedFormula().clone(), null, null);
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LDLfUnaryFormula<?> that = (LDLfUnaryFormula<?>) o;
-
-        return !(getNestedFormula() != null ? !getNestedFormula().equals(that.getNestedFormula()) : that.getNestedFormula() != null);
-
+        if (o != null && this.getClass().equals(o.getClass())) {
+            LDLfUnaryFormula<S> other = (LDLfUnaryFormula<S>) o;
+            return this.getNestedFormula().equals(other.getNestedFormula());
+        } else return false;
     }
 
     @Override

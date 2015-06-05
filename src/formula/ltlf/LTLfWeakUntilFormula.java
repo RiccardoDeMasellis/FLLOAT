@@ -9,6 +9,7 @@
 package formula.ltlf;
 
 import formula.FormulaType;
+import formula.ldlf.LDLfFormula;
 import symbols.Symbol;
 
 /**
@@ -52,4 +53,9 @@ public class LTLfWeakUntilFormula<S extends Symbol<?>> extends LTLfBinaryFormula
         return FormulaType.LTLf_WEAK_UNTIL;
     }
 
+
+    @Override
+    public LDLfFormula<S> toLDLf() {
+        return this.nnf().toLDLf();
+    }
 }

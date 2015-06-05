@@ -8,15 +8,13 @@
 
 package formula.ltlf;
 
-import formula.Formula;
-import formula.ldlf.LDLfFormula;
+import formula.BooleanOpFormula;
 import symbols.Symbol;
 
 /**
- * Created by Riccardo De Masellis on 14/05/15.
+ * Created by Riccardo De Masellis on 23/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface LTLfFormula<S extends Symbol<?>> extends Formula<S> {
+public interface LTLfBoolOpFormula<S extends Symbol<?>> extends LTLfFormula<S>, BooleanOpFormula<S> {
 
-    LDLfFormula<S> toLDLf();
 }

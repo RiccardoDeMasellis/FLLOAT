@@ -9,6 +9,11 @@
 package formula.ltlf;
 
 import formula.FormulaType;
+import formula.ldlf.LDLfDiamondFormula;
+import formula.regExp.RegExpConcat;
+import formula.regExp.RegExpLocalTrue;
+import formula.regExp.RegExpStar;
+import formula.regExp.RegExpTest;
 import symbols.Symbol;
 
 /**
@@ -43,5 +48,13 @@ public class LTLfUntilFormula<S extends Symbol<?>> extends LTLfBinaryFormula<S> 
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_UNTIL;
+    }
+
+    @Override
+    public LDLfDiamondFormula<S> toLDLf() {
+        RegExpTest<S> test = new RegExpTest<>(this.getLeftFormula().toLDLf());
+        RegExpConcat concat = new RegExpConcat<>(test, new RegExpLocalTrue<>());
+        RegExpStar<S> star = new RegExpStar<>(concat);
+        return new LDLfDiamondFormula<>(star, this.getRightFormula().toLDLf());
     }
 }

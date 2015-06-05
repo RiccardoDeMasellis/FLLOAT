@@ -6,17 +6,16 @@
  * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
  */
 
-package formula.ltlf;
-
-import formula.Formula;
-import formula.ldlf.LDLfFormula;
-import symbols.Symbol;
+package formula;
 
 /**
- * Created by Riccardo De Masellis on 14/05/15.
+ * Created by Riccardo De Masellis on 23/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface LTLfFormula<S extends Symbol<?>> extends Formula<S> {
-
-    LDLfFormula<S> toLDLf();
+public enum BoolOpType {
+    AND,
+    OR,
+    IMPL,
+    DOUBLEIMPL,
+    NOT
 }

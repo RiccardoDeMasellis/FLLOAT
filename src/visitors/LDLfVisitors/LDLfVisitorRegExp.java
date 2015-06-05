@@ -8,10 +8,8 @@
 
 package visitors.LDLfVisitors;
 
-import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalTrueFormula;
-import formula.ldlf.LDLfttFormula;
 import formula.regExp.*;
 import generatedParsers.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -116,13 +114,19 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
         } else {
             // atom TEST
             if (ctx.getChildCount() == 2) {
-                LDLfFormula<S> f = null;
-                String atom = ctx.getChild(0).getText();
-                if (atom.equals("True") || atom.equals("TRUE") || atom.equals("true") || atom.equals("T"))
-                    f = new LDLfDiamondFormula<>(new RegExpLocalTrue<>(), new LDLfttFormula<>());
-                if (atom.equals("False") || atom.equals("FALSE") || atom.equals("false"))
-                    f = new LDLfDiamondFormula<>(new RegExpLocalFalse<>(), new LDLfttFormula<>());
+                LDLfFormulaParserLexer lexer = new LDLfFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
+                LDLfFormulaParserParser parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
+                ParseTree tree = parser.expression();
+                LDLfVisitor<S> implementation = new LDLfVisitor<>(genericSymbol, alphabet);
+                LDLfFormula<S> f = implementation.visit(tree);
                 return new RegExpTest<>(f);
+//                LDLfFormula<S> f = null;
+//                String atom = ctx.getChild(0).getText();
+//                if (atom.equals("True") || atom.equals("TRUE") || atom.equals("true") || atom.equals("T"))
+//                    f = new LDLfDiamondFormula<>(new RegExpLocalTrue<>(), new LDLfttFormula<>());
+//                if (atom.equals("False") || atom.equals("FALSE") || atom.equals("false"))
+//                    f = new LDLfDiamondFormula<>(new RegExpLocalFalse<>(), new LDLfttFormula<>());
+//                return new RegExpTest<>(f);
             }
 
             // propositionalFormula |  EPSILON

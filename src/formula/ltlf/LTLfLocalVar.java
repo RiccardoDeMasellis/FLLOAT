@@ -10,6 +10,8 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.LocalVar;
+import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfLocalVar;
 import symbols.Symbol;
 
 /**
@@ -36,5 +38,10 @@ public class LTLfLocalVar<S extends Symbol<?>> extends LocalVar<S> implements LT
     @Override
     public LTLfFormula<S> nnf() {
         return (LTLfFormula<S>) this.clone();
+    }
+
+    @Override
+    public LDLfFormula<S> toLDLf() {
+        return new LDLfLocalVar<>(this.getSymbol());
     }
 }

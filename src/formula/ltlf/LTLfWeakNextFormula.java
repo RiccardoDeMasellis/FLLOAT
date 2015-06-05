@@ -9,6 +9,8 @@
 package formula.ltlf;
 
 import formula.FormulaType;
+import formula.ldlf.LDLfBoxFormula;
+import formula.regExp.RegExpLocalTrue;
 import symbols.Symbol;
 
 /**
@@ -46,8 +48,14 @@ public class LTLfWeakNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S
         return new LTLfNextFormula<>(nested);
     }
 
+
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_WEAK_NEXT;
+    }
+
+    @Override
+    public LDLfBoxFormula<S> toLDLf() {
+        return new LDLfBoxFormula<>(new RegExpLocalTrue<>(), this.getNestedFormula().toLDLf());
     }
 }

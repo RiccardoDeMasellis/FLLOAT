@@ -10,6 +10,8 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.NotFormula;
+import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfLocalNotFormula;
 import symbols.Symbol;
 
 /**
@@ -24,5 +26,14 @@ public class LTLfLocalNotFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S
 
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_LOCAL_NOT;
+    }
+
+    @Override
+    public LDLfFormula<S> toLDLf() {
+        if (this.getNestedFormula() instanceof LTLfLocalVar) {
+            return new LDLfLocalNotFormula<>(this.getNestedFormula().toLDLf());
+        } else {
+            return ((LTLfFormula<S>) this.nnf()).toLDLf();
+        }
     }
 }

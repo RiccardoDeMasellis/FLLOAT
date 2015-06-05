@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.TrueLocalFormula;
+import formula.ldlf.LDLfLocalTrueFormula;
 import symbols.Symbol;
 
 /**
@@ -35,5 +36,10 @@ public class LTLfLocalTrueFormula<S extends Symbol<?>> extends TrueLocalFormula<
 
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_LOCAL_TRUE;
+    }
+
+    @Override
+    public LDLfLocalTrueFormula<S> toLDLf() {
+        return new LDLfLocalTrueFormula<>();
     }
 }

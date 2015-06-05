@@ -9,6 +9,8 @@
 package formula.ltlf;
 
 import formula.FormulaType;
+import formula.ldlf.LDLfDiamondFormula;
+import formula.regExp.RegExpLocalTrue;
 import symbols.Symbol;
 
 /**
@@ -43,5 +45,10 @@ public class LTLfNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S> im
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_NEXT;
+    }
+
+    @Override
+    public LDLfDiamondFormula<S> toLDLf() {
+        return new LDLfDiamondFormula<>(new RegExpLocalTrue<>(), this.getNestedFormula().toLDLf());
     }
 }

@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.DoubleImplFormula;
 import formula.FormulaType;
+import formula.ldlf.LDLfFormula;
 import symbols.Symbol;
 
 /**
@@ -36,6 +37,11 @@ public class LTLfLocalDoubleImplFormula<S extends Symbol<?>> extends LTLfBinaryF
                     (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
         }
         return false;
+    }
+
+    @Override
+    public LDLfFormula<S> toLDLf() {
+        return ((LTLfFormula<S>) this.nnf()).toLDLf();
     }
 
 }

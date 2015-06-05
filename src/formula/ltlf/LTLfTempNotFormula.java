@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.NotFormula;
+import formula.ldlf.LDLfFormula;
 import symbols.Symbol;
 
 /**
@@ -29,5 +30,11 @@ public class LTLfTempNotFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S>
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_TEMP_NOT;
+    }
+
+
+    @Override
+    public LDLfFormula<S> toLDLf() {
+        return ((LTLfFormula<S>) this.nnf()).toLDLf();
     }
 }

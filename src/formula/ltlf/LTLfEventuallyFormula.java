@@ -9,6 +9,7 @@
 package formula.ltlf;
 
 import formula.FormulaType;
+import formula.ldlf.LDLfFormula;
 import symbols.Symbol;
 
 /**
@@ -47,5 +48,10 @@ public class LTLfEventuallyFormula<S extends Symbol<?>> extends LTLfUnaryFormula
 
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_EVENTUALLY;
+    }
+
+    @Override
+    public LDLfFormula<S> toLDLf() {
+        return this.nnf().toLDLf();
     }
 }

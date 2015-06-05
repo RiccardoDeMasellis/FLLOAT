@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ImplFormula;
+import formula.ldlf.LDLfFormula;
 import symbols.Symbol;
 
 /**
@@ -26,4 +27,8 @@ public class LTLfLocalImplFormula<S extends Symbol<?>> extends LTLfBinaryFormula
         return FormulaType.LTLf_LOCAL_IMPL;
     }
 
+    @Override
+    public LDLfFormula<S> toLDLf() {
+        return ((LTLfFormula<S>) this.nnf()).toLDLf();
+    }
 }

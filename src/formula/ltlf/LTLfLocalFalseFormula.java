@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.FalseLocalFormula;
 import formula.FormulaType;
+import formula.ldlf.LDLfLocalFalseFormula;
 import symbols.Symbol;
 
 /**
@@ -37,4 +38,8 @@ public class LTLfLocalFalseFormula<S extends Symbol<?>> extends FalseLocalFormul
         return FormulaType.LTLf_LOCAL_FALSE;
     }
 
+    @Override
+    public LDLfLocalFalseFormula<S> toLDLf() {
+        return new LDLfLocalFalseFormula<>();
+    }
 }

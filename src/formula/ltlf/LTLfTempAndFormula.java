@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.AndFormula;
 import formula.FormulaType;
+import formula.ldlf.LDLfTempAndFormula;
 import symbols.Symbol;
 
 /**
@@ -40,5 +41,10 @@ public class LTLfTempAndFormula<S extends Symbol<?>> extends LTLfBinaryFormula<S
                     (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
         }
         return false;
+    }
+
+    @Override
+    public LDLfTempAndFormula<S> toLDLf() {
+        return new LDLfTempAndFormula<>(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());
     }
 }

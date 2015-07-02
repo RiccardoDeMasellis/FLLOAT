@@ -69,19 +69,21 @@
         <processorPath useClasspath="true" />
         <module name="jautomata-io (1)" />
       </profile>
+      <profile default="false" name="Annotation profile for FLLOAT" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="FLLOAT" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
+      <module name="FLLOAT" target="1.8" />
       <module name="jautomata" target="1.7" />
-      <module name="jautomata (1)" target="1.7" />
       <module name="jautomata-core" target="1.7" />
-      <module name="jautomata-core (1)" target="1.7" />
       <module name="jautomata-ext" target="1.7" />
-      <module name="jautomata-ext (1)" target="1.7" />
       <module name="jautomata-graph" target="1.7" />
-      <module name="jautomata-graph (1)" target="1.7" />
       <module name="jautomata-io" target="1.7" />
-      <module name="jautomata-io (1)" target="1.7" />
-      <module name="jautomata-master" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

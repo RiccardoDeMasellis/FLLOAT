@@ -9,15 +9,14 @@
 package formula.regExp;
 
 import formula.FormulaType;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpAltern<S extends Symbol<?>> extends RegExpBinary<S> implements RegExpTemp<S> {
+public class RegExpAltern extends RegExpBinary implements RegExpTemp {
 
-    public RegExpAltern(RegExp<S> left, RegExp<S> right) {
+    public RegExpAltern(RegExp left, RegExp right) {
         super(left, right);
     }
 
@@ -27,13 +26,13 @@ public class RegExpAltern<S extends Symbol<?>> extends RegExpBinary<S> implement
     }
 
     @Override
-    public RegExpAltern<S> nnf() {
-        return new RegExpAltern<>((RegExp<S>) this.getLeftFormula().nnf(), (RegExp<S>) this.getRightFormula().nnf());
+    public RegExpAltern nnf() {
+        return new RegExpAltern((RegExp) this.getLeftFormula().nnf(), (RegExp) this.getRightFormula().nnf());
     }
 
     // NOOP
     @Override
-    public RegExpTest<S> negate() {
+    public RegExpTest negate() {
         throw new RuntimeException("Method negate() should not be called on RegExpAltern");
     }
 

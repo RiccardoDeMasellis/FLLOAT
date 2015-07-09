@@ -9,28 +9,27 @@
 package formula.ldlf;
 
 import formula.UnaryFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 21/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public abstract class LDLfUnaryFormula<S extends Symbol<?>> implements UnaryFormula<S>, LDLfFormula<S> {
-    private LDLfFormula<S> nestedFormula;
+public abstract class LDLfUnaryFormula implements UnaryFormula, LDLfFormula {
+    private LDLfFormula nestedFormula;
 
-    public LDLfUnaryFormula(LDLfFormula<S> nestedFormula) {
+    public LDLfUnaryFormula(LDLfFormula nestedFormula) {
         this.nestedFormula = nestedFormula;
     }
 
     @Override
-    public LDLfUnaryFormula<S> clone() {
+    public LDLfUnaryFormula clone() {
         return (LDLfUnaryFormula) this.formulaFactory(this.getFormulaType(), this.getNestedFormula().clone(), null, null);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            LDLfUnaryFormula<S> other = (LDLfUnaryFormula<S>) o;
+            LDLfUnaryFormula other = (LDLfUnaryFormula) o;
             return this.getNestedFormula().equals(other.getNestedFormula());
         } else return false;
     }
@@ -41,7 +40,7 @@ public abstract class LDLfUnaryFormula<S extends Symbol<?>> implements UnaryForm
     }
 
     @Override
-    public LDLfFormula<S> getNestedFormula() {
+    public LDLfFormula getNestedFormula() {
         return nestedFormula;
     }
 

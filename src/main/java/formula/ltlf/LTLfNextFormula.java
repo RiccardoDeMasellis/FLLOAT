@@ -11,15 +11,14 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.regExp.RegExpLocalTrue;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S> implements LTLfTempOpTempFormula<S> {
+public class LTLfNextFormula extends LTLfUnaryFormula implements LTLfTempOpTempFormula {
 
-    public LTLfNextFormula(LTLfFormula<S> nestedFormula) {
+    public LTLfNextFormula(LTLfFormula nestedFormula) {
         super(nestedFormula);
     }
 
@@ -30,16 +29,16 @@ public class LTLfNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S> im
 
 
     @Override
-    public LTLfFormula<S> nnf() {
-        LTLfFormula<S> nested = (LTLfFormula<S>) this.getNestedFormula().nnf();
-        return new LTLfNextFormula<>(nested);
+    public LTLfFormula nnf() {
+        LTLfFormula nested = (LTLfFormula) this.getNestedFormula().nnf();
+        return new LTLfNextFormula(nested);
     }
 
 
     @Override
-    public LTLfFormula<S> negate() {
-        LTLfFormula<S> nested = (LTLfFormula<S>) this.getNestedFormula().negate();
-        return new LTLfWeakNextFormula<>(nested);
+    public LTLfFormula negate() {
+        LTLfFormula nested = (LTLfFormula) this.getNestedFormula().negate();
+        return new LTLfWeakNextFormula(nested);
     }
 
     @Override
@@ -48,7 +47,7 @@ public class LTLfNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S> im
     }
 
     @Override
-    public LDLfDiamondFormula<S> toLDLf() {
-        return new LDLfDiamondFormula<>(new RegExpLocalTrue<>(), this.getNestedFormula().toLDLf());
+    public LDLfDiamondFormula toLDLf() {
+        return new LDLfDiamondFormula(new RegExpLocalTrue(), this.getNestedFormula().toLDLf());
     }
 }

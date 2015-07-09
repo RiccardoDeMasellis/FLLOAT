@@ -8,27 +8,25 @@
 
 package formula;
 
-import symbols.Symbol;
-
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface DoubleImplFormula<S extends Symbol<?>> extends BinaryFormula<S>, BooleanOpFormula<S> {
+public interface DoubleImplFormula extends BinaryFormula, BooleanOpFormula {
 
     default String stringOperator() {
         return "DOUBLEIMPL";
     }
 
-    default Formula<S> nnf() {
-        Formula<S> left = this.getLeftFormula().clone();
-        Formula<S> right = this.getRightFormula().clone();
-        Formula<S> impl1 = this.boolOpFormulaFactory(BoolOpType.IMPL, left, right);
-        Formula<S> impl2 = this.boolOpFormulaFactory(BoolOpType.IMPL, right, left);
+    default Formula nnf() {
+        Formula left = this.getLeftFormula().clone();
+        Formula right = this.getRightFormula().clone();
+        Formula impl1 = this.boolOpFormulaFactory(BoolOpType.IMPL, left, right);
+        Formula impl2 = this.boolOpFormulaFactory(BoolOpType.IMPL, right, left);
         return this.boolOpFormulaFactory(BoolOpType.AND, impl1.nnf(), impl2.nnf());
     }
 
-    default Formula<S> negate() {
+    default Formula negate() {
         return this.nnf().negate();
     }
 }

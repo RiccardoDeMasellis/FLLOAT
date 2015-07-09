@@ -8,12 +8,10 @@
 
 package formula.quotedFormula;
 
-import symbols.Symbol;
-
 /**
  * Created by Riccardo De Masellis on 08/06/15.
  */
-public abstract class QuotedBinaryFormula<S extends Symbol<?>> extends QuotedFormula<S> {
+public abstract class QuotedBinaryFormula extends QuotedFormula {
 
     private QuotedFormula left;
     private QuotedFormula right;
@@ -34,7 +32,7 @@ public abstract class QuotedBinaryFormula<S extends Symbol<?>> extends QuotedFor
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            QuotedBinaryFormula<S> other = (QuotedBinaryFormula<S>) o;
+            QuotedBinaryFormula other = (QuotedBinaryFormula) o;
             return this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula());
         }
         return false;

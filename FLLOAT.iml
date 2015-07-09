@@ -6,20 +6,26 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/antlr4-generated" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Prove" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/antlr4-generated/formulaParser" />
       <excludeFolder url="file://$MODULE_DIR$/antlr4-generated/fromStringToCharParser" />
       <excludeFolder url="file://$MODULE_DIR$/out" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/java/alternating" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/evaluations" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/java/formula-old" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/java/useless" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/java/utils" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: net.sf.tweety.logics:pl:1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.sat4j:org.ow2.sat4j.core:2.3.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.tweety.logics:fol:1.3" level="project" />
     <orderEntry type="library" name="Maven: net.sf.tweety.logics:commons:1.3" level="project" />
     <orderEntry type="library" name="Maven: net.sf.tweety:commons:1.3" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:0.9.30" level="project" />
@@ -31,6 +37,8 @@
     <orderEntry type="library" name="Maven: ojalgo:ojalgo:35.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.dbtsai.lbfgs:lbfgs:0.1" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.3" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.tweety:plugin:1.3" level="project" />
+    <orderEntry type="library" name="Maven: jspf:core:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr4:4.5" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.5" level="project" />
     <orderEntry type="library" name="Maven: org.abego.treelayout:org.abego.treelayout.core:1.0.1" level="project" />

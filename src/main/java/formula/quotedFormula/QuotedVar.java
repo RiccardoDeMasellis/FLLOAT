@@ -9,26 +9,29 @@
 package formula.quotedFormula;
 
 import formula.ldlf.LDLfFormula;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+
+import java.util.HashMap;
 
 /**
  * Created by Riccardo De Masellis on 08/06/15.
  */
-public class QuotedVar<S extends Symbol<?>> extends QuotedAtomicFormula<S> {
+public class QuotedVar extends QuotedAtomicFormula {
 
-    private LDLfFormula<S> unquotedFormula;
+    private LDLfFormula unquotedFormula;
 
-    public QuotedVar(LDLfFormula<S> unquotedFormula) {
+    public QuotedVar(LDLfFormula unquotedFormula) {
         this.unquotedFormula = unquotedFormula;
     }
 
-    public LDLfFormula<S> getUnquotedFormula() {
+    public LDLfFormula getUnquotedFormula() {
         return unquotedFormula;
     }
 
     public boolean equals(Object o) {
         if (this.getClass().equals(o.getClass())) {
-            QuotedVar other = (QuotedVar<S>) o;
+            QuotedVar other = (QuotedVar) o;
             return this.getUnquotedFormula().equals(other.getUnquotedFormula());
         }
         return false;
@@ -46,8 +49,20 @@ public class QuotedVar<S extends Symbol<?>> extends QuotedAtomicFormula<S> {
         return getUnquotedFormula() != null ? getUnquotedFormula().hashCode() : 0;
     }
 
+    public QuotedVar clone() {
+        return new QuotedVar((LDLfFormula) this.getUnquotedFormula().clone());
+    }
 
-    public QuotedVar<S> clone() {
-        return new QuotedVar<>((LDLfFormula<S>) this.getUnquotedFormula().clone());
+    @Override
+    public PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf) {
+        String prop;
+        if (LDLf2String.containsKey(this.getUnquotedFormula()))
+            prop = LDLf2String.get(this.getUnquotedFormula());
+        else {
+            prop = Integer.toString(LDLf2String.size());
+            LDLf2String.put(this.getUnquotedFormula(), prop);
+            String2LDLf.put(prop, this.getUnquotedFormula());
+        }
+        return new Proposition(prop);
     }
 }

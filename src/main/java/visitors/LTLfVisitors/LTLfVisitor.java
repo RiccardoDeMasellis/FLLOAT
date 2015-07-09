@@ -17,35 +17,21 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
-import symbols.Alphabet;
-import symbols.Symbol;
 import visitors.PropVisitor.LocalVisitor;
 
 
-public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisitor<LTLfFormula<S>> {
-
-    private Alphabet<S> alphabet;
-    private Class<S> genericSymbol;
-
-    public LTLfVisitor(Class<S> genericSymbol) {
-        alphabet = new Alphabet<>();
-        this.genericSymbol = genericSymbol;
-    }
-
-    public Alphabet<S> getAlphabet() {
-        return alphabet;
-    }
+public class LTLfVisitor extends LTLfFormulaParserBaseVisitor<LTLfFormula> {
 
 
     @Override
-    public LTLfFormula<S> visitExpression(@NotNull LTLfFormulaParserParser.ExpressionContext ctx) {
+    public LTLfFormula visitExpression(@NotNull LTLfFormulaParserParser.ExpressionContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public LTLfFormula<S> visitLtlfAtom(@NotNull LTLfFormulaParserParser.LtlfAtomContext ctx) {
+    public LTLfFormula visitLtlfAtom(@NotNull LTLfFormulaParserParser.LtlfAtomContext ctx) {
         if ((ctx.getText().equals("LAST")) || (ctx.getText().equals("Last")) || (ctx.getText().equals("last"))) {
-            return new LTLfTempNotFormula<>(new LTLfNextFormula<>(new LTLfLocalTrueFormula<>()));
+            return new LTLfTempNotFormula(new LTLfNextFormula(new LTLfLocalTrueFormula()));
         } else {
 /*            S symbol = null;
             try {
@@ -58,25 +44,25 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
                 e.printStackTrace();
             }
             alphabet.addSymbol(symbol);
-            return new LDLfAtomicFormula<>(symbol);*/
+            return new LDLfAtomicFormula(symbol);*/
 
             PropFormulaParserLexer lexer = new PropFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
             PropFormulaParserParser parser = new PropFormulaParserParser(new CommonTokenStream(lexer));
             ParseTree tree = parser.propositionalFormula();
-            LocalVisitor<S, LTLfLocalFormula<S>> implementation = new LocalVisitor(genericSymbol, LTLfLocalFormula.class, alphabet);
-            //LocalVisitor<S, LTLfLocalFormula<S>>  implementation = new LocalVisitor<>(genericSymbol, LTLfLocalFormula.class, alphabet);
-            LTLfLocalFormula<S> f = implementation.visit(tree);
+            LocalVisitor<LTLfLocalFormula> implementation = new LocalVisitor(LTLfLocalFormula.class);
+            //LocalVisitor<S, LTLfLocalFormula>  implementation = new LocalVisitor(genericSymbol, LTLfLocalFormula.class, alphabet);
+            LTLfLocalFormula f = implementation.visit(tree);
             return f;
         }
     }
 
 
     @Override
-    public LTLfFormula<S> visitAndTemp(@NotNull LTLfFormulaParserParser.AndTempContext ctx) {
+    public LTLfFormula visitAndTemp(@NotNull LTLfFormulaParserParser.AndTempContext ctx) {
 
-        LTLfFormula<S> left;
-        LTLfFormula<S> right;
-        LTLfFormula<S> result = null;
+        LTLfFormula left;
+        LTLfFormula right;
+        LTLfFormula result = null;
 
         if (ctx.getChildCount() > 1) {
             for (int i = ctx.getChildCount() - 1; i >= 2; i = i - 2) {
@@ -87,7 +73,7 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
                     left = visit(ctx.getChild(i - 2));
                     right = result;
                 }
-                result = new LTLfTempAndFormula<>(left, right);
+                result = new LTLfTempAndFormula(left, right);
             }
 
             return result;
@@ -99,13 +85,13 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
 
 
     @Override
-    public LTLfFormula<S> visitImplicationTemp(@NotNull LTLfFormulaParserParser.ImplicationTempContext ctx) {
+    public LTLfFormula visitImplicationTemp(@NotNull LTLfFormulaParserParser.ImplicationTempContext ctx) {
 
         if (ctx.getChildCount() == 3) {
-            LTLfFormula<S> left = visit(ctx.getChild(0));
-            LTLfFormula<S> right = visit(ctx.getChild(2));
+            LTLfFormula left = visit(ctx.getChild(0));
+            LTLfFormula right = visit(ctx.getChild(2));
 
-            return new LTLfTempImplFormula<>(left, right);
+            return new LTLfTempImplFormula(left, right);
         } else {
             return visitChildren(ctx);
         }
@@ -113,13 +99,13 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
 
 
 //    @Override
-//    public LTLfFormula<S> visitNotTemp(@NotNull LTLfFormulaParserParser.NotTempContext ctx) {
+//    public LTLfFormula visitNotTemp(@NotNull LTLfFormulaParserParser.NotTempContext ctx) {
 //
 //        if (ctx.getChildCount() == 2) {
-//            return new LTLfTempNotFormula<>(visit(ctx.getChild(1)));
+//            return new LTLfTempNotFormula(visit(ctx.getChild(1)));
 //        } else {
 //            if (ctx.getChildCount() == 4) {
-//                return new LTLfTempNotFormula<>(visit(ctx.getChild(2)));
+//                return new LTLfTempNotFormula(visit(ctx.getChild(2)));
 //            } else {
 //                if (ctx.getChildCount() == 3) {
 //                    return visit(ctx.getChild(1));
@@ -131,13 +117,13 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
 //    }
 
     @Override
-    public LTLfFormula<S> visitNotTemp(@NotNull LTLfFormulaParserParser.NotTempContext ctx) {
+    public LTLfFormula visitNotTemp(@NotNull LTLfFormulaParserParser.NotTempContext ctx) {
 
         if (ctx.getChildCount() == 1)
             return visit(ctx.getChild(0));
         else {
             if (ctx.getChildCount() == 4)
-                return new LTLfTempNotFormula<>(visit(ctx.getChild(2)));
+                return new LTLfTempNotFormula(visit(ctx.getChild(2)));
             else // ctx.getChildCount() == 3
                 return visit(ctx.getChild(1));
         }
@@ -145,107 +131,107 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
 
 
     @Override
-    public LTLfFormula<S> visitUntil(@NotNull LTLfFormulaParserParser.UntilContext ctx) {
+    public LTLfFormula visitUntil(@NotNull LTLfFormulaParserParser.UntilContext ctx) {
 
         if (ctx.getChildCount() == 3) {
-            LTLfFormula<S> left = visit(ctx.getChild(0));
-            LTLfFormula<S> right = visit(ctx.getChild(2));
+            LTLfFormula left = visit(ctx.getChild(0));
+            LTLfFormula right = visit(ctx.getChild(2));
 
-            return new LTLfUntilFormula<>(left, right);
+            return new LTLfUntilFormula(left, right);
         } else {
             return visitChildren(ctx);
         }
     }
 
     @Override
-    public LTLfFormula<S> visitNext(@NotNull LTLfFormulaParserParser.NextContext ctx) {
+    public LTLfFormula visitNext(@NotNull LTLfFormulaParserParser.NextContext ctx) {
         if (ctx.getChildCount() == 2) {
-            return new LTLfNextFormula<>(visit(ctx.getChild(1)));
+            return new LTLfNextFormula(visit(ctx.getChild(1)));
         } else {
             return visitChildren(ctx);
         }
     }
 
     @Override
-    public LTLfFormula<S> visitWeakUntil(@NotNull LTLfFormulaParserParser.WeakUntilContext ctx) {
+    public LTLfFormula visitWeakUntil(@NotNull LTLfFormulaParserParser.WeakUntilContext ctx) {
 
         if (ctx.getChildCount() == 3) {
-            LTLfFormula<S> left = visit(ctx.getChild(0));
-            LTLfFormula<S> right = visit(ctx.getChild(2));
+            LTLfFormula left = visit(ctx.getChild(0));
+            LTLfFormula right = visit(ctx.getChild(2));
 
-            return new LTLfWeakUntilFormula<>(left, right);
+            return new LTLfWeakUntilFormula(left, right);
         } else {
             return visitChildren(ctx);
         }
     }
 
     @Override
-    public LTLfFormula<S> visitGlobally(@NotNull LTLfFormulaParserParser.GloballyContext ctx) {
+    public LTLfFormula visitGlobally(@NotNull LTLfFormulaParserParser.GloballyContext ctx) {
 
         if (ctx.getChildCount() == 2) {
-            return new LTLfGloballyFormula<>(visit(ctx.getChild(1)));
+            return new LTLfGloballyFormula(visit(ctx.getChild(1)));
         } else {
             return visitChildren(ctx);
         }
     }
 
     @Override
-    public LTLfFormula<S> visitEventually(@NotNull LTLfFormulaParserParser.EventuallyContext ctx) {
+    public LTLfFormula visitEventually(@NotNull LTLfFormulaParserParser.EventuallyContext ctx) {
 
         if (ctx.getChildCount() == 2) {
-            return new LTLfEventuallyFormula<>(visit(ctx.getChild(1)));
+            return new LTLfEventuallyFormula(visit(ctx.getChild(1)));
         } else {
             return visitChildren(ctx);
         }
     }
 
     @Override
-    public LTLfFormula<S> visitWeakNext(@NotNull LTLfFormulaParserParser.WeakNextContext ctx) {
+    public LTLfFormula visitWeakNext(@NotNull LTLfFormulaParserParser.WeakNextContext ctx) {
 
         if (ctx.getChildCount() == 2) {
-            return new LTLfWeakNextFormula<>(visit(ctx.getChild(1)));
+            return new LTLfWeakNextFormula(visit(ctx.getChild(1)));
         } else {
             return visitChildren(ctx);
         }
     }
 
     @Override
-    public LTLfFormula<S> visitStart(@NotNull LTLfFormulaParserParser.StartContext ctx) {
+    public LTLfFormula visitStart(@NotNull LTLfFormulaParserParser.StartContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public LTLfFormula<S> visitDoubleImplicationTemp(@NotNull LTLfFormulaParserParser.DoubleImplicationTempContext ctx) {
+    public LTLfFormula visitDoubleImplicationTemp(@NotNull LTLfFormulaParserParser.DoubleImplicationTempContext ctx) {
 
         if (ctx.getChildCount() == 3) {
-            LTLfFormula<S> left = visit(ctx.getChild(0));
-            LTLfFormula<S> right = visit(ctx.getChild(2));
+            LTLfFormula left = visit(ctx.getChild(0));
+            LTLfFormula right = visit(ctx.getChild(2));
 
-            return new LTLfTempDoubleImplFormula<>(left, right);
+            return new LTLfTempDoubleImplFormula(left, right);
         } else {
             return visitChildren(ctx);
         }
     }
 
     @Override
-    public LTLfFormula<S> visitRelease(@NotNull LTLfFormulaParserParser.ReleaseContext ctx) {
+    public LTLfFormula visitRelease(@NotNull LTLfFormulaParserParser.ReleaseContext ctx) {
 
         if (ctx.getChildCount() == 3) {
-            LTLfFormula<S> left = visit(ctx.getChild(0));
-            LTLfFormula<S> right = visit(ctx.getChild(2));
+            LTLfFormula left = visit(ctx.getChild(0));
+            LTLfFormula right = visit(ctx.getChild(2));
 
-            return new LTLfReleaseFormula<>(left, right);
+            return new LTLfReleaseFormula(left, right);
         } else {
             return visitChildren(ctx);
         }
     }
 
     @Override
-    public LTLfFormula<S> visitOrTemp(@NotNull LTLfFormulaParserParser.OrTempContext ctx) {
+    public LTLfFormula visitOrTemp(@NotNull LTLfFormulaParserParser.OrTempContext ctx) {
 
-        LTLfFormula<S> left;
-        LTLfFormula<S> right;
-        LTLfFormula<S> result = null;
+        LTLfFormula left;
+        LTLfFormula right;
+        LTLfFormula result = null;
 
         if (ctx.getChildCount() > 1) {
             for (int i = ctx.getChildCount() - 1; i >= 2; i = i - 2) {
@@ -256,7 +242,7 @@ public class LTLfVisitor<S extends Symbol<?>> extends LTLfFormulaParserBaseVisit
                     left = visit(ctx.getChild(i - 2));
                     right = result;
                 }
-                result = new LTLfTempOrFormula<>(left, right);
+                result = new LTLfTempOrFormula(left, right);
             }
 
             return result;

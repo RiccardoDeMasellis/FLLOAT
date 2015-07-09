@@ -11,15 +11,14 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.regExp.RegExpLocalTrue;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfWeakNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S> implements LTLfTempOpTempFormula<S> {
+public class LTLfWeakNextFormula extends LTLfUnaryFormula implements LTLfTempOpTempFormula {
 
-    public LTLfWeakNextFormula(LTLfFormula<S> nestedFormula) {
+    public LTLfWeakNextFormula(LTLfFormula nestedFormula) {
         super(nestedFormula);
     }
 
@@ -33,9 +32,9 @@ public class LTLfWeakNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S
     we need WN as a basic (not derived) operator.
     */
     @Override
-    public LTLfFormula<S> nnf() {
-        LTLfFormula<S> nested = (LTLfFormula<S>) this.getNestedFormula().nnf();
-        return new LTLfWeakNextFormula<>(nested);
+    public LTLfFormula nnf() {
+        LTLfFormula nested = (LTLfFormula) this.getNestedFormula().nnf();
+        return new LTLfWeakNextFormula(nested);
     }
 
 
@@ -43,9 +42,9 @@ public class LTLfWeakNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S
     NOT (WN phi) = X NOT(phi)
      */
     @Override
-    public LTLfFormula<S> negate() {
-        LTLfFormula<S> nested = (LTLfFormula<S>) this.getNestedFormula().negate();
-        return new LTLfNextFormula<>(nested);
+    public LTLfFormula negate() {
+        LTLfFormula nested = (LTLfFormula) this.getNestedFormula().negate();
+        return new LTLfNextFormula(nested);
     }
 
 
@@ -55,7 +54,7 @@ public class LTLfWeakNextFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S
     }
 
     @Override
-    public LDLfBoxFormula<S> toLDLf() {
-        return new LDLfBoxFormula<>(new RegExpLocalTrue<>(), this.getNestedFormula().toLDLf());
+    public LDLfBoxFormula toLDLf() {
+        return new LDLfBoxFormula(new RegExpLocalTrue(), this.getNestedFormula().toLDLf());
     }
 }

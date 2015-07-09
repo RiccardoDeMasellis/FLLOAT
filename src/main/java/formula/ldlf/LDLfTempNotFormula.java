@@ -10,15 +10,14 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.NotFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfTempNotFormula<S extends Symbol<?>> extends LDLfUnaryFormula<S> implements LDLfBoolOpTempFormula<S>, NotFormula<S> {
+public class LDLfTempNotFormula extends LDLfUnaryFormula implements LDLfBoolOpTempFormula, NotFormula {
 
-    public LDLfTempNotFormula(LDLfFormula<S> nestedFormula) {
+    public LDLfTempNotFormula(LDLfFormula nestedFormula) {
         super(nestedFormula);
     }
 

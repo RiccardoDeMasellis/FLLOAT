@@ -10,15 +10,14 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfWeakUntilFormula<S extends Symbol<?>> extends LTLfBinaryFormula<S> implements LTLfTempOpTempFormula<S> {
+public class LTLfWeakUntilFormula extends LTLfBinaryFormula implements LTLfTempOpTempFormula {
 
-    public LTLfWeakUntilFormula(LTLfFormula<S> left, LTLfFormula<S> right) {
+    public LTLfWeakUntilFormula(LTLfFormula left, LTLfFormula right) {
         super(left, right);
     }
 
@@ -29,23 +28,23 @@ public class LTLfWeakUntilFormula<S extends Symbol<?>> extends LTLfBinaryFormula
 
     // Wikipedia: phi WU psi = psi R (psi OR phi)
     @Override
-    public LTLfFormula<S> nnf() {
-        LTLfFormula<S> left = (LTLfFormula<S>) this.getLeftFormula().nnf();
-        LTLfFormula<S> right = (LTLfFormula<S>) this.getRightFormula().nnf();
-        LTLfFormula<S> or;
+    public LTLfFormula nnf() {
+        LTLfFormula left = (LTLfFormula) this.getLeftFormula().nnf();
+        LTLfFormula right = (LTLfFormula) this.getRightFormula().nnf();
+        LTLfFormula or;
 
         if (left instanceof LTLfLocalFormula && right instanceof LTLfLocalFormula)
-            or = new LTLfLocalOrFormula<>(left, right);
+            or = new LTLfLocalOrFormula(left, right);
 
         else
-            or = new LTLfTempOrFormula<>(left, right);
+            or = new LTLfTempOrFormula(left, right);
 
-        return new LTLfReleaseFormula<>(left, or);
+        return new LTLfReleaseFormula(left, or);
     }
 
     @Override
-    public LTLfFormula<S> negate() {
-        return (LTLfFormula<S>) this.nnf().negate();
+    public LTLfFormula negate() {
+        return (LTLfFormula) this.nnf().negate();
     }
 
     @Override
@@ -55,7 +54,7 @@ public class LTLfWeakUntilFormula<S extends Symbol<?>> extends LTLfBinaryFormula
 
 
     @Override
-    public LDLfFormula<S> toLDLf() {
+    public LDLfFormula toLDLf() {
         return this.nnf().toLDLf();
     }
 }

@@ -14,15 +14,14 @@ import formula.regExp.RegExpConcat;
 import formula.regExp.RegExpLocalTrue;
 import formula.regExp.RegExpStar;
 import formula.regExp.RegExpTest;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfUntilFormula<S extends Symbol<?>> extends LTLfBinaryFormula<S> implements LTLfTempOpTempFormula<S> {
+public class LTLfUntilFormula extends LTLfBinaryFormula implements LTLfTempOpTempFormula {
 
-    public LTLfUntilFormula(LTLfFormula<S> left, LTLfFormula<S> right) {
+    public LTLfUntilFormula(LTLfFormula left, LTLfFormula right) {
         super(left, right);
     }
 
@@ -32,17 +31,17 @@ public class LTLfUntilFormula<S extends Symbol<?>> extends LTLfBinaryFormula<S> 
 
 
     @Override
-    public LTLfFormula<S> nnf() {
-        LTLfFormula<S> left = (LTLfFormula<S>) this.getLeftFormula().nnf();
-        LTLfFormula<S> right = (LTLfFormula<S>) this.getRightFormula().nnf();
-        return new LTLfUntilFormula<>(left, right);
+    public LTLfFormula nnf() {
+        LTLfFormula left = (LTLfFormula) this.getLeftFormula().nnf();
+        LTLfFormula right = (LTLfFormula) this.getRightFormula().nnf();
+        return new LTLfUntilFormula(left, right);
     }
 
     @Override
-    public LTLfFormula<S> negate() {
-        LTLfFormula<S> left = (LTLfFormula<S>) this.getLeftFormula().negate();
-        LTLfFormula<S> right = (LTLfFormula<S>) this.getRightFormula().negate();
-        return new LTLfReleaseFormula<>(left, right);
+    public LTLfFormula negate() {
+        LTLfFormula left = (LTLfFormula) this.getLeftFormula().negate();
+        LTLfFormula right = (LTLfFormula) this.getRightFormula().negate();
+        return new LTLfReleaseFormula(left, right);
     }
 
     @Override
@@ -51,10 +50,10 @@ public class LTLfUntilFormula<S extends Symbol<?>> extends LTLfBinaryFormula<S> 
     }
 
     @Override
-    public LDLfDiamondFormula<S> toLDLf() {
-        RegExpTest<S> test = new RegExpTest<>(this.getLeftFormula().toLDLf());
-        RegExpConcat concat = new RegExpConcat<>(test, new RegExpLocalTrue<>());
-        RegExpStar<S> star = new RegExpStar<>(concat);
-        return new LDLfDiamondFormula<>(star, this.getRightFormula().toLDLf());
+    public LDLfDiamondFormula toLDLf() {
+        RegExpTest test = new RegExpTest(this.getLeftFormula().toLDLf());
+        RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
+        RegExpStar star = new RegExpStar(concat);
+        return new LDLfDiamondFormula(star, this.getRightFormula().toLDLf());
     }
 }

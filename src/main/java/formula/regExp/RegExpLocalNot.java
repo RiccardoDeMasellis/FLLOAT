@@ -10,15 +10,14 @@ package formula.regExp;
 
 import formula.FormulaType;
 import formula.NotFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpLocalNot<S extends Symbol<?>> extends RegExpUnary<S> implements RegExpBoolOpLocal<S>, NotFormula<S> {
+public class RegExpLocalNot extends RegExpUnary implements RegExpBoolOpLocal, NotFormula {
 
-    public RegExpLocalNot(RegExp<S> nestedFormula) {
+    public RegExpLocalNot(RegExp nestedFormula) {
         super(nestedFormula);
     }
 

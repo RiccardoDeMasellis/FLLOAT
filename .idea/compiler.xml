@@ -69,12 +69,12 @@
         <processorPath useClasspath="true" />
         <module name="jautomata-io (1)" />
       </profile>
-      <profile default="false" name="Annotation profile for FLLOAT" enabled="true">
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="FLLOAT" />
+        <module name="ProveVarie" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
@@ -84,6 +84,7 @@
       <module name="jautomata-ext" target="1.7" />
       <module name="jautomata-graph" target="1.7" />
       <module name="jautomata-io" target="1.7" />
+      <module name="ProveVarie" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

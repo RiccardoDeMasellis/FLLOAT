@@ -9,23 +9,22 @@
 package formula.ltlf;
 
 import formula.UnaryFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 19/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public abstract class LTLfUnaryFormula<S extends Symbol<?>> implements UnaryFormula<S>, LTLfFormula<S> {
-    private LTLfFormula<S> nestedFormula;
+public abstract class LTLfUnaryFormula implements UnaryFormula, LTLfFormula {
+    private LTLfFormula nestedFormula;
 
-    public LTLfUnaryFormula(LTLfFormula<S> nestedFormula) {
+    public LTLfUnaryFormula(LTLfFormula nestedFormula) {
         this.nestedFormula = nestedFormula;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            LTLfUnaryFormula<S> other = (LTLfUnaryFormula<S>) o;
+            LTLfUnaryFormula other = (LTLfUnaryFormula) o;
             return this.getNestedFormula().equals(other.getNestedFormula());
         } else return false;
     }
@@ -37,7 +36,7 @@ public abstract class LTLfUnaryFormula<S extends Symbol<?>> implements UnaryForm
     }
 
     @Override
-    public LTLfFormula<S> getNestedFormula() {
+    public LTLfFormula getNestedFormula() {
         return nestedFormula;
     }
 
@@ -48,7 +47,7 @@ public abstract class LTLfUnaryFormula<S extends Symbol<?>> implements UnaryForm
 
 
     @Override
-    public LTLfUnaryFormula<S> clone() {
+    public LTLfUnaryFormula clone() {
         return (LTLfUnaryFormula) this.formulaFactory(this.getFormulaType(), this.getNestedFormula().clone(), null, null);
     }
 

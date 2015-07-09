@@ -10,16 +10,15 @@ package formula.regExp;
 
 import formula.Formula;
 import formula.UnaryFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 21/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public abstract class RegExpUnary<S extends Symbol<?>> implements UnaryFormula<S>, RegExp<S> {
-    private Formula<S> nestedFormula;
+public abstract class RegExpUnary implements UnaryFormula, RegExp {
+    private Formula nestedFormula;
 
-    public RegExpUnary(Formula<S> nestedFormula) {
+    public RegExpUnary(Formula nestedFormula) {
         this.nestedFormula = nestedFormula;
     }
 
@@ -29,21 +28,21 @@ public abstract class RegExpUnary<S extends Symbol<?>> implements UnaryFormula<S
     }
 
     @Override
-    public Formula<S> getNestedFormula() {
+    public Formula getNestedFormula() {
         return nestedFormula;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            RegExpUnary<S> other = (RegExpUnary<S>) o;
+            RegExpUnary other = (RegExpUnary) o;
             return this.getNestedFormula().equals(other.getNestedFormula());
         } else return false;
     }
 
     @Override
-    public RegExpUnary<S> clone() {
-        return (RegExpUnary<S>) this.formulaFactory(this.getFormulaType(), this.getNestedFormula().clone(), null, null);
+    public RegExpUnary clone() {
+        return (RegExpUnary) this.formulaFactory(this.getFormulaType(), this.getNestedFormula().clone(), null, null);
     }
 
 

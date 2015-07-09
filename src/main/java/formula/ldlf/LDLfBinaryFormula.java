@@ -9,32 +9,31 @@
 package formula.ldlf;
 
 import formula.BinaryFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 21/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public abstract class LDLfBinaryFormula<S extends Symbol<?>> implements BinaryFormula<S>, LDLfFormula<S> {
+public abstract class LDLfBinaryFormula implements BinaryFormula, LDLfFormula {
 
-    private LDLfFormula<S> left, right;
+    private LDLfFormula left, right;
 
-    public LDLfBinaryFormula(LDLfFormula<S> left, LDLfFormula<S> right) {
+    public LDLfBinaryFormula(LDLfFormula left, LDLfFormula right) {
         this.left = left;
         this.right = right;
     }
 
 
     @Override
-    public LDLfBinaryFormula<S> clone() {
-        return (LDLfBinaryFormula<S>) this.formulaFactory(this.getFormulaType(), this.getLeftFormula().clone(), this.getRightFormula().clone(), null);
+    public LDLfBinaryFormula clone() {
+        return (LDLfBinaryFormula) this.formulaFactory(this.getFormulaType(), this.getLeftFormula().clone(), this.getRightFormula().clone(), null);
     }
 
 
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            LDLfBinaryFormula<S> other = (LDLfBinaryFormula<S>) o;
+            LDLfBinaryFormula other = (LDLfBinaryFormula) o;
             return this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula());
         }
         return false;
@@ -47,11 +46,11 @@ public abstract class LDLfBinaryFormula<S extends Symbol<?>> implements BinaryFo
         return result;
     }
 
-    public LDLfFormula<S> getLeftFormula() {
+    public LDLfFormula getLeftFormula() {
         return left;
     }
 
-    public LDLfFormula<S> getRightFormula() {
+    public LDLfFormula getRightFormula() {
         return right;
     }
 

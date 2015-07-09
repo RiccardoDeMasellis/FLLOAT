@@ -10,16 +10,17 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.LocalVar;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfLocalVar<S extends Symbol<?>> extends LocalVar<S> implements LDLfLocalFormula<S> {
+public class LDLfLocalVar extends LocalVar implements LDLfLocalFormula {
 
-    public LDLfLocalVar(S symbol) {
-        super(symbol);
+    public LDLfLocalVar(Proposition prop) {
+        super(prop);
     }
 
     @Override
@@ -28,12 +29,17 @@ public class LDLfLocalVar<S extends Symbol<?>> extends LocalVar<S> implements LD
     }
 
     @Override
-    public LDLfFormula<S> negate() {
-        return new LDLfLocalNotFormula<>((LDLfFormula<S>) this.clone());
+    public LDLfFormula negate() {
+        return new LDLfLocalNotFormula((LDLfFormula) this.clone());
     }
 
     @Override
-    public LDLfFormula<S> nnf() {
-        return (LDLfFormula<S>) this.clone();
+    public LDLfFormula nnf() {
+        return (LDLfFormula) this.clone();
+    }
+
+    @Override
+    public PropositionalFormula LDLfLocal2Prop() {
+        return this.getProp().clone();
     }
 }

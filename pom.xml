@@ -14,6 +14,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>FLLOAT</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <build>
@@ -29,11 +30,15 @@
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>ProveVarie</module>
+        <module>../ProveVarie</module>
+    </modules>
 
     <dependencies>
         <dependency>
             <groupId>net.sf.tweety.logics</groupId>
-            <artifactId>commons</artifactId>
+            <artifactId>pl</artifactId>
             <version>1.3</version>
         </dependency>
         <dependency>

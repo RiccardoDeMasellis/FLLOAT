@@ -8,22 +8,23 @@
 
 package formula;
 
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public abstract class LocalVar<S extends Symbol<?>> implements LocalFormula<S>, AtomicFormula<S> {
+public abstract class LocalVar implements LocalFormula, AtomicFormula {
 
-    private S symbol;
+    private Proposition prop;
 
-    public LocalVar(S symbol) {
-        this.symbol = symbol;
+    public LocalVar(Proposition prop) {
+        this.prop = prop;
     }
 
-    public S getSymbol() {
-        return symbol;
+    public Proposition getProp() {
+        return prop;
     }
 
     @Override
@@ -31,22 +32,32 @@ public abstract class LocalVar<S extends Symbol<?>> implements LocalFormula<S>, 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        LocalVar<?> propVar = (LocalVar<?>) o;
+        LocalVar propVar = (LocalVar) o;
 
-        return !(getSymbol() != null ? !getSymbol().equals(propVar.getSymbol()) : propVar.getSymbol() != null);
+        return !(getProp() != null ? !getProp().equals(propVar.getProp()) : propVar.getProp() != null);
 
     }
 
     @Override
     public int hashCode() {
-        return getSymbol() != null ? getSymbol().hashCode() : 0;
+        return getProp() != null ? getProp().hashCode() : 0;
     }
 
     public String toString() {
-        return symbol.toString();
+        return prop.toString();
     }
 
-    public Formula<S> clone() {
-        return this.formulaFactory(this.getFormulaType(), null, null, this.getSymbol());
+    public Formula clone() {
+        return this.formulaFactory(this.getFormulaType(), null, null, this.getProp());
+    }
+
+    public PropositionalSignature getSignature() {
+        PropositionalSignature sig = new PropositionalSignature();
+        this.getSignatureRic(sig);
+        return sig;
+    }
+
+    public void getSignatureRic(PropositionalSignature sig) {
+        sig.add(this.getProp());
     }
 }

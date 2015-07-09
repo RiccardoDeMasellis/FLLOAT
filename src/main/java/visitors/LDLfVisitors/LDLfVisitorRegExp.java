@@ -16,31 +16,20 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTree;
-import symbols.Alphabet;
-import symbols.Symbol;
 import visitors.PropVisitor.LocalVisitor;
 
-public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBaseVisitor<RegExp<S>> {
-
-    private Class<S> genericSymbol;
-    private Alphabet<S> alphabet;
-
-
-    public LDLfVisitorRegExp(Class<S> genericSymbol, Alphabet<S> alphabet) {
-        this.genericSymbol = genericSymbol;
-        this.alphabet = alphabet;
-    }
+public class LDLfVisitorRegExp extends LDLfFormulaParserBaseVisitor<RegExp> {
 
     @Override
-    public RegExp<S> visitRegularExpression(@NotNull LDLfFormulaParserParser.RegularExpressionContext ctx) {
+    public RegExp visitRegularExpression(@NotNull LDLfFormulaParserParser.RegularExpressionContext ctx) {
         return visitChildren(ctx);
     }
 
     @Override
-    public RegExp<S> visitAlternation(@NotNull LDLfFormulaParserParser.AlternationContext ctx) {
-        RegExp<S> left;
-        RegExp<S> right;
-        RegExp<S> result = null;
+    public RegExp visitAlternation(@NotNull LDLfFormulaParserParser.AlternationContext ctx) {
+        RegExp left;
+        RegExp right;
+        RegExp result = null;
         if (ctx.getChildCount() > 1) {
             for (int i = ctx.getChildCount() - 1; i >= 2; i = i - 2) {
                 if (i == ctx.getChildCount() - 1) {
@@ -50,7 +39,7 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
                     left = visit(ctx.getChild(i - 2));
                     right = result;
                 }
-                result = new RegExpAltern<>(left, right);
+                result = new RegExpAltern(left, right);
             }
             return result;
         } else {
@@ -59,10 +48,10 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
     }
 
     @Override
-    public RegExp<S> visitConcatenation(@NotNull LDLfFormulaParserParser.ConcatenationContext ctx) {
-        RegExp<S> left;
-        RegExp<S> right;
-        RegExp<S> result = null;
+    public RegExp visitConcatenation(@NotNull LDLfFormulaParserParser.ConcatenationContext ctx) {
+        RegExp left;
+        RegExp right;
+        RegExp result = null;
         if (ctx.getChildCount() > 1) {
             for (int i = ctx.getChildCount() - 1; i >= 2; i = i - 2) {
                 if (i == ctx.getChildCount() - 1) {
@@ -72,7 +61,7 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
                     left = visit(ctx.getChild(i - 2));
                     right = result;
                 }
-                result = new RegExpConcat<>(left, right);
+                result = new RegExpConcat(left, right);
             }
             return result;
         } else {
@@ -81,13 +70,13 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
     }
 
     @Override
-    public RegExp<S> visitStar(@NotNull LDLfFormulaParserParser.StarContext ctx) {
+    public RegExp visitStar(@NotNull LDLfFormulaParserParser.StarContext ctx) {
 
         if (ctx.getChildCount() == 4) {
-            return new RegExpStar<>(visit(ctx.getChild(1)));
+            return new RegExpStar(visit(ctx.getChild(1)));
         } else {
             if (ctx.getChildCount() == 2) {
-                return new RegExpStar<>(visit(ctx.getChild(0)));
+                return new RegExpStar(visit(ctx.getChild(0)));
             } else {
                 if (ctx.getChildCount() == 3) {
                     return visit(ctx.getChild(1));
@@ -100,40 +89,40 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
     }
 
     @Override
-    public RegExp<S> visitTest(@NotNull LDLfFormulaParserParser.TestContext ctx) {
+    public RegExp visitTest(@NotNull LDLfFormulaParserParser.TestContext ctx) {
 
         // LSEPARATOR expression RSEPARATOR TEST
         if (ctx.getChildCount() == 4) {
             LDLfFormulaParserLexer lexer = new LDLfFormulaParserLexer(new ANTLRInputStream(ctx.getChild(1).getText()));
             LDLfFormulaParserParser parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
             ParseTree tree = parser.expression();
-            LDLfVisitor<S> implementation = new LDLfVisitor<>(genericSymbol, alphabet);
-            LDLfFormula<S> f = implementation.visit(tree);
+            LDLfVisitor implementation = new LDLfVisitor();
+            LDLfFormula f = implementation.visit(tree);
             //f.nnf();
-            return new RegExpTest<>(f);
+            return new RegExpTest(f);
         } else {
             // atom TEST
             if (ctx.getChildCount() == 2) {
                 LDLfFormulaParserLexer lexer = new LDLfFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
                 LDLfFormulaParserParser parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
                 ParseTree tree = parser.expression();
-                LDLfVisitor<S> implementation = new LDLfVisitor<>(genericSymbol, alphabet);
-                LDLfFormula<S> f = implementation.visit(tree);
-                return new RegExpTest<>(f);
-//                LDLfFormula<S> f = null;
+                LDLfVisitor implementation = new LDLfVisitor();
+                LDLfFormula f = implementation.visit(tree);
+                return new RegExpTest(f);
+//                LDLfFormula f = null;
 //                String atom = ctx.getChild(0).getText();
 //                if (atom.equals("True") || atom.equals("TRUE") || atom.equals("true") || atom.equals("T"))
-//                    f = new LDLfDiamondFormula<>(new RegExpLocalTrue<>(), new LDLfttFormula<>());
+//                    f = new LDLfDiamondFormula(new RegExpLocalTrue(), new LDLfttFormula());
 //                if (atom.equals("False") || atom.equals("FALSE") || atom.equals("false"))
-//                    f = new LDLfDiamondFormula<>(new RegExpLocalFalse<>(), new LDLfttFormula<>());
-//                return new RegExpTest<>(f);
+//                    f = new LDLfDiamondFormula(new RegExpLocalFalse(), new LDLfttFormula());
+//                return new RegExpTest(f);
             }
 
             // propositionalFormula |  EPSILON
             else {
                 // EPSILON
                 if (ctx.getChild(0).getText().equals("eps")) {
-                    return new RegExpTest<>(new LDLfLocalTrueFormula<>());
+                    return new RegExpTest(new LDLfLocalTrueFormula());
                 }
 
                 // propositionalFormula
@@ -141,9 +130,9 @@ public class LDLfVisitorRegExp<S extends Symbol<?>> extends LDLfFormulaParserBas
                     PropFormulaParserLexer lexer = new PropFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
                     PropFormulaParserParser parser = new PropFormulaParserParser(new CommonTokenStream(lexer));
                     ParseTree tree = parser.propositionalFormula();
-                    LocalVisitor<S, RegExpLocal<S>> implementation = new LocalVisitor(genericSymbol, RegExpLocal.class, alphabet);
-                    //LocalVisitor<S, LTLfLocalFormula<S>>  implementation = new LocalVisitor<>(genericSymbol, LTLfLocalFormula.class, alphabet);
-                    RegExpLocal<S> f = implementation.visit(tree);
+                    LocalVisitor<RegExpLocal> implementation = new LocalVisitor(RegExpLocal.class);
+                    //LocalVisitor<S, LTLfLocalFormula>  implementation = new LocalVisitor(genericSymbol, LTLfLocalFormula.class, alphabet);
+                    RegExpLocal f = implementation.visit(tree);
                     return f;
                 }
             }

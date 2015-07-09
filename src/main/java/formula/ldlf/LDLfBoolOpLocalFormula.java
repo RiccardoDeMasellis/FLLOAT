@@ -10,27 +10,26 @@ package formula.ldlf;
 
 import formula.BoolOpType;
 import formula.Formula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 23/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface LDLfBoolOpLocalFormula<S extends Symbol<?>> extends LDLfLocalFormula<S>, LDLfBoolOpFormula<S> {
+public interface LDLfBoolOpLocalFormula extends LDLfLocalFormula, LDLfBoolOpFormula {
 
     @Override
-    default LDLfLocalFormula<S> boolOpFormulaFactory(BoolOpType boolOp, Formula<S> left, Formula<S> right) {
+    default LDLfLocalFormula boolOpFormulaFactory(BoolOpType boolOp, Formula left, Formula right) {
         switch (boolOp) {
             case AND:
-                return new LDLfLocalAndFormula<>((LDLfLocalFormula<S>) left, (LDLfLocalFormula<S>) right);
+                return new LDLfLocalAndFormula((LDLfLocalFormula) left, (LDLfLocalFormula) right);
             case OR:
-                return new LDLfLocalOrFormula<>((LDLfLocalFormula<S>) left, (LDLfLocalFormula<S>) right);
+                return new LDLfLocalOrFormula((LDLfLocalFormula) left, (LDLfLocalFormula) right);
             case IMPL:
-                return new LDLfLocalImplFormula<>((LDLfLocalFormula<S>) left, (LDLfLocalFormula<S>) right);
+                return new LDLfLocalImplFormula((LDLfLocalFormula) left, (LDLfLocalFormula) right);
             case DOUBLEIMPL:
-                return new LDLfLocalDoubleImplFormula<>((LDLfLocalFormula<S>) left, (LDLfLocalFormula<S>) right);
+                return new LDLfLocalDoubleImplFormula((LDLfLocalFormula) left, (LDLfLocalFormula) right);
             case NOT:
-                return new LDLfLocalNotFormula<>((LDLfLocalFormula<S>) left);
+                return new LDLfLocalNotFormula((LDLfLocalFormula) left);
             default:
                 throw new RuntimeException("Error in LDLfBoolOpLocalFormula.boolOpFormulaFactory");
         }

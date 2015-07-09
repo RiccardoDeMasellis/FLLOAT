@@ -10,15 +10,14 @@ package formula.regExp;
 
 import formula.Formula;
 import formula.FormulaType;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpStar<S extends Symbol<?>> extends RegExpUnary<S> implements RegExpTemp<S> {
+public class RegExpStar extends RegExpUnary implements RegExpTemp {
 
-    public RegExpStar(RegExp<S> nestedFormula) {
+    public RegExpStar(RegExp nestedFormula) {
         super(nestedFormula);
     }
 
@@ -28,13 +27,13 @@ public class RegExpStar<S extends Symbol<?>> extends RegExpUnary<S> implements R
     }
 
     @Override
-    public Formula<S> nnf() {
-        return new RegExpStar<>((RegExp<S>) this.getNestedFormula().nnf());
+    public Formula nnf() {
+        return new RegExpStar((RegExp) this.getNestedFormula().nnf());
     }
 
     // NOOP
     @Override
-    public RegExpTest<S> negate() {
+    public RegExpTest negate() {
         throw new RuntimeException("Method negate() should not be called on RegExpStar");
     }
 

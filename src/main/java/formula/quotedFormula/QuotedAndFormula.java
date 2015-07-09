@@ -8,12 +8,16 @@
 
 package formula.quotedFormula;
 
-import symbols.Symbol;
+import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+
+import java.util.HashMap;
 
 /**
  * Created by Riccardo De Masellis on 08/06/15.
  */
-public class QuotedAndFormula<S extends Symbol<?>> extends QuotedBinaryFormula<S> {
+public class QuotedAndFormula extends QuotedBinaryFormula {
 
     public QuotedAndFormula(QuotedFormula left, QuotedFormula right) {
         super(left, right);
@@ -25,7 +29,14 @@ public class QuotedAndFormula<S extends Symbol<?>> extends QuotedBinaryFormula<S
     }
 
     @Override
-    public QuotedAndFormula<S> clone() {
-        return new QuotedAndFormula<>(this.getLeftFormula().clone(), this.getRightFormula().clone());
+    public QuotedAndFormula clone() {
+        return new QuotedAndFormula(this.getLeftFormula().clone(), this.getRightFormula().clone());
+    }
+
+    @Override
+    public PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf) {
+        PropositionalFormula left = this.getLeftFormula().quoted2Prop(LDLf2String, String2LDLf);
+        PropositionalFormula right = this.getRightFormula().quoted2Prop(LDLf2String, String2LDLf);
+        return new Conjunction(left, right);
     }
 }

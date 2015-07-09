@@ -10,15 +10,14 @@ package formula.regExp;
 
 import formula.FormulaType;
 import formula.OrFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpLocalOr<S extends Symbol<?>> extends RegExpBinary<S> implements RegExpBoolOpLocal<S>, OrFormula<S> {
+public class RegExpLocalOr extends RegExpBinary implements RegExpBoolOpLocal, OrFormula {
 
-    public RegExpLocalOr(RegExp<S> left, RegExp<S> right) {
+    public RegExpLocalOr(RegExp left, RegExp right) {
         super(left, right);
     }
 

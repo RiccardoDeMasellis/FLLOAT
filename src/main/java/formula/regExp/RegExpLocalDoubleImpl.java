@@ -10,14 +10,13 @@ package formula.regExp;
 
 import formula.DoubleImplFormula;
 import formula.FormulaType;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpLocalDoubleImpl<S extends Symbol<?>> extends RegExpBinary<S> implements RegExpBoolOpLocal<S>, DoubleImplFormula<S> {
-    public RegExpLocalDoubleImpl(RegExp<S> left, RegExp<S> right) {
+public class RegExpLocalDoubleImpl extends RegExpBinary implements RegExpBoolOpLocal, DoubleImplFormula {
+    public RegExpLocalDoubleImpl(RegExp left, RegExp right) {
         super(left, right);
     }
 

@@ -10,26 +10,25 @@ package formula.regExp;
 
 import formula.FormulaType;
 import formula.TrueLocalFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpLocalTrue<S extends Symbol<?>> extends TrueLocalFormula<S> implements RegExpLocal<S> {
+public class RegExpLocalTrue extends TrueLocalFormula implements RegExpLocal {
 
     public RegExpLocalTrue() {
         super();
     }
 
     @Override
-    public RegExpLocalTrue<S> nnf() {
-        return (RegExpLocalTrue<S>) this.clone();
+    public RegExpLocalTrue nnf() {
+        return (RegExpLocalTrue) this.clone();
     }
 
     @Override
-    public RegExpLocalFalse<S> negate() {
-        return new RegExpLocalFalse<>();
+    public RegExpLocalFalse negate() {
+        return new RegExpLocalFalse();
     }
 
     @Override

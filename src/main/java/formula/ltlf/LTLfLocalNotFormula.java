@@ -12,15 +12,14 @@ import formula.FormulaType;
 import formula.NotFormula;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalNotFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfLocalNotFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S> implements LTLfBoolOpLocalFormula<S>, NotFormula<S> {
+public class LTLfLocalNotFormula extends LTLfUnaryFormula implements LTLfBoolOpLocalFormula, NotFormula {
 
-    public LTLfLocalNotFormula(LTLfFormula<S> nestedFormula) {
+    public LTLfLocalNotFormula(LTLfFormula nestedFormula) {
         super(nestedFormula);
     }
 
@@ -29,11 +28,11 @@ public class LTLfLocalNotFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S
     }
 
     @Override
-    public LDLfFormula<S> toLDLf() {
+    public LDLfFormula toLDLf() {
         if (this.getNestedFormula() instanceof LTLfLocalVar) {
-            return new LDLfLocalNotFormula<>(this.getNestedFormula().toLDLf());
+            return new LDLfLocalNotFormula(this.getNestedFormula().toLDLf());
         } else {
-            return ((LTLfFormula<S>) this.nnf()).toLDLf();
+            return ((LTLfFormula) this.nnf()).toLDLf();
         }
     }
 }

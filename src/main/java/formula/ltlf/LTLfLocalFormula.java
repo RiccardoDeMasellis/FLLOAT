@@ -10,33 +10,33 @@ package formula.ltlf;
 
 import formula.LocalFormula;
 import formula.LocalFormulaType;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface LTLfLocalFormula<S extends Symbol<?>> extends LocalFormula<S>, LTLfFormula<S> {
+public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
 
     // Used with reflection in LocalVisitor, do not erase.
-    static <S extends Symbol<?>> LTLfLocalFormula<S> localFormulaFactory(LocalFormulaType formulaType, LTLfLocalFormula<S> left, LTLfLocalFormula<S> right, S symbol) {
+    static LTLfLocalFormula localFormulaFactory(LocalFormulaType formulaType, LTLfLocalFormula left, LTLfLocalFormula right, Proposition prop) {
         switch (formulaType) {
             case PROP_AND:
-                return new LTLfLocalAndFormula<>(left, right);
+                return new LTLfLocalAndFormula(left, right);
             case PROP_DOUBLEIMPL:
-                return new LTLfLocalDoubleImplFormula<>(left, right);
+                return new LTLfLocalDoubleImplFormula(left, right);
             case PROP_IMPL:
-                return new LTLfLocalImplFormula<>(left, right);
+                return new LTLfLocalImplFormula(left, right);
             case PROP_NOT:
-                return new LTLfLocalNotFormula<>(left);
+                return new LTLfLocalNotFormula(left);
             case PROP_OR:
-                return new LTLfLocalOrFormula<>(left, right);
+                return new LTLfLocalOrFormula(left, right);
             case PROP_VAR:
-                return new LTLfLocalVar<>(symbol);
+                return new LTLfLocalVar(prop);
             case PROP_TRUE:
-                return new LTLfLocalTrueFormula<>();
+                return new LTLfLocalTrueFormula();
             case PROP_FALSE:
-                return new LTLfLocalFalseFormula<>();
+                return new LTLfLocalFalseFormula();
             default:
                 throw new RuntimeException("Enum " + formulaType + " in LTLfLocalFormula.propFormulaFactory not found.");
         }

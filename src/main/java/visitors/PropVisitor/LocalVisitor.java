@@ -12,29 +12,21 @@ import formula.LocalFormula;
 import formula.LocalFormulaType;
 import generatedParsers.PropFormulaParserBaseVisitor;
 import generatedParsers.PropFormulaParserParser;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 import org.antlr.v4.runtime.misc.NotNull;
-import symbols.Alphabet;
-import symbols.Symbol;
 
 import java.lang.reflect.InvocationTargetException;
 
 
 // F can be of type LDLfLocalFormula, RegExpLocal or LTLfLocalFormula.
-public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extends PropFormulaParserBaseVisitor<F> {
+public class LocalVisitor<F extends LocalFormula> extends PropFormulaParserBaseVisitor<F> {
 
-    private Alphabet<S> alphabet;
-    private Class<S> genericSymbol;
     private Class<F> genericFormula;
 
-    public LocalVisitor(Class<S> genericSymbol, Class<F> genericFormula, Alphabet<S> alphabet) {
-        this.genericSymbol = genericSymbol;
+    public LocalVisitor(Class<F> genericFormula) {
         this.genericFormula = genericFormula;
-        this.alphabet = alphabet;
     }
 
-    public Alphabet<S> getAlphabet() {
-        return this.alphabet;
-    }
 
     @Override
     public F visitPropositionalFormula(@NotNull PropFormulaParserParser.PropositionalFormulaContext ctx) {
@@ -49,7 +41,7 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
             F right = visit(ctx.getChild(2));
 
             try {
-                return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_IMPL, genericFormula.cast(left), genericFormula.cast(right), null));
+                return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_IMPL, genericFormula.cast(left), genericFormula.cast(right), null));
             } catch (IllegalAccessException
                     | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException
@@ -80,7 +72,7 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
                     right = result;
                 }
                 try {
-                    result = genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_AND, genericFormula.cast(left), genericFormula.cast(right), null));
+                    result = genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_AND, genericFormula.cast(left), genericFormula.cast(right), null));
                 } catch (IllegalAccessException
                         | IllegalArgumentException
                         | InvocationTargetException | NoSuchMethodException
@@ -102,7 +94,7 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
         if (ctx.getChildCount() == 2) {
             F left = visit(ctx.getChild(1));
             try {
-                return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_NOT, genericFormula.cast(left), null, null));
+                return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_NOT, genericFormula.cast(left), null, null));
             } catch (IllegalAccessException
                     | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException
@@ -113,7 +105,7 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
             if (ctx.getChildCount() == 4) {
                 F left = visit(ctx.getChild(2));
                 try {
-                    return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_NOT, genericFormula.cast(left), null, null));
+                    return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_NOT, genericFormula.cast(left), null, null));
                 } catch (IllegalAccessException
                         | IllegalArgumentException
                         | InvocationTargetException | NoSuchMethodException
@@ -138,7 +130,7 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
             F right = visit(ctx.getChild(2));
 
             try {
-                return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_DOUBLEIMPL, genericFormula.cast(left), genericFormula.cast(right), null));
+                return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_DOUBLEIMPL, genericFormula.cast(left), genericFormula.cast(right), null));
             } catch (IllegalAccessException
                     | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException
@@ -169,7 +161,7 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
                     right = result;
                 }
                 try {
-                    result = genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_OR, genericFormula.cast(left), genericFormula.cast(right), null));
+                    result = genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_OR, genericFormula.cast(left), genericFormula.cast(right), null));
                 } catch (IllegalAccessException
                         | IllegalArgumentException
                         | InvocationTargetException | NoSuchMethodException
@@ -189,7 +181,7 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
     public F visitAtom(@NotNull PropFormulaParserParser.AtomContext ctx) {
         if ((ctx.getText().equals("TRUE")) || (ctx.getText().equals("True")) || (ctx.getText().equals("true"))) {
             try {
-                return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_TRUE, null, null, null));
+                return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_TRUE, null, null, null));
             } catch (IllegalAccessException
                     | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException
@@ -199,7 +191,7 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
         } else {
             if ((ctx.getText().equals("FALSE")) || (ctx.getText().equals("False")) || (ctx.getText().equals("false"))) {
                 try {
-                    return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_FALSE, null, null, null));
+                    return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_FALSE, null, null, null));
                 } catch (IllegalAccessException
                         | IllegalArgumentException
                         | InvocationTargetException | NoSuchMethodException
@@ -207,19 +199,9 @@ public class LocalVisitor<S extends Symbol<?>, F extends LocalFormula<S>> extend
                     throw new RuntimeException(e);
                 }
             } else {
-                S symbol = null;
+                Proposition prop = new Proposition(ctx.getText());
                 try {
-                    symbol = genericSymbol.getConstructor(String.class).newInstance(ctx.getText());
-                } catch (InstantiationException | IllegalAccessException
-                        | IllegalArgumentException
-                        | InvocationTargetException | NoSuchMethodException
-                        | SecurityException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                alphabet.addSymbol(symbol);
-                try {
-                    return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Symbol.class).invoke(null, LocalFormulaType.PROP_VAR, null, null, symbol));
+                    return genericFormula.cast(genericFormula.getMethod("localFormulaFactory", LocalFormulaType.class, genericFormula, genericFormula, Proposition.class).invoke(null, LocalFormulaType.PROP_VAR, null, null, prop));
                 } catch (IllegalAccessException
                         | IllegalArgumentException
                         | InvocationTargetException | NoSuchMethodException

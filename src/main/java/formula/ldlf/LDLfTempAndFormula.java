@@ -10,14 +10,13 @@ package formula.ldlf;
 
 import formula.AndFormula;
 import formula.FormulaType;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfTempAndFormula<S extends Symbol<?>> extends LDLfBinaryFormula<S> implements LDLfBoolOpTempFormula<S>, AndFormula<S> {
-    public LDLfTempAndFormula(LDLfFormula<S> left, LDLfFormula<S> right) {
+public class LDLfTempAndFormula extends LDLfBinaryFormula implements LDLfBoolOpTempFormula, AndFormula {
+    public LDLfTempAndFormula(LDLfFormula left, LDLfFormula right) {
         super(left, right);
     }
 
@@ -33,7 +32,7 @@ public class LDLfTempAndFormula<S extends Symbol<?>> extends LDLfBinaryFormula<S
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            LDLfTempAndFormula<S> other = (LDLfTempAndFormula<S>) o;
+            LDLfTempAndFormula other = (LDLfTempAndFormula) o;
             return (this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula()))
                     ||
                     (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));

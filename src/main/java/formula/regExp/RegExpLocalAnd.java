@@ -10,14 +10,13 @@ package formula.regExp;
 
 import formula.AndFormula;
 import formula.FormulaType;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpLocalAnd<S extends Symbol<?>> extends RegExpBinary<S> implements RegExpBoolOpLocal<S>, AndFormula<S> {
-    public RegExpLocalAnd(RegExp<S> left, RegExp<S> right) {
+public class RegExpLocalAnd extends RegExpBinary implements RegExpBoolOpLocal, AndFormula {
+    public RegExpLocalAnd(RegExp left, RegExp right) {
         super(left, right);
     }
 

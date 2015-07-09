@@ -10,19 +10,26 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.NotFormula;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfLocalNotFormula<S extends Symbol<?>> extends LDLfUnaryFormula<S> implements LDLfBoolOpLocalFormula<S>, NotFormula<S> {
-    public LDLfLocalNotFormula(LDLfFormula<S> nestedFormula) {
+public class LDLfLocalNotFormula extends LDLfUnaryFormula implements LDLfBoolOpLocalFormula, NotFormula {
+    public LDLfLocalNotFormula(LDLfFormula nestedFormula) {
         super(nestedFormula);
     }
 
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.LDLf_LOCAL_NOT;
+    }
+
+    @Override
+    public PropositionalFormula LDLfLocal2Prop() {
+        PropositionalFormula nested = ((LDLfLocalFormula) this.getNestedFormula()).LDLfLocal2Prop();
+        return new Negation(nested);
     }
 }

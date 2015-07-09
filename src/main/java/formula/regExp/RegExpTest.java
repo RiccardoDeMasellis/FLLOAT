@@ -10,15 +10,14 @@ package formula.regExp;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpTest<S extends Symbol<?>> extends RegExpUnary<S> implements RegExpTemp<S> {
+public class RegExpTest extends RegExpUnary implements RegExpTemp {
 
-    public RegExpTest(LDLfFormula<S> nestedFormula) {
+    public RegExpTest(LDLfFormula nestedFormula) {
         super(nestedFormula);
     }
 
@@ -28,13 +27,13 @@ public class RegExpTest<S extends Symbol<?>> extends RegExpUnary<S> implements R
     }
 
     @Override
-    public RegExp<S> nnf() {
-        return new RegExpTest<>((LDLfFormula<S>) this.getNestedFormula().nnf());
+    public RegExp nnf() {
+        return new RegExpTest((LDLfFormula) this.getNestedFormula().nnf());
     }
 
     // NOOP
     @Override
-    public RegExpTest<S> negate() {
+    public RegExpTest negate() {
         throw new RuntimeException("Method negate() should not be called on RegExpTest");
     }
 

@@ -9,15 +9,14 @@
 package formula.regExp;
 
 import formula.FormulaType;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpConcat<S extends Symbol<?>> extends RegExpBinary<S> implements RegExpTemp<S> {
+public class RegExpConcat extends RegExpBinary implements RegExpTemp {
 
-    public RegExpConcat(RegExp<S> left, RegExp<S> right) {
+    public RegExpConcat(RegExp left, RegExp right) {
         super(left, right);
     }
 
@@ -27,13 +26,13 @@ public class RegExpConcat<S extends Symbol<?>> extends RegExpBinary<S> implement
     }
 
     @Override
-    public RegExpConcat<S> nnf() {
-        return new RegExpConcat<>((RegExp<S>) this.getLeftFormula().nnf(), (RegExp<S>) this.getRightFormula().nnf());
+    public RegExpConcat nnf() {
+        return new RegExpConcat((RegExp) this.getLeftFormula().nnf(), (RegExp) this.getRightFormula().nnf());
     }
 
     // NOOP
     @Override
-    public RegExpTest<S> negate() {
+    public RegExpTest negate() {
         throw new RuntimeException("Method negate() should not be called on RegExpConcat");
     }
 

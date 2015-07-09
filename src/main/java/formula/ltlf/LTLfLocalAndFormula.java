@@ -11,15 +11,14 @@ package formula.ltlf;
 import formula.AndFormula;
 import formula.FormulaType;
 import formula.ldlf.LDLfLocalAndFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfLocalAndFormula<S extends Symbol<?>> extends LTLfBinaryFormula<S> implements LTLfBoolOpLocalFormula<S>, AndFormula<S> {
+public class LTLfLocalAndFormula extends LTLfBinaryFormula implements LTLfBoolOpLocalFormula, AndFormula {
 
-    public LTLfLocalAndFormula(LTLfFormula<S> left, LTLfFormula<S> right) {
+    public LTLfLocalAndFormula(LTLfFormula left, LTLfFormula right) {
         super(left, right);
     }
 
@@ -30,7 +29,7 @@ public class LTLfLocalAndFormula<S extends Symbol<?>> extends LTLfBinaryFormula<
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            LTLfLocalAndFormula<S> other = (LTLfLocalAndFormula<S>) o;
+            LTLfLocalAndFormula other = (LTLfLocalAndFormula) o;
             return (this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula()))
                     ||
                     (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
@@ -40,7 +39,7 @@ public class LTLfLocalAndFormula<S extends Symbol<?>> extends LTLfBinaryFormula<
 
 
     @Override
-    public LDLfLocalAndFormula<S> toLDLf() {
-        return new LDLfLocalAndFormula<>(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());
+    public LDLfLocalAndFormula toLDLf() {
+        return new LDLfLocalAndFormula(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());
     }
 }

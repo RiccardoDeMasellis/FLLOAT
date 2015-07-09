@@ -11,15 +11,16 @@ package formula;
 import formula.ldlf.*;
 import formula.ltlf.*;
 import formula.regExp.*;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface Formula<S extends Symbol<?>> extends Cloneable {
+public interface Formula extends Cloneable {
 
-    Formula<S> clone();
+    Formula clone();
 
     boolean equals(Object o);
 
@@ -27,112 +28,116 @@ public interface Formula<S extends Symbol<?>> extends Cloneable {
 
     String toString();
 
-    Formula<S> nnf();
+    Formula nnf();
 
-    Formula<S> negate();
+    Formula negate();
 
     FormulaType getFormulaType();
 
-    default Formula<S> formulaFactory(FormulaType type, Formula<S> left, Formula<S> right, S symbol) {
+    PropositionalSignature getSignature();
+
+    void getSignatureRic(PropositionalSignature sig);
+
+    default Formula formulaFactory(FormulaType type, Formula left, Formula right, Proposition prop) {
         switch (type) {
             case LTLf_WEAK_UNTIL:
-                return new LTLfWeakUntilFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfWeakUntilFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_WEAK_NEXT:
-                return new LTLfWeakNextFormula<>((LTLfFormula<S>) left);
+                return new LTLfWeakNextFormula((LTLfFormula) left);
             case LTLf_UNTIL:
-                return new LTLfUntilFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfUntilFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_TEMP_OR:
-                return new LTLfTempOrFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfTempOrFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_TEMP_NOT:
-                return new LTLfTempNotFormula<>((LTLfFormula<S>) left);
+                return new LTLfTempNotFormula((LTLfFormula) left);
             case LTLf_TEMP_IMPL:
-                return new LTLfTempImplFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfTempImplFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_TEMP_DOUBLEIMPL:
-                return new LTLfTempDoubleImplFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfTempDoubleImplFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_TEMP_AND:
-                return new LTLfTempAndFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfTempAndFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_RELEASE:
-                return new LTLfReleaseFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfReleaseFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_LOCAL_TRUE:
-                return new LTLfLocalTrueFormula<>();
+                return new LTLfLocalTrueFormula();
             case LTLf_LOCAL_OR:
-                return new LTLfLocalOrFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfLocalOrFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_LOCAL_NOT:
-                return new LTLfLocalNotFormula<>((LTLfFormula<S>) left);
+                return new LTLfLocalNotFormula((LTLfFormula) left);
             case LTLf_LOCAL_IMPL:
-                return new LTLfLocalImplFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfLocalImplFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_LOCAL_FALSE:
-                return new LTLfLocalFalseFormula<>();
+                return new LTLfLocalFalseFormula();
             case LTLf_LOCAL_DOUBLEIMPL:
-                return new LTLfLocalDoubleImplFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfLocalDoubleImplFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_LOCAL_AND:
-                return new LTLfLocalAndFormula<>((LTLfFormula<S>) left, (LTLfFormula<S>) right);
+                return new LTLfLocalAndFormula((LTLfFormula) left, (LTLfFormula) right);
             case LTLf_NEXT:
-                return new LTLfNextFormula<>((LTLfFormula<S>) left);
+                return new LTLfNextFormula((LTLfFormula) left);
             case LTLf_GLOBALLY:
-                return new LTLfGloballyFormula<>((LTLfFormula<S>) left);
+                return new LTLfGloballyFormula((LTLfFormula) left);
             case LTLf_EVENTUALLY:
-                return new LTLfEventuallyFormula<>((LTLfFormula<S>) left);
+                return new LTLfEventuallyFormula((LTLfFormula) left);
             case LTLf_LOCAL_VAR:
-                return new LTLfLocalVar<>(symbol);
+                return new LTLfLocalVar(prop);
             case LDLf_TEMP_OR:
-                return new LDLfTempOrFormula<>((LDLfFormula<S>) left, (LDLfFormula<S>) right);
+                return new LDLfTempOrFormula((LDLfFormula) left, (LDLfFormula) right);
             case LDLf_TEMP_NOT:
-                return new LDLfTempNotFormula<>((LDLfFormula<S>) left);
+                return new LDLfTempNotFormula((LDLfFormula) left);
             case LDLf_TEMP_IMPL:
-                return new LDLfTempImplFormula<>((LDLfFormula<S>) left, (LDLfFormula<S>) right);
+                return new LDLfTempImplFormula((LDLfFormula) left, (LDLfFormula) right);
             case LDLf_TEMP_DOUBLEIMPL:
-                return new LDLfTempDoubleImplFormula<>((LDLfFormula<S>) left, (LDLfFormula<S>) right);
+                return new LDLfTempDoubleImplFormula((LDLfFormula) left, (LDLfFormula) right);
             case LDLf_TEMP_AND:
-                return new LDLfTempAndFormula<>((LDLfFormula<S>) left, (LDLfFormula<S>) right);
+                return new LDLfTempAndFormula((LDLfFormula) left, (LDLfFormula) right);
             case LDLf_LOCAL_TRUE:
-                return new LDLfLocalTrueFormula<>();
+                return new LDLfLocalTrueFormula();
             case LDLf_LOCAL_OR:
-                return new LDLfLocalOrFormula<>((LDLfFormula<S>) left, (LDLfFormula<S>) right);
+                return new LDLfLocalOrFormula((LDLfFormula) left, (LDLfFormula) right);
             case LDLf_LOCAL_NOT:
-                return new LDLfLocalNotFormula<>((LDLfFormula<S>) left);
+                return new LDLfLocalNotFormula((LDLfFormula) left);
             case LDLf_LOCAL_IMPL:
-                return new LDLfLocalImplFormula<>((LDLfFormula<S>) left, (LDLfFormula<S>) right);
+                return new LDLfLocalImplFormula((LDLfFormula) left, (LDLfFormula) right);
             case LDLf_LOCAL_FALSE:
-                return new LDLfLocalFalseFormula<>();
+                return new LDLfLocalFalseFormula();
             case LDLf_LOCAL_DOUBLEIMPL:
-                return new LDLfLocalDoubleImplFormula<>((LDLfFormula<S>) left, (LDLfFormula<S>) right);
+                return new LDLfLocalDoubleImplFormula((LDLfFormula) left, (LDLfFormula) right);
             case LDLf_LOCAL_AND:
-                return new LDLfLocalAndFormula<>((LDLfFormula<S>) left, (LDLfFormula<S>) right);
+                return new LDLfLocalAndFormula((LDLfFormula) left, (LDLfFormula) right);
             case LDLf_LOCAL_VAR:
-                return new LDLfLocalVar<>(symbol);
+                return new LDLfLocalVar(prop);
             case LDLf_tt:
-                return new LDLfttFormula<>();
+                return new LDLfttFormula();
             case LDLf_ff:
-                return new LDLfffFormula<>();
+                return new LDLfffFormula();
             case LDLf_BOX:
-                return new LDLfBoxFormula<>((RegExp<S>) left, (LDLfFormula<S>) right);
+                return new LDLfBoxFormula((RegExp) left, (LDLfFormula) right);
             case LDLf_DIAMOND:
-                return new LDLfDiamondFormula<>((RegExp<S>) left, (LDLfFormula<S>) right);
+                return new LDLfDiamondFormula((RegExp) left, (LDLfFormula) right);
             case RE_TEST:
-                return new RegExpTest<>((LDLfFormula<S>) left);
+                return new RegExpTest((LDLfFormula) left);
             case RE_STAR:
-                return new RegExpStar<>((RegExp<S>) left);
+                return new RegExpStar((RegExp) left);
             case RE_LOCAL_VAR:
-                return new RegExpLocalVar<>(symbol);
+                return new RegExpLocalVar(prop);
             case RE_LOCAL_TRUE:
-                return new RegExpLocalTrue<>();
+                return new RegExpLocalTrue();
             case RE_LOCAL_OR:
-                return new RegExpLocalOr<>((RegExp<S>) left, (RegExp<S>) right);
+                return new RegExpLocalOr((RegExp) left, (RegExp) right);
             case RE_LOCAL_NOT:
-                return new RegExpLocalNot<>((RegExp<S>) left);
+                return new RegExpLocalNot((RegExp) left);
             case RE_LOCAL_IMPL:
-                return new RegExpLocalImpl<>((RegExp<S>) left, (RegExp<S>) right);
+                return new RegExpLocalImpl((RegExp) left, (RegExp) right);
             case RE_LOCAL_FALSE:
-                return new RegExpLocalFalse<>();
+                return new RegExpLocalFalse();
             case RE_LOCAL_DOUBLEIMPL:
-                return new RegExpLocalDoubleImpl<>((RegExp<S>) left, (RegExp<S>) right);
+                return new RegExpLocalDoubleImpl((RegExp) left, (RegExp) right);
             case RE_LOCAL_AND:
-                return new RegExpLocalAnd<>((RegExp<S>) left, (RegExp<S>) right);
+                return new RegExpLocalAnd((RegExp) left, (RegExp) right);
             case RE_CONCAT:
-                return new RegExpConcat<>((RegExp<S>) left, (RegExp<S>) right);
+                return new RegExpConcat((RegExp) left, (RegExp) right);
             case RE_ALTERN:
-                return new RegExpAltern<>((RegExp<S>) left, (RegExp<S>) right);
+                return new RegExpAltern((RegExp) left, (RegExp) right);
             default:
                 throw new RuntimeException();
         }

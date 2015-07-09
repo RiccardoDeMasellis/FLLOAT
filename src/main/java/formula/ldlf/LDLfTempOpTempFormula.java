@@ -9,33 +9,32 @@
 package formula.ldlf;
 
 import formula.regExp.RegExp;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 23/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public abstract class LDLfTempOpTempFormula<S extends Symbol<?>> implements LDLfTempFormula<S> {
+public abstract class LDLfTempOpTempFormula implements LDLfTempFormula {
 
-    private RegExp<S> regExp;
-    private LDLfFormula<S> goalFormula;
+    private RegExp regExp;
+    private LDLfFormula goalFormula;
 
-    public LDLfTempOpTempFormula(RegExp<S> regExp, LDLfFormula<S> goalFormula) {
+    public LDLfTempOpTempFormula(RegExp regExp, LDLfFormula goalFormula) {
         this.regExp = regExp;
         this.goalFormula = goalFormula;
     }
 
 
     @Override
-    public LDLfTempOpTempFormula<S> clone() {
-        return (LDLfTempOpTempFormula<S>) this.formulaFactory(this.getFormulaType(), regExp.clone(), goalFormula.clone(), null);
+    public LDLfTempOpTempFormula clone() {
+        return (LDLfTempOpTempFormula) this.formulaFactory(this.getFormulaType(), regExp.clone(), goalFormula.clone(), null);
     }
 
 
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            LDLfTempOpTempFormula<S> other = (LDLfTempOpTempFormula<S>) o;
+            LDLfTempOpTempFormula other = (LDLfTempOpTempFormula) o;
             return this.getRegExp().equals(other.getRegExp()) && this.getGoalFormula().equals(other.getGoalFormula());
         }
         return false;
@@ -48,11 +47,11 @@ public abstract class LDLfTempOpTempFormula<S extends Symbol<?>> implements LDLf
         return result;
     }
 
-    public RegExp<S> getRegExp() {
+    public RegExp getRegExp() {
         return regExp;
     }
 
-    public LDLfFormula<S> getGoalFormula() {
+    public LDLfFormula getGoalFormula() {
         return goalFormula;
     }
 }

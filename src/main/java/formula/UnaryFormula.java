@@ -8,15 +8,25 @@
 
 package formula;
 
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface UnaryFormula<S extends Symbol<?>> extends Formula<S> {
+public interface UnaryFormula extends Formula {
 
-    Formula<S> getNestedFormula();
+    Formula getNestedFormula();
 
     String stringOperator();
+
+    default PropositionalSignature getSignature() {
+        PropositionalSignature sig = new PropositionalSignature();
+        this.getSignatureRic(sig);
+        return sig;
+    }
+
+    default void getSignatureRic(PropositionalSignature sig) {
+        this.getNestedFormula().getSignatureRic(sig);
+    }
 }

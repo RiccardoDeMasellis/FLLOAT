@@ -11,15 +11,14 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.ImplFormula;
 import formula.ldlf.LDLfFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfTempImplFormula<S extends Symbol<?>> extends LTLfBinaryFormula<S> implements ImplFormula<S>, LTLfBoolOpTempFormula<S> {
+public class LTLfTempImplFormula extends LTLfBinaryFormula implements ImplFormula, LTLfBoolOpTempFormula {
 
-    public LTLfTempImplFormula(LTLfFormula<S> left, LTLfFormula<S> right) {
+    public LTLfTempImplFormula(LTLfFormula left, LTLfFormula right) {
         super(left, right);
     }
 
@@ -34,7 +33,7 @@ public class LTLfTempImplFormula<S extends Symbol<?>> extends LTLfBinaryFormula<
     }
 
     @Override
-    public LDLfFormula<S> toLDLf() {
-        return ((LTLfFormula<S>) this.nnf()).toLDLf();
+    public LDLfFormula toLDLf() {
+        return ((LTLfFormula) this.nnf()).toLDLf();
     }
 }

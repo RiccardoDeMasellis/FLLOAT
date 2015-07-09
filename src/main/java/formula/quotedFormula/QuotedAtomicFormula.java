@@ -8,10 +8,8 @@
 
 package formula.quotedFormula;
 
-import symbols.Symbol;
-
 /**
  * Created by Riccardo De Masellis on 08/06/15.
  */
-public abstract class QuotedAtomicFormula<S extends Symbol<?>> extends QuotedFormula<S> {
+public abstract class QuotedAtomicFormula extends QuotedFormula {
 }

@@ -9,12 +9,11 @@
 package formula.ldlf;
 
 import formula.BooleanOpFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 23/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface LDLfBoolOpFormula<S extends Symbol<?>> extends LDLfFormula<S>, BooleanOpFormula<S> {
+public interface LDLfBoolOpFormula extends LDLfFormula, BooleanOpFormula {
 
 }

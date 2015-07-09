@@ -12,16 +12,16 @@ import formula.FormulaType;
 import formula.LocalVar;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalVar;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfLocalVar<S extends Symbol<?>> extends LocalVar<S> implements LTLfLocalFormula<S> {
+public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
 
-    public LTLfLocalVar(S symbol) {
-        super(symbol);
+    public LTLfLocalVar(Proposition prop) {
+        super(prop);
     }
 
     @Override
@@ -31,17 +31,17 @@ public class LTLfLocalVar<S extends Symbol<?>> extends LocalVar<S> implements LT
 
 
     @Override
-    public LTLfFormula<S> negate() {
-        return new LTLfLocalNotFormula<>((LTLfFormula<S>) this.clone());
+    public LTLfFormula negate() {
+        return new LTLfLocalNotFormula((LTLfFormula) this.clone());
     }
 
     @Override
-    public LTLfFormula<S> nnf() {
-        return (LTLfFormula<S>) this.clone();
+    public LTLfFormula nnf() {
+        return (LTLfFormula) this.clone();
     }
 
     @Override
-    public LDLfFormula<S> toLDLf() {
-        return new LDLfLocalVar<>(this.getSymbol());
+    public LDLfFormula toLDLf() {
+        return new LDLfLocalVar(this.getProp());
     }
 }

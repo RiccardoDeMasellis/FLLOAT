@@ -11,21 +11,21 @@ package formula.ldlf;
 import formula.AtomicFormula;
 import formula.Formula;
 import formula.FormulaType;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfffFormula<S extends Symbol<?>> implements AtomicFormula<S>, LDLfTempFormula<S> {
+public class LDLfffFormula implements AtomicFormula, LDLfTempFormula {
 
     public LDLfffFormula() {
         super();
     }
 
     @Override
-    public LDLfffFormula<S> clone() {
-        return new LDLfffFormula<>();
+    public LDLfffFormula clone() {
+        return new LDLfffFormula();
     }
 
     public boolean equals(Object o) {
@@ -44,17 +44,31 @@ public class LDLfffFormula<S extends Symbol<?>> implements AtomicFormula<S>, LDL
     }
 
     @Override
-    public LDLfFormula<S> nnf() {
+    public LDLfFormula nnf() {
         return this.clone();
     }
 
     @Override
-    public Formula<S> negate() {
-        return new LDLfffFormula<>();
+    public Formula negate() {
+        return new LDLfffFormula();
     }
 
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.LDLf_ff;
     }
+
+    public PropositionalSignature getSignature() {
+        PropositionalSignature sig = new PropositionalSignature();
+        this.getSignatureRic(sig);
+        return sig;
+    }
+
+    public void getSignatureRic(PropositionalSignature sig) {
+        return;
+    }
+
+//    public QuotedFormula delta(PossibleWorld world) {
+//        return new QuotedFalseFormula();
+//    }
 }

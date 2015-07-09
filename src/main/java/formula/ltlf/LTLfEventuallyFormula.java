@@ -10,15 +10,14 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfEventuallyFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S> implements LTLfTempOpTempFormula<S> {
+public class LTLfEventuallyFormula extends LTLfUnaryFormula implements LTLfTempOpTempFormula {
 
-    public LTLfEventuallyFormula(LTLfFormula<S> nestedFormula) {
+    public LTLfEventuallyFormula(LTLfFormula nestedFormula) {
         super(nestedFormula);
     }
 
@@ -31,9 +30,9 @@ public class LTLfEventuallyFormula<S extends Symbol<?>> extends LTLfUnaryFormula
     F phi = true U phi
     */
     @Override
-    public LTLfFormula<S> nnf() {
-        LTLfFormula<S> nested = (LTLfFormula<S>) this.getNestedFormula().nnf();
-        return new LTLfUntilFormula<>(new LTLfLocalTrueFormula<>(), nested);
+    public LTLfFormula nnf() {
+        LTLfFormula nested = (LTLfFormula) this.getNestedFormula().nnf();
+        return new LTLfUntilFormula(new LTLfLocalTrueFormula(), nested);
     }
 
 
@@ -41,9 +40,9 @@ public class LTLfEventuallyFormula<S extends Symbol<?>> extends LTLfUnaryFormula
     NOT(G phi) = true U NOT(phi)
      */
     @Override
-    public LTLfFormula<S> negate() {
-        LTLfFormula<S> nested = (LTLfFormula<S>) this.getNestedFormula().negate();
-        return new LTLfUntilFormula<>(new LTLfLocalTrueFormula<>(), nested);
+    public LTLfFormula negate() {
+        LTLfFormula nested = (LTLfFormula) this.getNestedFormula().negate();
+        return new LTLfUntilFormula(new LTLfLocalTrueFormula(), nested);
     }
 
     public FormulaType getFormulaType() {
@@ -51,7 +50,7 @@ public class LTLfEventuallyFormula<S extends Symbol<?>> extends LTLfUnaryFormula
     }
 
     @Override
-    public LDLfFormula<S> toLDLf() {
+    public LDLfFormula toLDLf() {
         return this.nnf().toLDLf();
     }
 }

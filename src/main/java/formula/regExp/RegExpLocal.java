@@ -10,35 +10,38 @@ package formula.regExp;
 
 import formula.LocalFormula;
 import formula.LocalFormulaType;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface RegExpLocal<S extends Symbol<?>> extends RegExp<S>, LocalFormula<S> {
+public interface RegExpLocal extends RegExp, LocalFormula {
 
-    static <S extends Symbol<?>> RegExpLocal<S> localFormulaFactory(LocalFormulaType formulaType, RegExpLocal<S> left, RegExpLocal<S> right, S symbol) {
+    static RegExpLocal localFormulaFactory(LocalFormulaType formulaType, RegExpLocal left, RegExpLocal right, Proposition prop) {
         switch (formulaType) {
             case PROP_AND:
-                return new RegExpLocalAnd<>(left, right);
+                return new RegExpLocalAnd(left, right);
             case PROP_DOUBLEIMPL:
-                return new RegExpLocalDoubleImpl<>(left, right);
+                return new RegExpLocalDoubleImpl(left, right);
             case PROP_IMPL:
-                return new RegExpLocalImpl<>(left, right);
+                return new RegExpLocalImpl(left, right);
             case PROP_NOT:
-                return new RegExpLocalNot<>(left);
+                return new RegExpLocalNot(left);
             case PROP_OR:
-                return new RegExpLocalOr<>(left, right);
+                return new RegExpLocalOr(left, right);
             case PROP_VAR:
-                return new RegExpLocalVar<>(symbol);
+                return new RegExpLocalVar(prop);
             case PROP_TRUE:
-                return new RegExpLocalTrue<>();
+                return new RegExpLocalTrue();
             case PROP_FALSE:
-                return new RegExpLocalFalse<>();
+                return new RegExpLocalFalse();
             default:
                 throw new RuntimeException("Enum " + formulaType + " in RegExpLocal.propFormulaFactory not found.");
         }
     }
+
+    //default QuotedFormula delta(LDLfFormula goal, PossibleWorld world) {
+    //}
 
 }

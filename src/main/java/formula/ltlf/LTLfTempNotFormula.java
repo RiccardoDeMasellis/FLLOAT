@@ -11,15 +11,14 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.NotFormula;
 import formula.ldlf.LDLfFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfTempNotFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S> implements NotFormula<S>, LTLfBoolOpTempFormula<S> {
+public class LTLfTempNotFormula extends LTLfUnaryFormula implements NotFormula, LTLfBoolOpTempFormula {
 
-    public LTLfTempNotFormula(LTLfFormula<S> nestedFormula) {
+    public LTLfTempNotFormula(LTLfFormula nestedFormula) {
         super(nestedFormula);
     }
 
@@ -34,7 +33,7 @@ public class LTLfTempNotFormula<S extends Symbol<?>> extends LTLfUnaryFormula<S>
 
 
     @Override
-    public LDLfFormula<S> toLDLf() {
-        return ((LTLfFormula<S>) this.nnf()).toLDLf();
+    public LDLfFormula toLDLf() {
+        return ((LTLfFormula) this.nnf()).toLDLf();
     }
 }

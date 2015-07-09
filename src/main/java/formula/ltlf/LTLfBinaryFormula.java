@@ -9,17 +9,16 @@
 package formula.ltlf;
 
 import formula.BinaryFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 19/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public abstract class LTLfBinaryFormula<S extends Symbol<?>> implements BinaryFormula<S>, LTLfFormula<S> {
+public abstract class LTLfBinaryFormula implements BinaryFormula, LTLfFormula {
 
-    private LTLfFormula<S> left, right;
+    private LTLfFormula left, right;
 
-    public LTLfBinaryFormula(LTLfFormula<S> left, LTLfFormula<S> right) {
+    public LTLfBinaryFormula(LTLfFormula left, LTLfFormula right) {
         this.left = left;
         this.right = right;
     }
@@ -27,7 +26,7 @@ public abstract class LTLfBinaryFormula<S extends Symbol<?>> implements BinaryFo
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            LTLfBinaryFormula<S> other = (LTLfBinaryFormula<S>) o;
+            LTLfBinaryFormula other = (LTLfBinaryFormula) o;
             return this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula());
         }
         return false;
@@ -41,11 +40,11 @@ public abstract class LTLfBinaryFormula<S extends Symbol<?>> implements BinaryFo
         return result;
     }
 
-    public LTLfFormula<S> getLeftFormula() {
+    public LTLfFormula getLeftFormula() {
         return left;
     }
 
-    public LTLfFormula<S> getRightFormula() {
+    public LTLfFormula getRightFormula() {
         return right;
     }
 
@@ -54,7 +53,7 @@ public abstract class LTLfBinaryFormula<S extends Symbol<?>> implements BinaryFo
     }
 
     @Override
-    public LTLfBinaryFormula<S> clone() {
-        return (LTLfBinaryFormula<S>) this.formulaFactory(this.getFormulaType(), this.getLeftFormula().clone(), this.getRightFormula().clone(), null);
+    public LTLfBinaryFormula clone() {
+        return (LTLfBinaryFormula) this.formulaFactory(this.getFormulaType(), this.getLeftFormula().clone(), this.getRightFormula().clone(), null);
     }
 }

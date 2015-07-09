@@ -8,12 +8,10 @@
 
 package formula.ltlf;
 
-import symbols.Symbol;
-
 /**
  * Created by Riccardo De Masellis on 23/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface LTLfTempOpTempFormula<S extends Symbol<?>> extends LTLfTempFormula<S> {
+public interface LTLfTempOpTempFormula extends LTLfTempFormula {
 
 }

@@ -8,20 +8,24 @@
 
 package formula.quotedFormula;
 
-import symbols.Symbol;
+import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+
+import java.util.HashMap;
 
 /**
  * Created by Riccardo De Masellis on 08/06/15.
  */
-public class QuotedFalseFormula<S extends Symbol<?>> extends QuotedAtomicFormula<S> {
+public class QuotedFalseFormula extends QuotedAtomicFormula {
 
     public QuotedFalseFormula() {
         super();
     }
 
     @Override
-    public QuotedFormula<S> clone() {
-        return new QuotedFalseFormula<>();
+    public QuotedFormula clone() {
+        return new QuotedFalseFormula();
     }
 
     @Override
@@ -37,5 +41,10 @@ public class QuotedFalseFormula<S extends Symbol<?>> extends QuotedAtomicFormula
     @Override
     public String toString() {
         return "false";
+    }
+
+    @Override
+    public PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf) {
+        return new Contradiction();
     }
 }

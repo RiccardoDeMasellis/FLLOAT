@@ -8,14 +8,19 @@
 
 package formula.quotedFormula;
 
-import symbols.Symbol;
+import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+
+import java.util.HashMap;
 
 /**
  * Created by Riccardo De Masellis on 08/06/15.
  */
-public abstract class QuotedFormula<S extends Symbol<?>> implements Cloneable {
+public abstract class QuotedFormula implements Cloneable {
 
-    public abstract QuotedFormula<S> clone();
+    public abstract PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf);
+
+    public abstract QuotedFormula clone();
 
     public abstract boolean equals(Object o);
 

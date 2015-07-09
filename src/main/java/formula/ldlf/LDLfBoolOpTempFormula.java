@@ -10,27 +10,26 @@ package formula.ldlf;
 
 import formula.BoolOpType;
 import formula.Formula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 23/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface LDLfBoolOpTempFormula<S extends Symbol<?>> extends LDLfTempFormula<S>, LDLfBoolOpFormula<S> {
+public interface LDLfBoolOpTempFormula extends LDLfTempFormula, LDLfBoolOpFormula {
 
     @Override
-    default LDLfTempFormula<S> boolOpFormulaFactory(BoolOpType boolOp, Formula<S> left, Formula<S> right) {
+    default LDLfTempFormula boolOpFormulaFactory(BoolOpType boolOp, Formula left, Formula right) {
         switch (boolOp) {
             case AND:
-                return new LDLfTempAndFormula<>(((LDLfFormula<S>) left), ((LDLfFormula<S>) right));
+                return new LDLfTempAndFormula(((LDLfFormula) left), ((LDLfFormula) right));
             case OR:
-                return new LDLfTempOrFormula<>(((LDLfFormula<S>) left), ((LDLfFormula<S>) right));
+                return new LDLfTempOrFormula(((LDLfFormula) left), ((LDLfFormula) right));
             case IMPL:
-                return new LDLfTempImplFormula<>(((LDLfFormula<S>) left), ((LDLfFormula<S>) right));
+                return new LDLfTempImplFormula(((LDLfFormula) left), ((LDLfFormula) right));
             case DOUBLEIMPL:
-                return new LDLfTempDoubleImplFormula<>(((LDLfFormula<S>) left), ((LDLfFormula<S>) right));
+                return new LDLfTempDoubleImplFormula(((LDLfFormula) left), ((LDLfFormula) right));
             case NOT:
-                return new LDLfTempNotFormula<>(((LDLfFormula<S>) left));
+                return new LDLfTempNotFormula(((LDLfFormula) left));
             default:
                 throw new RuntimeException("Error in LDLfBoolOpTemporalFormula.boolOpFormulaFactory");
         }

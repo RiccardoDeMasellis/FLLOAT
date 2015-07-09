@@ -11,27 +11,26 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.TrueLocalFormula;
 import formula.ldlf.LDLfLocalTrueFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LTLfLocalTrueFormula<S extends Symbol<?>> extends TrueLocalFormula<S> implements LTLfLocalFormula<S> {
+public class LTLfLocalTrueFormula extends TrueLocalFormula implements LTLfLocalFormula {
 
     public LTLfLocalTrueFormula() {
         super();
     }
 
     @Override
-    public LTLfFormula<S> nnf() {
-        return new LTLfLocalTrueFormula<>();
+    public LTLfFormula nnf() {
+        return new LTLfLocalTrueFormula();
     }
 
 
     @Override
-    public LTLfFormula<S> negate() {
-        return new LTLfLocalFalseFormula<>();
+    public LTLfFormula negate() {
+        return new LTLfLocalFalseFormula();
     }
 
     public FormulaType getFormulaType() {
@@ -39,7 +38,7 @@ public class LTLfLocalTrueFormula<S extends Symbol<?>> extends TrueLocalFormula<
     }
 
     @Override
-    public LDLfLocalTrueFormula<S> toLDLf() {
-        return new LDLfLocalTrueFormula<>();
+    public LDLfLocalTrueFormula toLDLf() {
+        return new LDLfLocalTrueFormula();
     }
 }

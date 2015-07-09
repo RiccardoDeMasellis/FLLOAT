@@ -10,13 +10,14 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.TrueLocalFormula;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfLocalTrueFormula<S extends Symbol<?>> extends TrueLocalFormula<S> implements LDLfLocalFormula<S> {
+public class LDLfLocalTrueFormula extends TrueLocalFormula implements LDLfLocalFormula {
     public LDLfLocalTrueFormula() {
         super();
     }
@@ -27,13 +28,18 @@ public class LDLfLocalTrueFormula<S extends Symbol<?>> extends TrueLocalFormula<
     }
 
     @Override
-    public LDLfFormula<S> nnf() {
-        return new LDLfLocalTrueFormula<>();
+    public LDLfFormula nnf() {
+        return new LDLfLocalTrueFormula();
     }
 
 
     @Override
-    public LDLfFormula<S> negate() {
-        return new LDLfLocalFalseFormula<>();
+    public LDLfFormula negate() {
+        return new LDLfLocalFalseFormula();
+    }
+
+    @Override
+    public PropositionalFormula LDLfLocal2Prop() {
+        return new Tautology();
     }
 }

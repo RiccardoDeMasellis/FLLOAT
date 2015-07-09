@@ -10,15 +10,15 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.regExp.RegExp;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfBoxFormula<S extends Symbol<?>> extends LDLfTempOpTempFormula<S> {
+public class LDLfBoxFormula extends LDLfTempOpTempFormula {
 
-    public LDLfBoxFormula(RegExp<S> regExp, LDLfFormula<S> goalFormula) {
+    public LDLfBoxFormula(RegExp regExp, LDLfFormula goalFormula) {
         super(regExp, goalFormula);
     }
 
@@ -27,17 +27,28 @@ public class LDLfBoxFormula<S extends Symbol<?>> extends LDLfTempOpTempFormula<S
     }
 
     @Override
-    public LDLfFormula<S> nnf() {
-        return new LDLfBoxFormula<>((RegExp<S>) this.getRegExp().nnf(), (LDLfFormula<S>) this.getGoalFormula().nnf());
+    public LDLfFormula nnf() {
+        return new LDLfBoxFormula((RegExp) this.getRegExp().nnf(), (LDLfFormula) this.getGoalFormula().nnf());
     }
 
     @Override
-    public LDLfFormula<S> negate() {
-        return new LDLfDiamondFormula<>((RegExp<S>) this.getRegExp().clone(), (LDLfFormula<S>) this.getGoalFormula().negate());
+    public LDLfFormula negate() {
+        return new LDLfDiamondFormula((RegExp) this.getRegExp().clone(), (LDLfFormula) this.getGoalFormula().negate());
     }
 
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.LDLf_BOX;
+    }
+
+    public PropositionalSignature getSignature() {
+        PropositionalSignature sig = new PropositionalSignature();
+        this.getSignatureRic(sig);
+        return sig;
+    }
+
+    public void getSignatureRic(PropositionalSignature sig) {
+        this.getGoalFormula().getSignatureRic(sig);
+        this.getRegExp().getSignatureRic(sig);
     }
 }

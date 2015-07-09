@@ -9,12 +9,11 @@
 package formula.ltlf;
 
 import formula.BooleanOpFormula;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 23/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public interface LTLfBoolOpFormula<S extends Symbol<?>> extends LTLfFormula<S>, BooleanOpFormula<S> {
+public interface LTLfBoolOpFormula extends LTLfFormula, BooleanOpFormula {
 
 }

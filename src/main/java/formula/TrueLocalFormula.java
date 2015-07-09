@@ -8,13 +8,13 @@
 
 package formula;
 
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public abstract class TrueLocalFormula<S extends Symbol<?>> implements AtomicFormula<S>, LocalFormula<S> {
+public abstract class TrueLocalFormula implements AtomicFormula, LocalFormula {
 
     public boolean equals(Object o) {
         if (o == null)
@@ -32,7 +32,17 @@ public abstract class TrueLocalFormula<S extends Symbol<?>> implements AtomicFor
     }
 
     @Override
-    public Formula<S> clone() {
+    public Formula clone() {
         return this.formulaFactory(this.getFormulaType(), null, null, null);
+    }
+
+    public PropositionalSignature getSignature() {
+        PropositionalSignature sig = new PropositionalSignature();
+        this.getSignatureRic(sig);
+        return sig;
+    }
+
+    public void getSignatureRic(PropositionalSignature sig) {
+        return;
     }
 }

@@ -10,13 +10,12 @@ package formula.regExp;
 
 import formula.FalseLocalFormula;
 import formula.FormulaType;
-import symbols.Symbol;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class RegExpLocalFalse<S extends Symbol<?>> extends FalseLocalFormula<S> implements RegExpLocal<S> {
+public class RegExpLocalFalse extends FalseLocalFormula implements RegExpLocal {
 
     public RegExpLocalFalse() {
         super();
@@ -28,12 +27,12 @@ public class RegExpLocalFalse<S extends Symbol<?>> extends FalseLocalFormula<S> 
     }
 
     @Override
-    public RegExpLocalFalse<S> nnf() {
-        return (RegExpLocalFalse<S>) this.clone();
+    public RegExpLocalFalse nnf() {
+        return (RegExpLocalFalse) this.clone();
     }
 
     @Override
-    public RegExpLocalTrue<S> negate() {
-        return new RegExpLocalTrue<>();
+    public RegExpLocalTrue negate() {
+        return new RegExpLocalTrue();
     }
 }

@@ -8,20 +8,24 @@
 
 package formula.quotedFormula;
 
-import symbols.Symbol;
+import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.Tautology;
+
+import java.util.HashMap;
 
 /**
  * Created by Riccardo De Masellis on 08/06/15.
  */
-public class QuotedTrueFormula<S extends Symbol<?>> extends QuotedAtomicFormula<S> {
+public class QuotedTrueFormula extends QuotedAtomicFormula {
 
     public QuotedTrueFormula() {
         super();
     }
 
     @Override
-    public QuotedFormula<S> clone() {
-        return new QuotedTrueFormula<>();
+    public QuotedFormula clone() {
+        return new QuotedTrueFormula();
     }
 
     @Override
@@ -37,5 +41,10 @@ public class QuotedTrueFormula<S extends Symbol<?>> extends QuotedAtomicFormula<
     @Override
     public String toString() {
         return "true";
+    }
+
+    @Override
+    public PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf) {
+        return new Tautology();
     }
 }

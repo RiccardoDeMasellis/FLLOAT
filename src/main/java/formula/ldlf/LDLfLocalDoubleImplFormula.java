@@ -10,14 +10,14 @@ package formula.ldlf;
 
 import formula.DoubleImplFormula;
 import formula.FormulaType;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfLocalDoubleImplFormula<S extends Symbol<?>> extends LDLfBinaryFormula<S> implements LDLfBoolOpLocalFormula<S>, DoubleImplFormula<S> {
-    public LDLfLocalDoubleImplFormula(LDLfFormula<S> left, LDLfFormula<S> right) {
+public class LDLfLocalDoubleImplFormula extends LDLfBinaryFormula implements LDLfBoolOpLocalFormula, DoubleImplFormula {
+    public LDLfLocalDoubleImplFormula(LDLfFormula left, LDLfFormula right) {
         super(left, right);
     }
 
@@ -29,11 +29,16 @@ public class LDLfLocalDoubleImplFormula<S extends Symbol<?>> extends LDLfBinaryF
     @Override
     public boolean equals(Object o) {
         if (o != null && this.getClass().equals(o.getClass())) {
-            LDLfLocalDoubleImplFormula<S> other = (LDLfLocalDoubleImplFormula<S>) o;
+            LDLfLocalDoubleImplFormula other = (LDLfLocalDoubleImplFormula) o;
             return (this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula()))
                     ||
                     (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
         }
         return false;
+    }
+
+    @Override
+    public PropositionalFormula LDLfLocal2Prop() {
+        return ((LDLfLocalFormula) this.nnf()).LDLfLocal2Prop();
     }
 }

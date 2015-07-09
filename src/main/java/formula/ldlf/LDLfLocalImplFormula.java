@@ -10,19 +10,25 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.ImplFormula;
-import symbols.Symbol;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
-public class LDLfLocalImplFormula<S extends Symbol<?>> extends LDLfBinaryFormula<S> implements LDLfBoolOpLocalFormula<S>, ImplFormula<S> {
-    public LDLfLocalImplFormula(LDLfFormula<S> left, LDLfFormula<S> right) {
+public class LDLfLocalImplFormula extends LDLfBinaryFormula implements LDLfBoolOpLocalFormula, ImplFormula {
+    public LDLfLocalImplFormula(LDLfFormula left, LDLfFormula right) {
         super(left, right);
     }
 
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.LDLf_LOCAL_IMPL;
+    }
+
+
+    @Override
+    public PropositionalFormula LDLfLocal2Prop() {
+        return ((LDLfLocalFormula) this.nnf()).LDLfLocal2Prop();
     }
 }

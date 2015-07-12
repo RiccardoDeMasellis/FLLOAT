@@ -11,6 +11,7 @@ package formula.regExp;
 import formula.FormulaType;
 import formula.LocalVar;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -35,5 +36,10 @@ public class RegExpLocalVar extends LocalVar implements RegExpLocal {
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.RE_LOCAL_VAR;
+    }
+
+    @Override
+    public PropositionalFormula regExpLocal2Propositional() {
+        return this.getProp().clone();
     }
 }

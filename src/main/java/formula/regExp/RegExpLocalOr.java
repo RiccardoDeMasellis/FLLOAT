@@ -10,6 +10,8 @@ package formula.regExp;
 
 import formula.FormulaType;
 import formula.OrFormula;
+import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -26,4 +28,10 @@ public class RegExpLocalOr extends RegExpBinary implements RegExpBoolOpLocal, Or
         return FormulaType.RE_LOCAL_OR;
     }
 
+    @Override
+    public PropositionalFormula regExpLocal2Propositional() {
+        PropositionalFormula left = ((RegExpLocal) this.getLeftFormula()).regExpLocal2Propositional();
+        PropositionalFormula right = ((RegExpLocal) this.getRightFormula()).regExpLocal2Propositional();
+        return new Disjunction(left, right);
+    }
 }

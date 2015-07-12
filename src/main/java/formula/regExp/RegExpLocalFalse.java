@@ -10,6 +10,8 @@ package formula.regExp;
 
 import formula.FalseLocalFormula;
 import formula.FormulaType;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -34,5 +36,10 @@ public class RegExpLocalFalse extends FalseLocalFormula implements RegExpLocal {
     @Override
     public RegExpLocalTrue negate() {
         return new RegExpLocalTrue();
+    }
+
+    @Override
+    public PropositionalFormula regExpLocal2Propositional() {
+        return new Contradiction();
     }
 }

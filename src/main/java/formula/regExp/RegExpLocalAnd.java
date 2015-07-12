@@ -10,6 +10,8 @@ package formula.regExp;
 
 import formula.AndFormula;
 import formula.FormulaType;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -23,5 +25,12 @@ public class RegExpLocalAnd extends RegExpBinary implements RegExpBoolOpLocal, A
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.RE_LOCAL_AND;
+    }
+
+    @Override
+    public PropositionalFormula regExpLocal2Propositional() {
+        PropositionalFormula left = ((RegExpLocal) this.getLeftFormula()).regExpLocal2Propositional();
+        PropositionalFormula right = ((RegExpLocal) this.getRightFormula()).regExpLocal2Propositional();
+        return new Conjunction(left, right);
     }
 }

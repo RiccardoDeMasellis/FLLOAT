@@ -9,6 +9,7 @@
 package formula.quotedFormula;
 
 import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -26,6 +27,13 @@ public class QuotedAndFormula extends QuotedBinaryFormula {
     @Override
     public String toString() {
         return "(" + this.getLeftFormula() + ") AND (" + this.getRightFormula() + ")";
+    }
+
+    @Override
+    public QuotedFormula delta(PossibleWorld world) {
+        QuotedFormula left = this.getLeftFormula().delta(world);
+        QuotedFormula right = this.getRightFormula().delta(world);
+        return new QuotedAndFormula(left, right);
     }
 
     @Override

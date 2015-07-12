@@ -9,6 +9,7 @@
 package formula.quotedFormula;
 
 import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -46,5 +47,10 @@ public class QuotedFalseFormula extends QuotedAtomicFormula {
     @Override
     public PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf) {
         return new Contradiction();
+    }
+
+    @Override
+    public QuotedFormula delta(PossibleWorld world) {
+        throw new RuntimeException("Something wrong: delta method cannot be called on QuotedFalseFormula");
     }
 }

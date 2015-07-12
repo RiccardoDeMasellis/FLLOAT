@@ -9,6 +9,7 @@
 package formula.quotedFormula;
 
 import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 import java.util.HashMap;
@@ -27,4 +28,6 @@ public abstract class QuotedFormula implements Cloneable {
     public abstract String toString();
 
     public abstract int hashCode();
+
+    public abstract QuotedFormula delta(PossibleWorld world);
 }

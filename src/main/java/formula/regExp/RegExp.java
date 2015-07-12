@@ -9,6 +9,9 @@
 package formula.regExp;
 
 import formula.Formula;
+import formula.ldlf.LDLfFormula;
+import formula.quotedFormula.QuotedFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -16,5 +19,7 @@ import formula.Formula;
  */
 public interface RegExp extends Formula {
 
-    //QuotedFormula delta(LDLfFormula goal, PossibleWorld world);
+    QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorld world);
+
+    QuotedFormula deltaBox(LDLfFormula goal, PossibleWorld world);
 }

@@ -8,9 +8,18 @@
 
 package formula.regExp;
 
+import evaluations.EmptyTrace;
+import evaluations.PropositionLast;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
+import formula.ldlf.LDLfFormula;
+import formula.quotedFormula.QuotedFalseFormula;
+import formula.quotedFormula.QuotedFormula;
+import formula.quotedFormula.QuotedTrueFormula;
+import formula.quotedFormula.QuotedVar;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -41,7 +50,43 @@ public interface RegExpLocal extends RegExp, LocalFormula {
         }
     }
 
-    //default QuotedFormula delta(LDLfFormula goal, PossibleWorld world) {
-    //}
+    PropositionalFormula regExpLocal2Propositional();
+
+
+    default QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorld world) {
+        if (world instanceof EmptyTrace)
+            return new QuotedFalseFormula();
+
+        PropositionLast last = new PropositionLast();
+        PropositionalFormula pf = this.regExpLocal2Propositional();
+
+        if (world.satisfies(pf)) {
+            if (world.contains(last)) {
+                QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
+                return quoted.delta(new EmptyTrace());
+            } else
+                return new QuotedVar((LDLfFormula) goal.clone());
+        } else { // !world.satisfies(pf)
+            return new QuotedFalseFormula();
+        }
+    }
+
+    default QuotedFormula deltaBox(LDLfFormula goal, PossibleWorld world) {
+        if (world instanceof EmptyTrace)
+            return new QuotedTrueFormula();
+
+        PropositionLast last = new PropositionLast();
+        PropositionalFormula pf = this.regExpLocal2Propositional();
+
+        if (world.satisfies(pf)) {
+            if (world.contains(last)) {
+                QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
+                return quoted.delta(new EmptyTrace());
+            } else
+                return new QuotedVar((LDLfFormula) goal.clone());
+        } else { // !world.satisfies(pf)
+            return new QuotedTrueFormula();
+        }
+    }
 
 }

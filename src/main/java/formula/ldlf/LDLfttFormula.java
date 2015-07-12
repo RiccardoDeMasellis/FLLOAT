@@ -11,6 +11,9 @@ package formula.ldlf;
 import formula.AtomicFormula;
 import formula.Formula;
 import formula.FormulaType;
+import formula.quotedFormula.QuotedFormula;
+import formula.quotedFormula.QuotedTrueFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
@@ -68,8 +71,8 @@ public class LDLfttFormula implements AtomicFormula, LDLfTempFormula {
         return;
     }
 
-
-//    public QuotedFormula delta(PossibleWorld world) {
-//        return new QuotedTrueFormula();
-//    }
+    @Override
+    public QuotedFormula delta(PossibleWorld world) {
+        return new QuotedTrueFormula();
+    }
 }

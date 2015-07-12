@@ -10,6 +10,8 @@ package formula.regExp;
 
 import formula.FormulaType;
 import formula.NotFormula;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -24,5 +26,11 @@ public class RegExpLocalNot extends RegExpUnary implements RegExpBoolOpLocal, No
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.RE_LOCAL_NOT;
+    }
+
+    @Override
+    public PropositionalFormula regExpLocal2Propositional() {
+        PropositionalFormula nested = ((RegExpLocal) this.getNestedFormula()).regExpLocal2Propositional();
+        return new Negation(nested);
     }
 }

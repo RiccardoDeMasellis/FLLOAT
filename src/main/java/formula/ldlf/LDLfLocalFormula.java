@@ -8,8 +8,13 @@
 
 package formula.ldlf;
 
+import evaluations.EmptyTrace;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
+import formula.quotedFormula.QuotedFalseFormula;
+import formula.quotedFormula.QuotedFormula;
+import formula.quotedFormula.QuotedTrueFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -43,4 +48,15 @@ public interface LDLfLocalFormula extends LDLfFormula, LocalFormula {
     }
 
     PropositionalFormula LDLfLocal2Prop();
+
+    default QuotedFormula delta(PossibleWorld world) {
+        if (world instanceof EmptyTrace)
+            return new QuotedFalseFormula();
+
+        PropositionalFormula pf = this.LDLfLocal2Prop();
+        if (world.satisfies(pf))
+            return new QuotedTrueFormula();
+        else
+            return new QuotedFalseFormula();
+    }
 }

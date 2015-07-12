@@ -9,6 +9,7 @@
 package formula.quotedFormula;
 
 import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -37,7 +38,6 @@ public class QuotedVar extends QuotedAtomicFormula {
         return false;
     }
 
-
     @Override
     public String toString() {
         return "''" + this.getUnquotedFormula().toString() + "''";
@@ -64,5 +64,10 @@ public class QuotedVar extends QuotedAtomicFormula {
             String2LDLf.put(prop, this.getUnquotedFormula());
         }
         return new Proposition(prop);
+    }
+
+    @Override
+    public QuotedFormula delta(PossibleWorld world) {
+        return this.getUnquotedFormula().delta(world);
     }
 }

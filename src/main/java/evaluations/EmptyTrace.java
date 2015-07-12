@@ -6,18 +6,19 @@
  * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
  */
 
-package formula.ldlf;
+package evaluations;
 
-import formula.Formula;
-import formula.quotedFormula.QuotedFormula;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
- * Created by Riccardo De Masellis on 15/05/15.
- * For any issue please write to r.demasellis@trentorise.eu.
+ * Created by Riccardo De Masellis on 09/07/15.
  */
-public interface LDLfFormula extends Formula {
+public class EmptyTrace extends PossibleWorld {
 
-    QuotedFormula delta(PossibleWorld world);
-
+    public boolean equals(Object other) {
+        if (other == null)
+            return false;
+        else
+            return this.getClass().equals(other.getClass());
+    }
 }

@@ -9,6 +9,7 @@
 package formula.quotedFormula;
 
 import formula.ldlf.LDLfFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -29,6 +30,11 @@ public class QuotedOrFormula extends QuotedBinaryFormula {
     }
 
     @Override
+    public QuotedFormula delta(PossibleWorld world) {
+        throw new RuntimeException("Something wrong: delta method cannot be called on QuotedOrFormula");
+    }
+
+    @Override
     public QuotedOrFormula clone() {
         return new QuotedOrFormula(this.getLeftFormula().clone(), this.getRightFormula().clone());
     }
@@ -39,4 +45,6 @@ public class QuotedOrFormula extends QuotedBinaryFormula {
         PropositionalFormula right = this.getRightFormula().quoted2Prop(LDLf2String, String2LDLf);
         return new Disjunction(left, right);
     }
+
+
 }

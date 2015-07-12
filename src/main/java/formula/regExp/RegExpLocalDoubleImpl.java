@@ -10,6 +10,7 @@ package formula.regExp;
 
 import formula.DoubleImplFormula;
 import formula.FormulaType;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -23,5 +24,10 @@ public class RegExpLocalDoubleImpl extends RegExpBinary implements RegExpBoolOpL
     @Override
     public FormulaType getFormulaType() {
         return FormulaType.RE_LOCAL_DOUBLEIMPL;
+    }
+
+    @Override
+    public PropositionalFormula regExpLocal2Propositional() {
+        return ((RegExpLocal) this.nnf()).regExpLocal2Propositional();
     }
 }

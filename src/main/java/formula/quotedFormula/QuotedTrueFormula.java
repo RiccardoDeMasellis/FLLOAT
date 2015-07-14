@@ -8,8 +8,8 @@
 
 package formula.quotedFormula;
 
-import formula.ldlf.LDLfFormula;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
@@ -45,7 +45,7 @@ public class QuotedTrueFormula extends QuotedAtomicFormula {
     }
 
     @Override
-    public PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf) {
+    public PropositionalFormula quoted2Prop(HashMap<QuotedVar, Proposition> quotedVar2Prop, HashMap<Proposition, QuotedVar> prop2QuotedVar) {
         return new Tautology();
     }
 

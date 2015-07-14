@@ -15,9 +15,9 @@
       <excludeFolder url="file://$MODULE_DIR$/out" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/java/alternating" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/java/formula-old" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/old-utils" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/java/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/java/useless" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/utils" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

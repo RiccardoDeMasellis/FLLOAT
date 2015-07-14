@@ -8,9 +8,9 @@
 
 package formula.quotedFormula;
 
-import formula.ldlf.LDLfFormula;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 import java.util.HashMap;
@@ -40,9 +40,9 @@ public class QuotedOrFormula extends QuotedBinaryFormula {
     }
 
     @Override
-    public PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf) {
-        PropositionalFormula left = this.getLeftFormula().quoted2Prop(LDLf2String, String2LDLf);
-        PropositionalFormula right = this.getRightFormula().quoted2Prop(LDLf2String, String2LDLf);
+    public PropositionalFormula quoted2Prop(HashMap<QuotedVar, Proposition> quotedVar2Prop, HashMap<Proposition, QuotedVar> prop2QuotedVar) {
+        PropositionalFormula left = this.getLeftFormula().quoted2Prop(quotedVar2Prop, prop2QuotedVar);
+        PropositionalFormula right = this.getRightFormula().quoted2Prop(quotedVar2Prop, prop2QuotedVar);
         return new Disjunction(left, right);
     }
 

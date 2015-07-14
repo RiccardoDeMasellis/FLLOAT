@@ -19,6 +19,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import visitors.LDLfVisitors.LDLfVisitor;
 
@@ -30,6 +31,7 @@ import java.util.Set;
  */
 public class DeltaFunctionTest {
 
+    @Ignore
     @Test
     public void deltaAtomicTest() {
         LDLfttFormula tt = new LDLfttFormula();
@@ -84,6 +86,7 @@ public class DeltaFunctionTest {
         Assert.assertEquals(expected, result);
     }
 
+    @Ignore
     @Test
     public void deltaQuotedAndTest() {
         String input = "( !(a && b) && !( a || b ) ) || ((!d) && ciao)";
@@ -160,6 +163,10 @@ public class DeltaFunctionTest {
         System.out.println("Expected: " + expected);
         Assert.assertEquals(expected, result);
 
+        //Testing the models of the formula:
+        Set<Set<QuotedVar>> QuotedModels = result.getMinimalModels();
+        System.out.println(QuotedModels);
+
         // Try with model Pi={a, b}
         world = new PossibleWorld();
         world.add(new Proposition("a"));
@@ -175,6 +182,10 @@ public class DeltaFunctionTest {
         System.out.println("Result: " + result);
         System.out.println("Expected: " + expected);
         Assert.assertEquals(expected, result);
+
+        //Testing the models of the formula:
+        QuotedModels = result.getMinimalModels();
+        System.out.println(QuotedModels);
 
         /////////////////////////////////////////////
 

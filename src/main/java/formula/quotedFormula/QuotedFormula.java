@@ -8,18 +8,19 @@
 
 package formula.quotedFormula;
 
-import formula.ldlf.LDLfFormula;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 08/06/15.
  */
 public abstract class QuotedFormula implements Cloneable {
 
-    public abstract PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf);
+    public abstract PropositionalFormula quoted2Prop(HashMap<QuotedVar, Proposition> quotedVar2Prop, HashMap<Proposition, QuotedVar> prop2QuotedVar);
 
     public abstract QuotedFormula clone();
 
@@ -30,4 +31,12 @@ public abstract class QuotedFormula implements Cloneable {
     public abstract int hashCode();
 
     public abstract QuotedFormula delta(PossibleWorld world);
+
+    public Set<Set<QuotedVar>> getMinimalModels() {
+        HashMap<QuotedVar, Proposition> quotedVar2Prop = new HashMap<>();
+        HashMap<Proposition, QuotedVar> prop2QuotedVar = new HashMap<>();
+        PropositionalFormula pf = this.quoted2Prop(quotedVar2Prop, prop2QuotedVar);
+        Set<PossibleWorld> models = pf.getModels();
+        return utils.FormulaUtils.propModelsToMinModels(models, prop2QuotedVar);
+    }
 }

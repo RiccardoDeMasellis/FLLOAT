@@ -54,14 +54,14 @@ public class QuotedVar extends QuotedAtomicFormula {
     }
 
     @Override
-    public PropositionalFormula quoted2Prop(HashMap<LDLfFormula, String> LDLf2String, HashMap<String, LDLfFormula> String2LDLf) {
-        String prop;
-        if (LDLf2String.containsKey(this.getUnquotedFormula()))
-            prop = LDLf2String.get(this.getUnquotedFormula());
+    public PropositionalFormula quoted2Prop(HashMap<QuotedVar, Proposition> quotedVar2Prop, HashMap<Proposition, QuotedVar> prop2QuotedVar) {
+        Proposition prop;
+        if (quotedVar2Prop.containsKey(this))
+            prop = quotedVar2Prop.get(this);
         else {
-            prop = Integer.toString(LDLf2String.size());
-            LDLf2String.put(this.getUnquotedFormula(), prop);
-            String2LDLf.put(prop, this.getUnquotedFormula());
+            prop = new Proposition(Integer.toString(quotedVar2Prop.size()));
+            quotedVar2Prop.put(this, prop);
+            prop2QuotedVar.put(prop, this);
         }
         return new Proposition(prop);
     }

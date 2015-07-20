@@ -13,11 +13,12 @@
       <excludeFolder url="file://$MODULE_DIR$/antlr4-generated/formulaParser" />
       <excludeFolder url="file://$MODULE_DIR$/antlr4-generated/fromStringToCharParser" />
       <excludeFolder url="file://$MODULE_DIR$/out" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/alternating" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/formula-old" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/old-utils" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/symbols" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/useless" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/old" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/old/alternating" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/old/formula-old" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/old/old-utils" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/old/symbols" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/old/useless" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -45,5 +46,6 @@
     <orderEntry type="library" name="Maven: org.antlr:ST4:4.0.8" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.11" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="module" module-name="jautomata-core" />
   </component>
 </module>

@@ -31,11 +31,12 @@ public class QuotedVar extends QuotedAtomicFormula {
     }
 
     public boolean equals(Object o) {
-        if (this.getClass().equals(o.getClass())) {
+        if (o == null || !this.getClass().equals(o.getClass()))
+            return false;
+        else {
             QuotedVar other = (QuotedVar) o;
             return this.getUnquotedFormula().equals(other.getUnquotedFormula());
         }
-        return false;
     }
 
     @Override

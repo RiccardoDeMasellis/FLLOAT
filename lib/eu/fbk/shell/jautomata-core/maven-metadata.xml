@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>eu.fbk.shell</groupId>
+  <artifactId>jautomata-core</artifactId>
+  <versioning>
+    <release>05.2015-snapshot</release>
+    <versions>
+      <version>05.2015-snapshot</version>
+    </versions>
+    <lastUpdated>20150721094906</lastUpdated>
+  </versioning>
+</metadata>

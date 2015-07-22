@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eu.fbk.shell</groupId>
+  <artifactId>jautomata</artifactId>
+  <packaging>pom</packaging>
+  <version>05.2015-snapshot</version>
+  <name>JAutomata Library</name>
+  <url>http://github.com/RiccardoDeMasellis/jautomata</url>
+  <description>
+    JAuto is a library for manipulating rational languages and various kind of automata.
+  </description>
+
+  <inceptionYear>2015</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <modules>
+    <module>jautomata-core</module>
+    <module>jautomata-graph</module>
+    <module>jautomata-ext</module>
+    <module>jautomata-io</module>
+  </modules>
+
+  <developers>
+
+    <developer>
+      <name>Arnaud Bailly</name>
+      <id>bailly</id>
+      <email>bailly AT lifl POINT fr</email>
+      <organization>LIFL/Norsys</organization>
+      <roles>
+        <role>Developper</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <name>Yves Roos</name>
+      <id>yroos</id>
+      <email/>
+      <organization>LIFL</organization>
+      <roles>
+        <role>Original developper</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+
+
+    <plugins>
+
+      <!-- build 1.5 binaries -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
+          <compilerArgument>-Xlint:all</compilerArgument>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>1.7.2</version>
+        <configuration>
+          <locales>en</locales>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>surefire-report-maven-plugin</artifactId>
+        <version>2.18.1</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jxr-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>changes-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+
+</project>

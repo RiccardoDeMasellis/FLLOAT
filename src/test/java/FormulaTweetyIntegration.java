@@ -7,8 +7,8 @@
  */
 
 import formula.ldlf.LDLfLocalFormula;
-import generatedParsers.LDLfFormulaParserLexer;
-import generatedParsers.LDLfFormulaParserParser;
+import antlr4_generated.LDLfFormulaParserLexer;
+import antlr4_generated.LDLfFormulaParserParser;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;

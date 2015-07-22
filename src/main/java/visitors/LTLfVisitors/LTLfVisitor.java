@@ -8,11 +8,11 @@
 
 package visitors.LTLfVisitors;
 
+import antlr4_generated.LTLfFormulaParserBaseVisitor;
+import antlr4_generated.LTLfFormulaParserParser;
+import antlr4_generated.PropFormulaParserLexer;
+import antlr4_generated.PropFormulaParserParser;
 import formula.ltlf.*;
-import generatedParsers.LTLfFormulaParserBaseVisitor;
-import generatedParsers.LTLfFormulaParserParser;
-import generatedParsers.PropFormulaParserLexer;
-import generatedParsers.PropFormulaParserParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.NotNull;

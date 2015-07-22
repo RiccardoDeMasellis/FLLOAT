@@ -14,10 +14,7 @@ import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
-import formula.quotedFormula.QuotedAndFormula;
-import formula.quotedFormula.QuotedFormula;
-import formula.quotedFormula.QuotedOrFormula;
-import formula.quotedFormula.QuotedVar;
+import formula.quotedFormula.*;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**

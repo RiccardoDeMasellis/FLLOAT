@@ -10,6 +10,7 @@ package utils;
 
 import automaton.QuotedFormulaStateFactory;
 import automaton.QuotedFormulaStateFactory.QuotedFormulaState;
+import evaluations.EmptyTrace;
 import evaluations.PropositionLast;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
@@ -53,9 +54,7 @@ public class AutomatonUtils {
         Set<QuotedVar> initialStateFormulas = new HashSet<>();
         initialStateFormulas.add(new QuotedVar(initialFormula));
         /*
-        Creation of the initial state. Notice that method automaton.addState(true, false) calls the
-        QuotedFormulaStateFactory for state creation. But it takes two parameters only, so I then have
-        to add explicitly the set of formulas belonging to it.
+        Creation of the initial state.
          */
         QuotedFormulaState initialState = (QuotedFormulaState) stateFactory.create(true, false, initialStateFormulas);
         // Add the initial state to the set of state to be analyzed
@@ -66,12 +65,17 @@ public class AutomatonUtils {
         which contains the empty set of quoted formulas (empty conjunction stands for true).
         */
         QuotedFormulaState finalState = (QuotedFormulaState) stateFactory.create(false, true, new HashSet<>());
-
         /*
         All transitions loop in the final state. Hence I get all possible models for the signature
         and then add a transition for each one of them.
          */
         Set<PossibleWorld> allModels = new Tautology().getModels(ps);
+
+        /*
+        Add the emptyTrace to the set of possible models!
+         */
+        allModels.add(new EmptyTrace());
+
         for (PossibleWorld w : allModels) {
             Transition<PossibleWorld> t = new Transition(finalState, w, finalState);
             try {
@@ -100,6 +104,7 @@ public class AutomatonUtils {
                         destinationState = (QuotedFormulaState) stateFactory.create(false, false, newStateFormulas);
                         toAnalyze.addLast(destinationState);
                     }
+
                     // Add the transition (currentState, world, destinationState)
                     Transition<PossibleWorld> t = new Transition<>(currentState, world, destinationState);
                     try {

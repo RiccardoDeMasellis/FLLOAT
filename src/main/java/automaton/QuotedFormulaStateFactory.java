@@ -7,8 +7,9 @@ import rationals.Automaton;
 import rationals.State;
 import rationals.StateFactory;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This class is used by Automaton objects to create new states on A user can
@@ -258,7 +259,8 @@ public class QuotedFormulaStateFactory implements StateFactory, Cloneable {
         }
 
         public String toString() {
-            return formulaSet == null ? Integer.toString(i) : formulaSet.toString();
+            //return formulaSet == null ? Integer.toString(i) : formulaSet.toString();
+            return Integer.toString(i);
         }
 
         public boolean equals(Object o) {
@@ -276,239 +278,239 @@ public class QuotedFormulaStateFactory implements StateFactory, Cloneable {
     }
 
 
-    class QuotedFormulaStateSet implements Set {
-
-        int modcount = 0;
-        int mods = 0;
-        int bit = -1;
-        BitSet bits = new BitSet();
-        Iterator it = new Iterator() {
-
-            public void remove() {
-                if (bit > 0)
-                    bits.clear(bit);
-            }
-
-            public boolean hasNext() {
-                return bits.nextSetBit(bit) > -1;
-            }
-
-            public Object next() {
-                bit = bits.nextSetBit(bit);
-                if (bit == -1)
-                    throw new NoSuchElementException();
-                QuotedFormulaState ds = new QuotedFormulaState(bit, false, false);
-                ds.initial = automaton.initials().contains(ds);
-                ds.terminal = automaton.terminals().contains(ds);
-                mods++;
-                modcount++;
-                if (mods != modcount)
-                    throw new ConcurrentModificationException();
-        /* advance iterator */
-                bit++;
-                return ds;
-            }
-        };
-
-        private QuotedFormulaStateFactory df;
-
-        /**
-         * @param set
-         */
-        public QuotedFormulaStateSet(QuotedFormulaStateSet set, QuotedFormulaStateFactory df) {
-            this.bits = (BitSet) set.bits.clone();
-            this.df = df;
-        }
-
-        /**
-         *
-         */
-        public QuotedFormulaStateSet(QuotedFormulaStateFactory df) {
-            this.df = df;
-        }
-
-        public boolean equals(Object obj) {
-            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) obj;
-            return (dss == null) ? false : (dss.bits.equals(bits) && dss.df == df);
-        }
-
-        public int hashCode() {
-            return bits.hashCode();
-        }
-
-        public String toString() {
-            StringBuffer sb = new StringBuffer();
-            sb.append('[');
-            String b = bits.toString();
-            sb.append(b.substring(1, b.length() - 1));
-            sb.append(']');
-            return sb.toString();
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#size()
-         */
-        public int size() {
-            return bits.cardinality();
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#clear()
-         */
-        public void clear() {
-            modcount++;
-            bits.clear();
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#isEmpty()
-         */
-        public boolean isEmpty() {
-            return bits.isEmpty();
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#toArray()
-         */
-        public Object[] toArray() {
-            Object[] ret = new Object[size()];
-            Iterator it = iterator();
-            int i = 0;
-            while (it.hasNext()) {
-                ret[i++] = it.next();
-            }
-            return ret;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#add(java.lang.Object)
-         */
-        public boolean add(Object o) {
-            QuotedFormulaState ds = (QuotedFormulaState) o;
-            if (bits.get(ds.i))
-                return false;
-            bits.set(ds.i);
-            modcount++;
-            return true;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#contains(java.lang.Object)
-         */
-        public boolean contains(Object o) {
-            QuotedFormulaState ds = (QuotedFormulaState) o;
-            return bits.get(ds.i);
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#remove(java.lang.Object)
-         */
-        public boolean remove(Object o) {
-            QuotedFormulaState ds = (QuotedFormulaState) o;
-            if (!bits.get(ds.i))
-                return false;
-            bits.clear(ds.i);
-            modcount++;
-            return true;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#addAll(java.util.Collection)
-         */
-        public boolean addAll(Collection c) {
-            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) c;
-            bits.or(dss.bits);
-            modcount++;
-            return true;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#containsAll(java.util.Collection)
-         */
-        public boolean containsAll(Collection c) {
-            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) c;
-            BitSet bs = new BitSet();
-            bs.or(bits);
-            bs.and(dss.bits);
-            modcount++;
-            return bs.equals(dss.bits);
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#removeAll(java.util.Collection)
-         */
-        public boolean removeAll(Collection c) {
-            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) c;
-            bits.andNot(dss.bits);
-            modcount++;
-            return true;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#retainAll(java.util.Collection)
-         */
-        public boolean retainAll(Collection c) {
-            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) c;
-            bits.and(dss.bits);
-            modcount++;
-            return true;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#iterator()
-         */
-        public Iterator iterator() {
-      /* reset iterator */
-            bit = modcount = mods = 0;
-            return it;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Set#toArray(java.lang.Object[])
-         */
-        public Object[] toArray(Object[] a) {
-            Object[] ret;
-            if (a.length == size())
-                ret = a;
-            else { /* create array dynamically */
-                ret = (Object[]) Array.newInstance(a.getClass().getComponentType(),
-                        size());
-            }
-            Iterator it = iterator();
-            int i = 0;
-            while (it.hasNext()) {
-                QuotedFormulaState ds = (QuotedFormulaState) it.next();
-                ret[ds.i] = ds;
-            }
-            return ret;
-        }
-
-    }
+//    class QuotedFormulaStateSet implements Set {
+//
+//        int modcount = 0;
+//        int mods = 0;
+//        int bit = -1;
+//        BitSet bits = new BitSet();
+//        Iterator it = new Iterator() {
+//
+//            public void remove() {
+//                if (bit > 0)
+//                    bits.clear(bit);
+//            }
+//
+//            public boolean hasNext() {
+//                return bits.nextSetBit(bit) > -1;
+//            }
+//
+//            public Object next() {
+//                bit = bits.nextSetBit(bit);
+//                if (bit == -1)
+//                    throw new NoSuchElementException();
+//                QuotedFormulaState ds = new QuotedFormulaState(bit, false, false);
+//                ds.initial = automaton.initials().contains(ds);
+//                ds.terminal = automaton.terminals().contains(ds);
+//                mods++;
+//                modcount++;
+//                if (mods != modcount)
+//                    throw new ConcurrentModificationException();
+//        /* advance iterator */
+//                bit++;
+//                return ds;
+//            }
+//        };
+//
+//        private QuotedFormulaStateFactory df;
+//
+//        /**
+//         * @param set
+//         */
+//        public QuotedFormulaStateSet(QuotedFormulaStateSet set, QuotedFormulaStateFactory df) {
+//            this.bits = (BitSet) set.bits.clone();
+//            this.df = df;
+//        }
+//
+//        /**
+//         *
+//         */
+//        public QuotedFormulaStateSet(QuotedFormulaStateFactory df) {
+//            this.df = df;
+//        }
+//
+//        public boolean equals(Object obj) {
+//            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) obj;
+//            return (dss == null) ? false : (dss.bits.equals(bits) && dss.df == df);
+//        }
+//
+//        public int hashCode() {
+//            return bits.hashCode();
+//        }
+//
+//        public String toString() {
+//            StringBuffer sb = new StringBuffer();
+//            sb.append('[');
+//            String b = bits.toString();
+//            sb.append(b.substring(1, b.length() - 1));
+//            sb.append(']');
+//            return sb.toString();
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#size()
+//         */
+//        public int size() {
+//            return bits.cardinality();
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#clear()
+//         */
+//        public void clear() {
+//            modcount++;
+//            bits.clear();
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#isEmpty()
+//         */
+//        public boolean isEmpty() {
+//            return bits.isEmpty();
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#toArray()
+//         */
+//        public Object[] toArray() {
+//            Object[] ret = new Object[size()];
+//            Iterator it = iterator();
+//            int i = 0;
+//            while (it.hasNext()) {
+//                ret[i++] = it.next();
+//            }
+//            return ret;
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#add(java.lang.Object)
+//         */
+//        public boolean add(Object o) {
+//            QuotedFormulaState ds = (QuotedFormulaState) o;
+//            if (bits.get(ds.i))
+//                return false;
+//            bits.set(ds.i);
+//            modcount++;
+//            return true;
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#contains(java.lang.Object)
+//         */
+//        public boolean contains(Object o) {
+//            QuotedFormulaState ds = (QuotedFormulaState) o;
+//            return bits.get(ds.i);
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#remove(java.lang.Object)
+//         */
+//        public boolean remove(Object o) {
+//            QuotedFormulaState ds = (QuotedFormulaState) o;
+//            if (!bits.get(ds.i))
+//                return false;
+//            bits.clear(ds.i);
+//            modcount++;
+//            return true;
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#addAll(java.util.Collection)
+//         */
+//        public boolean addAll(Collection c) {
+//            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) c;
+//            bits.or(dss.bits);
+//            modcount++;
+//            return true;
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#containsAll(java.util.Collection)
+//         */
+//        public boolean containsAll(Collection c) {
+//            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) c;
+//            BitSet bs = new BitSet();
+//            bs.or(bits);
+//            bs.and(dss.bits);
+//            modcount++;
+//            return bs.equals(dss.bits);
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#removeAll(java.util.Collection)
+//         */
+//        public boolean removeAll(Collection c) {
+//            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) c;
+//            bits.andNot(dss.bits);
+//            modcount++;
+//            return true;
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#retainAll(java.util.Collection)
+//         */
+//        public boolean retainAll(Collection c) {
+//            QuotedFormulaStateSet dss = (QuotedFormulaStateSet) c;
+//            bits.and(dss.bits);
+//            modcount++;
+//            return true;
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#iterator()
+//         */
+//        public Iterator iterator() {
+//      /* reset iterator */
+//            bit = modcount = mods = 0;
+//            return it;
+//        }
+//
+//        /*
+//         * (non-Javadoc)
+//         *
+//         * @see java.util.Set#toArray(java.lang.Object[])
+//         */
+//        public Object[] toArray(Object[] a) {
+//            Object[] ret;
+//            if (a.length == size())
+//                ret = a;
+//            else { /* create array dynamically */
+//                ret = (Object[]) Array.newInstance(a.getClass().getComponentType(),
+//                        size());
+//            }
+//            Iterator it = iterator();
+//            int i = 0;
+//            while (it.hasNext()) {
+//                QuotedFormulaState ds = (QuotedFormulaState) it.next();
+//                ret[ds.i] = ds;
+//            }
+//            return ret;
+//        }
+//
+//    }
 
 }

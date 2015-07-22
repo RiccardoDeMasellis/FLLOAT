@@ -21,4 +21,8 @@ public class EmptyTrace extends PossibleWorld {
         else
             return this.getClass().equals(other.getClass());
     }
+
+    public String toString() {
+        return "eps";
+    }
 }

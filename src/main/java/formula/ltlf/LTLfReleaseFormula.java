@@ -50,6 +50,7 @@ public class LTLfReleaseFormula extends LTLfBinaryFormula implements LTLfTempOpT
     }
 
 
+    // phi R psi = [( (?(!phi)) ; true)*] psi
     @Override
     public LDLfBoxFormula toLDLf() {
         RegExpTest test = new RegExpTest((LDLfFormula) this.getLeftFormula().toLDLf().negate());

@@ -9,8 +9,8 @@
 import evaluations.PropositionLast;
 import formula.ldlf.*;
 import formula.quotedFormula.*;
-import generatedParsers.LDLfFormulaParserLexer;
-import generatedParsers.LDLfFormulaParserParser;
+import antlr4_generated.LDLfFormulaParserLexer;
+import antlr4_generated.LDLfFormulaParserParser;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -23,6 +23,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import visitors.LDLfVisitors.LDLfVisitor;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -134,6 +135,7 @@ public class DeltaFunctionTest {
         Assert.assertEquals(expected, result);
     }
 
+    @Ignore
     @Test
     public void deltaTestGeneric() {
         String input = "<( (a)? ; true )*>b";
@@ -237,5 +239,70 @@ public class DeltaFunctionTest {
         System.out.println("Expected: " + expected);
         Assert.assertEquals(expected, result);
 
+        /////////////////////////////////////////////////
+
+        input = "[true*](<((a?);(true))*>b)";
+        lexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
+        parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
+        tree = parser.expression();
+        visitor = new LDLfVisitor();
+        formula = visitor.visit(tree);
+
+        quoted = new QuotedVar(formula);
+
+        // Try with model Pi={a, b, last}
+        world = new PossibleWorld();
+        world.add(new Proposition("a"));
+        world.add(new Proposition("b"));
+        world.add(new PropositionLast());
+
+        result = quoted.delta(world);
+
+        innerAnd = new QuotedAndFormula(new QuotedTrueFormula(), new QuotedFalseFormula());
+        QuotedFormula or = new QuotedOrFormula(new QuotedTrueFormula(), innerAnd);
+        expected = new QuotedAndFormula(or, new QuotedFalseFormula());
+
+        System.out.println("Result: " + result);
+        System.out.println("Expected: " + expected);
+        Assert.assertEquals(expected, result);
     }
+
+
+
+    @Test
+    public void deltaMinimalModelsTest() {
+        String input = "[true*](<((a?);(true))*>b)";
+        LDLfFormulaParserLexer lexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
+        LDLfFormulaParserParser parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
+        ParseTree tree = parser.expression();
+        LDLfVisitor visitor = new LDLfVisitor();
+        LDLfFormula formula = visitor.visit(tree);
+
+        QuotedFormula quoted = new QuotedVar(formula);
+
+        // Try with model Pi={a, b, last}
+        PossibleWorld world= new PossibleWorld();
+        world.add(new Proposition("a"));
+        world.add(new Proposition("b"));
+        world.add(new PropositionLast());
+
+        QuotedFormula result = quoted.delta(world);
+
+        QuotedFormula innerAnd = new QuotedAndFormula(new QuotedTrueFormula(), new QuotedFalseFormula());
+        QuotedFormula or = new QuotedOrFormula(new QuotedTrueFormula(), innerAnd);
+        QuotedFormula expected = new QuotedAndFormula(or, new QuotedFalseFormula());
+
+        System.out.println("Result: " + result);
+        System.out.println("Expected: " + expected);
+        Assert.assertEquals(expected, result);
+
+        HashMap<QuotedVar, Proposition> quotedVar2Prop = new HashMap<>();
+        HashMap<Proposition, QuotedVar> prop2QuotedVar = new HashMap<>();
+        PropositionalFormula pf = result.quoted2Prop(quotedVar2Prop, prop2QuotedVar);
+        System.out.println(quotedVar2Prop);
+        System.out.println(prop2QuotedVar);
+        System.out.println(pf);
+    }
+
+
 }

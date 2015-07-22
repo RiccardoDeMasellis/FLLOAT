@@ -8,10 +8,10 @@
 
 package visitors.PropVisitor;
 
+import antlr4_generated.PropFormulaParserBaseVisitor;
+import antlr4_generated.PropFormulaParserParser;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
-import generatedParsers.PropFormulaParserBaseVisitor;
-import generatedParsers.PropFormulaParserParser;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import org.antlr.v4.runtime.misc.NotNull;
 

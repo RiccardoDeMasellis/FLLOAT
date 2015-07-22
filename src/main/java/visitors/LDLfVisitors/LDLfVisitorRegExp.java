@@ -8,10 +8,10 @@
 
 package visitors.LDLfVisitors;
 
+import antlr4_generated.*;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalTrueFormula;
 import formula.regExp.*;
-import generatedParsers.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.NotNull;

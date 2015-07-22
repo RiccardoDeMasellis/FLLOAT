@@ -8,10 +8,10 @@
 
 import formula.ldlf.LDLfFormula;
 import formula.ltlf.LTLfFormula;
-import generatedParsers.LDLfFormulaParserLexer;
-import generatedParsers.LDLfFormulaParserParser;
-import generatedParsers.LTLfFormulaParserLexer;
-import generatedParsers.LTLfFormulaParserParser;
+import antlr4_generated.LDLfFormulaParserLexer;
+import antlr4_generated.LDLfFormulaParserParser;
+import antlr4_generated.LTLfFormulaParserLexer;
+import antlr4_generated.LTLfFormulaParserParser;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import org.antlr.v4.runtime.ANTLRInputStream;

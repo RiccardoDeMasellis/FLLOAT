@@ -87,7 +87,7 @@ public class Main {
         /*
         Input
          */
-        String input = "(G(a U b)) && (!( G(a U b) ))";
+        String input = "G (a U b)";
 
         /*
         Parsing
@@ -102,6 +102,7 @@ public class Main {
         Translation to ldlf!
          */
         LDLfFormula ldlff = formula.toLDLf();
+        System.out.println(ldlff.nnf());
 
         /*
         Automaton construction method invocation

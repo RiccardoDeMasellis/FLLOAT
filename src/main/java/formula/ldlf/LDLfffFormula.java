@@ -32,10 +32,10 @@ public class LDLfffFormula implements AtomicFormula, LDLfTempFormula {
     }
 
     public boolean equals(Object o) {
-        if (o == null)
-            return false;
+        if (o != null && this.getClass().equals(o.getClass()))
+            return true;
         else
-            return this.getClass().equals(o.getClass());
+            return false;
     }
 
     public int hashCode() {

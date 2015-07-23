@@ -19,7 +19,6 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 import rationals.Automaton;
-import rationals.DefaultStateFactory.DefaultState;
 import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
@@ -131,54 +130,7 @@ public class AutomatonUtils {
     }
 
 
-    // Version for DefaultStateFactory
-    /**
-     * Returns <a href="http://www.research.att.com/sw/tools/graphviz/" target="_top">Graphviz Dot</a>
-     * representation of this automaton.
-     */
-    /*
-    Warning here! After using any transformation methods of jautomata, a new automaton with the
-	DefaultStateFactory is returned! So this method
-	*/
-//    public static String quotedFormulaAutomaton2Dot(Automaton a) {
-//        StringBuilder b = new StringBuilder("digraph Automaton {\n");
-//        b.append("  rankdir = LR;\n");
-//        Set<QuotedFormulaState> states = a.states();
-//        for (QuotedFormulaState s : states) {
-//
-//            String stateFormulas = s.getFormulaSet().toString();
-//            b.append("  ").append(stateFormulas);
-//            if (s.isTerminal())
-//                b.append(" [shape=doublecircle,label=\""+stateFormulas+"\"];\n");
-//            else
-//                b.append(" [shape=circle,label=\""+stateFormulas+"\"];\n");
-//            if (s.isInitial()) {
-//                b.append("  initial [shape=plaintext,label=\""+stateFormulas+"\"];\n");
-//                b.append("  initial -> ").append(stateFormulas).append("\n");
-//            }
-//            Set<Transition> trans = a.delta(s);
-//            for (Transition t : trans) {
-//                appendDotTransition(b, t);
-//            }
-//        }
-//        return b.append("}\n").toString();
-//    }
-//
-//
-//    private static void appendDotTransition(StringBuilder b, Transition t) {
-//        b.append("  ").append(((QuotedFormulaState) t.start()).getFormulaSet());
-//
-//        QuotedFormulaState arrivalState = (QuotedFormulaState)t.end();
-//
-//        b.append(" -> ").append(arrivalState.getFormulaSet()).append(" [label=\"");
-//
-//        b.append(t.label().toString());
-//
-//        b.append("\"]\n");
-//    }
 
-
-    // Version for DefaultStateFactory
 
     /**
      * Returns <a href="http://www.research.att.com/sw/tools/graphviz/" target="_top">Graphviz Dot</a>
@@ -190,21 +142,17 @@ public class AutomatonUtils {
         Set<State> states = a.states();
         for (State s : states) {
 
-			/* Warning here! After using any transformation methods of jautomata, a new automaton with the
-            DefaultStateFactory is returned! */
-            DefaultState fs = (DefaultState) s;
-
-            String stateNumber = fs.getObject().toString();
-            b.append("  ").append(stateNumber);
-            if (fs.isTerminal())
-                b.append(" [shape=doublecircle,label=\"" + stateNumber + "\"];\n");
+            String stateString = s.toString();
+            b.append("  ").append(stateString);
+            if (s.isTerminal())
+                b.append(" [shape=doublecircle,label=\"" + stateString + "\"];\n");
             else
-                b.append(" [shape=circle,label=\"" + stateNumber + "\"];\n");
-            if (fs.isInitial()) {
-                b.append("  initial [shape=plaintext,label=\"" + stateNumber + "\"];\n");
-                b.append("  initial -> ").append(stateNumber).append("\n");
+                b.append(" [shape=circle,label=\"" + stateString + "\"];\n");
+            if (s.isInitial()) {
+                b.append("  initial [shape=plaintext,label=\"" + stateString + "\"];\n");
+                b.append("  initial -> ").append(stateString).append("\n");
             }
-            Set<Transition> trans = a.delta(fs);
+            Set<Transition> trans = a.delta(s);
             for (Transition t : trans) {
                 appendDotTransition(b, t);
             }
@@ -213,12 +161,13 @@ public class AutomatonUtils {
     }
 
 
+
     private static void appendDotTransition(StringBuilder b, Transition t) {
-        b.append("  ").append(((DefaultState) t.start()).getObject());
+        b.append("  ").append((t.start()).toString());
 
-        DefaultState arrivalState = (DefaultState) t.end();
+        State arrivalState = t.end();
 
-        b.append(" -> ").append(arrivalState.getObject()).append(" [label=\"");
+        b.append(" -> ").append(arrivalState.toString()).append(" [label=\"");
 
         b.append(t.label().toString());
 

@@ -22,6 +22,10 @@ import utils.AutomatonUtils;
 import visitors.LDLfVisitors.LDLfVisitor;
 import visitors.LTLfVisitors.LTLfVisitor;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 /**
  * Created by Riccardo De Masellis on 22/07/15.
  */
@@ -60,6 +64,22 @@ public class Main {
         Printing
          */
         System.out.println(automaton);
+
+
+        /*
+        Printing to .gv (graphviz) file
+         */
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream("ldlfAutomaton.gv");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        PrintStream ps = new PrintStream(fos);
+        ps.println(AutomatonUtils.toDot(automaton));
+        ps.flush();
+        ps.close();
     }
 
 
@@ -97,5 +117,21 @@ public class Main {
         Printing
          */
         System.out.println(automaton);
+
+
+        /*
+        Printing to .gv (graphviz) file
+         */
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream("ltlfAutomaton.gv");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        PrintStream ps = new PrintStream(fos);
+        ps.println(AutomatonUtils.toDot(automaton));
+        ps.flush();
+        ps.close();
     }
 }

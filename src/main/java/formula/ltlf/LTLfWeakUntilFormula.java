@@ -29,17 +29,17 @@ public class LTLfWeakUntilFormula extends LTLfBinaryFormula implements LTLfTempO
     // Wikipedia: phi WU psi = psi R (psi OR phi)
     @Override
     public LTLfFormula nnf() {
-        LTLfFormula left = (LTLfFormula) this.getLeftFormula().nnf();
-        LTLfFormula right = (LTLfFormula) this.getRightFormula().nnf();
+        LTLfFormula phi = (LTLfFormula) this.getLeftFormula().nnf();
+        LTLfFormula psi = (LTLfFormula) this.getRightFormula().nnf();
         LTLfFormula or;
 
-        if (left instanceof LTLfLocalFormula && right instanceof LTLfLocalFormula)
-            or = new LTLfLocalOrFormula(left, right);
+        if (phi instanceof LTLfLocalFormula && psi instanceof LTLfLocalFormula)
+            or = new LTLfLocalOrFormula(psi, phi);
 
         else
-            or = new LTLfTempOrFormula(left, right);
+            or = new LTLfTempOrFormula(psi, phi);
 
-        return new LTLfReleaseFormula(left, or);
+        return new LTLfReleaseFormula(psi, or);
     }
 
     @Override

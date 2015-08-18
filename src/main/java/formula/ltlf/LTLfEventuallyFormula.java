@@ -37,12 +37,11 @@ public class LTLfEventuallyFormula extends LTLfUnaryFormula implements LTLfTempO
 
 
     /*
-    NOT(G phi) = true U NOT(phi)
+    NOT(F phi) = false R NOT(phi)
      */
     @Override
     public LTLfFormula negate() {
-        LTLfFormula nested = (LTLfFormula) this.getNestedFormula().negate();
-        return new LTLfUntilFormula(new LTLfLocalTrueFormula(), nested);
+        return (LTLfFormula)this.nnf().negate();
     }
 
     public FormulaType getFormulaType() {

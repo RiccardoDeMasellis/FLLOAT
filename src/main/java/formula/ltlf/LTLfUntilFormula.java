@@ -49,6 +49,7 @@ public class LTLfUntilFormula extends LTLfBinaryFormula implements LTLfTempOpTem
         return FormulaType.LTLf_UNTIL;
     }
 
+
     @Override
     public LDLfDiamondFormula toLDLf() {
         RegExpTest test = new RegExpTest(this.getLeftFormula().toLDLf());

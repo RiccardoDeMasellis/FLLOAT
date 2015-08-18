@@ -47,7 +47,9 @@ public class Main {
         LDLfFormulaParserParser parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.expression();
         System.out.println(tree.toStringTree(parser));
+
         LDLfVisitor visitor = new LDLfVisitor();
+
         LDLfFormula formula = visitor.visit(tree);
 
         /*

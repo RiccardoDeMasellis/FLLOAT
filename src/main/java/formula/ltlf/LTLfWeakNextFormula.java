@@ -28,8 +28,8 @@ public class LTLfWeakNextFormula extends LTLfUnaryFormula implements LTLfTempOpT
 
 
     /*
-    WN phi = NOT(N(NOT phi)) by definition, but, if we require the nnf,
-    we need WN as a basic (not derived) operator.
+    WX phi = NOT(X(NOT phi)) by definition, but, if we require the nnf,
+    we need WX as a basic (not derived) operator.
     */
     @Override
     public LTLfFormula nnf() {

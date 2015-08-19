@@ -76,7 +76,7 @@ public class FormulaOperationsTest {
         visitor = new LTLfVisitor();
         formula1 = visitor.visit(tree);
 
-        input = "(((b) & (WX(!a))) | ((X a) & (!b)) )";
+        input = "((X a) & (!b)) | ((b) & (WX (!a)))";
         lexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
         parser = new LTLfFormulaParserParser(new CommonTokenStream(lexer));
         tree = parser.expression();
@@ -117,7 +117,7 @@ public class FormulaOperationsTest {
         visitor = new LTLfVisitor();
         formula1 = visitor.visit(tree);
 
-        input = "(true) U ( (false) R ( ((X true) | ((false) R ((!a) | (!b)))) & ((WX false) | ((true) U ((a) & (b)))) ) )";
+        input = "true U (false R ( ((X true) | (false R ((!a)|(!b)))) & ((true U (a & b)) | (WX false)) ) )";
         lexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
         parser = new LTLfFormulaParserParser(new CommonTokenStream(lexer));
         tree = parser.expression();

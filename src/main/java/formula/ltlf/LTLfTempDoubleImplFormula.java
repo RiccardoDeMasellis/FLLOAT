@@ -32,17 +32,6 @@ public class LTLfTempDoubleImplFormula extends LTLfBinaryFormula implements Doub
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o != null && this.getClass().equals(o.getClass())) {
-            LTLfTempDoubleImplFormula other = (LTLfTempDoubleImplFormula) o;
-            return (this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula()))
-                    ||
-                    (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
-        }
-        return false;
-    }
-
-    @Override
     public LDLfFormula toLDLf() {
         return ((LTLfFormula) this.nnf()).toLDLf();
     }

@@ -32,17 +32,6 @@ public class LTLfTempOrFormula extends LTLfBinaryFormula implements OrFormula, L
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o != null && this.getClass().equals(o.getClass())) {
-            LTLfTempOrFormula other = (LTLfTempOrFormula) o;
-            return (this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula()))
-                    ||
-                    (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
-        }
-        return false;
-    }
-
-    @Override
     public LDLfTempOrFormula toLDLf() {
         return new LDLfTempOrFormula(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());
     }

@@ -26,17 +26,6 @@ public class LTLfLocalAndFormula extends LTLfBinaryFormula implements LTLfBoolOp
         return FormulaType.LTLf_LOCAL_AND;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o != null && this.getClass().equals(o.getClass())) {
-            LTLfLocalAndFormula other = (LTLfLocalAndFormula) o;
-            return (this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula()))
-                    ||
-                    (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
-        }
-        return false;
-    }
-
 
     @Override
     public LDLfLocalAndFormula toLDLf() {

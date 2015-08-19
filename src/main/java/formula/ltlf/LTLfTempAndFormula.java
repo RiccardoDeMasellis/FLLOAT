@@ -31,16 +31,6 @@ public class LTLfTempAndFormula extends LTLfBinaryFormula implements AndFormula,
         return FormulaType.LTLf_TEMP_AND;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o != null && this.getClass().equals(o.getClass())) {
-            LTLfTempAndFormula other = (LTLfTempAndFormula) o;
-            return (this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula()))
-                    ||
-                    (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
-        }
-        return false;
-    }
 
     @Override
     public LDLfTempAndFormula toLDLf() {

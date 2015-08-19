@@ -27,16 +27,6 @@ public class LTLfLocalDoubleImplFormula extends LTLfBinaryFormula implements LTL
         return FormulaType.LTLf_LOCAL_DOUBLEIMPL;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o != null && this.getClass().equals(o.getClass())) {
-            LTLfLocalDoubleImplFormula other = (LTLfLocalDoubleImplFormula) o;
-            return (this.getLeftFormula().equals(other.getLeftFormula()) && this.getRightFormula().equals(other.getRightFormula()))
-                    ||
-                    (this.getLeftFormula().equals(other.getRightFormula()) && this.getRightFormula().equals(other.getLeftFormula()));
-        }
-        return false;
-    }
 
     @Override
     public LDLfFormula toLDLf() {

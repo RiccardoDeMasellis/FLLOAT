@@ -32,7 +32,6 @@ import java.util.Set;
  */
 public class DeltaFunctionTest {
 
-    @Ignore
     @Test
     public void deltaAtomicTest() {
         LDLfttFormula tt = new LDLfttFormula();
@@ -87,7 +86,6 @@ public class DeltaFunctionTest {
         Assert.assertEquals(expected, result);
     }
 
-    @Ignore
     @Test
     public void deltaQuotedAndTest() {
         String input = "( !(a && b) && !( a || b ) ) || ((!d) && ciao)";

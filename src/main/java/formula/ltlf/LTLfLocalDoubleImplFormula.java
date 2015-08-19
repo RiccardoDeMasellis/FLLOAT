@@ -11,6 +11,7 @@ package formula.ltlf;
 import formula.DoubleImplFormula;
 import formula.FormulaType;
 import formula.ldlf.LDLfFormula;
+import formula.regExp.RegExpLocal;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -31,6 +32,12 @@ public class LTLfLocalDoubleImplFormula extends LTLfBinaryFormula implements LTL
     @Override
     public LDLfFormula toLDLf() {
         return ((LTLfFormula) this.nnf()).toLDLf();
+    }
+
+
+    @Override
+    public RegExpLocal toRegExpLocal() {
+        return ((LTLfLocalFormula) this.nnf()).toRegExpLocal();
     }
 
 }

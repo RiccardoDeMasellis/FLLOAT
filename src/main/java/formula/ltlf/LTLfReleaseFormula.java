@@ -11,10 +11,8 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfFormula;
-import formula.regExp.RegExpConcat;
-import formula.regExp.RegExpLocalTrue;
-import formula.regExp.RegExpStar;
-import formula.regExp.RegExpTest;
+import formula.ldlf.LDLfffFormula;
+import formula.regExp.*;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -50,12 +48,46 @@ public class LTLfReleaseFormula extends LTLfBinaryFormula implements LTLfTempOpT
     }
 
 
-    // phi R psi = [( (?(!phi)) ; true)*] psi
     @Override
     public LDLfBoxFormula toLDLf() {
-        RegExpTest test = new RegExpTest((LDLfFormula) this.getLeftFormula().toLDLf().negate());
-        RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
-        RegExpStar star = new RegExpStar(concat);
-        return new LDLfBoxFormula(star, this.getRightFormula().toLDLf());
+
+        // a R b = !(!a U !b) --> [(!a)*][!b]ff
+        if (this.getLeftFormula() instanceof LTLfLocalFormula && this.getRightFormula() instanceof LTLfLocalFormula) {
+            RegExpLocal a = ((LTLfLocalFormula) this.getLeftFormula()).toRegExpLocal();
+            RegExpLocal b = ((LTLfLocalFormula) this.getRightFormula()).toRegExpLocal();
+            LDLfBoxFormula innerBox = new LDLfBoxFormula((RegExp) b.negate(), new LDLfffFormula());
+            RegExpStar star = new RegExpStar((RegExp) a.negate());
+            return new LDLfBoxFormula(star, innerBox);
+        }
+
+
+        // a R psi = !(!a U !psi) --> [(!a)*]psi
+        if (this.getLeftFormula() instanceof LTLfLocalFormula && this.getRightFormula() instanceof LTLfTempFormula) {
+            RegExpLocal a = ((LTLfLocalFormula) this.getLeftFormula()).toRegExpLocal();
+            RegExpStar star = new RegExpStar((RegExp) a.negate());
+            return new LDLfBoxFormula(star, this.getRightFormula().toLDLf());
+        }
+
+
+        // phi R b = !(!phi R !b) --> [(!phi)? ; true)*][!b]ff
+        if(this.getLeftFormula() instanceof LTLfTempFormula && this.getRightFormula() instanceof LTLfLocalFormula) {
+            RegExpLocal b = ((LTLfLocalFormula) this.getRightFormula()).toRegExpLocal();
+            LDLfBoxFormula innerBox = new LDLfBoxFormula((RegExp) b.negate(), new LDLfffFormula());
+            RegExpTest test = new RegExpTest((LDLfFormula) this.getLeftFormula().toLDLf().negate());
+            RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
+            RegExpStar star = new RegExpStar(concat);
+            return new LDLfBoxFormula(star, innerBox);
+        }
+
+
+        // phi R psi = !(!phi U !psi) --> [((!phi)? ; true)*]psi
+        if (this.getLeftFormula() instanceof LTLfTempFormula && this.getRightFormula() instanceof LTLfTempFormula) {
+            RegExpTest test = new RegExpTest((LDLfFormula) this.getLeftFormula().toLDLf().negate());
+            RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
+            RegExpStar star = new RegExpStar(concat);
+            return new LDLfBoxFormula(star, this.getRightFormula().toLDLf());
+        }
+
+        throw new RuntimeException("Error in Release toLDLf()");
     }
 }

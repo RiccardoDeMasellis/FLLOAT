@@ -12,6 +12,8 @@ import formula.FormulaType;
 import formula.LocalVar;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalVar;
+import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpLocalVar;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
@@ -43,5 +45,10 @@ public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
     @Override
     public LDLfFormula toLDLf() {
         return new LDLfLocalVar(this.getProp());
+    }
+
+    @Override
+    public RegExpLocal toRegExpLocal() {
+        return new RegExpLocalVar(this.getProp());
     }
 }

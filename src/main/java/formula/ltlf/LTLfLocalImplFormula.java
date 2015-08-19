@@ -11,6 +11,7 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.ImplFormula;
 import formula.ldlf.LDLfFormula;
+import formula.regExp.RegExpLocal;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -29,5 +30,10 @@ public class LTLfLocalImplFormula extends LTLfBinaryFormula implements LTLfBoolO
     @Override
     public LDLfFormula toLDLf() {
         return ((LTLfFormula) this.nnf()).toLDLf();
+    }
+
+    @Override
+    public RegExpLocal toRegExpLocal() {
+        return ((LTLfLocalFormula) this.nnf()).toRegExpLocal();
     }
 }

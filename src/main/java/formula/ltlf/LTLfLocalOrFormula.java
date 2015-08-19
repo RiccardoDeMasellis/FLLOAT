@@ -11,6 +11,8 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.OrFormula;
 import formula.ldlf.LDLfLocalOrFormula;
+import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpLocalOr;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -29,5 +31,12 @@ public class LTLfLocalOrFormula extends LTLfBinaryFormula implements LTLfBoolOpL
     @Override
     public LDLfLocalOrFormula toLDLf() {
         return new LDLfLocalOrFormula(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());
+    }
+
+    @Override
+    public RegExpLocal toRegExpLocal() {
+        RegExpLocal left = ((LTLfLocalFormula) this.getLeftFormula()).toRegExpLocal();
+        RegExpLocal right = ((LTLfLocalFormula) this.getRightFormula()).toRegExpLocal();
+        return new RegExpLocalOr(left, right);
     }
 }

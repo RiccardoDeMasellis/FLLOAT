@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.LocalFormula;
 import formula.LocalFormulaType;
+import formula.regExp.RegExpLocal;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
@@ -17,6 +18,8 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * For any issue please write to r.demasellis@trentorise.eu.
  */
 public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
+
+    RegExpLocal toRegExpLocal();
 
     // Used with reflection in LocalVisitor, do not erase.
     static LTLfLocalFormula localFormulaFactory(LocalFormulaType formulaType, LTLfLocalFormula left, LTLfLocalFormula right, Proposition prop) {

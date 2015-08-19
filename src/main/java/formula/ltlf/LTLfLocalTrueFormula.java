@@ -11,6 +11,8 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.TrueLocalFormula;
 import formula.ldlf.LDLfLocalTrueFormula;
+import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpLocalTrue;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -40,5 +42,10 @@ public class LTLfLocalTrueFormula extends TrueLocalFormula implements LTLfLocalF
     @Override
     public LDLfLocalTrueFormula toLDLf() {
         return new LDLfLocalTrueFormula();
+    }
+
+    @Override
+    public RegExpLocal toRegExpLocal() {
+        return new RegExpLocalTrue();
     }
 }

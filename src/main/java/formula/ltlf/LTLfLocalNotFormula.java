@@ -12,6 +12,8 @@ import formula.FormulaType;
 import formula.NotFormula;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalNotFormula;
+import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpLocalNot;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -34,5 +36,10 @@ public class LTLfLocalNotFormula extends LTLfUnaryFormula implements LTLfBoolOpL
         } else {
             return ((LTLfFormula) this.nnf()).toLDLf();
         }
+    }
+
+    @Override
+    public RegExpLocal toRegExpLocal() {
+        return new RegExpLocalNot(((LTLfLocalFormula) this.getNestedFormula()).toRegExpLocal());
     }
 }

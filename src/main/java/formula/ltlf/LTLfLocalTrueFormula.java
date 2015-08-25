@@ -11,6 +11,9 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.TrueLocalFormula;
 import formula.ldlf.LDLfLocalTrueFormula;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -41,4 +44,9 @@ public class LTLfLocalTrueFormula extends TrueLocalFormula implements LTLfLocalF
     public LDLfLocalTrueFormula toLDLf() {
         return new LDLfLocalTrueFormula();
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		return new Tautology();
+	}
 }

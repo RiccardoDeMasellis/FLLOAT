@@ -12,6 +12,8 @@ import formula.FormulaType;
 import formula.NotFormula;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalNotFormula;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -35,4 +37,13 @@ public class LTLfLocalNotFormula extends LTLfUnaryFormula implements LTLfBoolOpL
             return ((LTLfFormula) this.nnf()).toLDLf();
         }
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		LTLfLocalFormula nested = (LTLfLocalFormula) this.getNestedFormula();
+
+		PropositionalFormula res = new Negation(nested.toTweetyProp());
+
+		return res;
+	}
 }

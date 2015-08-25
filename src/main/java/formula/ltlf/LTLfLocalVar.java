@@ -13,6 +13,7 @@ import formula.LocalVar;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalVar;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -20,11 +21,27 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  */
 public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
 
+	private String name;
+
     public LTLfLocalVar(Proposition prop) {
         super(prop);
     }
 
-    @Override
+	public LTLfLocalVar(String name){
+		super(new Proposition(name));
+		this.name = name;
+	}
+
+	public String getName(){
+		return this.name;
+	}
+
+	@Override
+	public String toString(){
+		return this.getName();
+	}
+
+	@Override
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_LOCAL_VAR;
     }
@@ -44,4 +61,9 @@ public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
     public LDLfFormula toLDLf() {
         return new LDLfLocalVar(this.getProp());
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		return new Proposition();
+	}
 }

@@ -11,6 +11,8 @@ package formula.ltlf;
 import formula.AndFormula;
 import formula.FormulaType;
 import formula.ldlf.LDLfLocalAndFormula;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -31,4 +33,14 @@ public class LTLfLocalAndFormula extends LTLfBinaryFormula implements LTLfBoolOp
     public LDLfLocalAndFormula toLDLf() {
         return new LDLfLocalAndFormula(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		LTLfLocalFormula left = (LTLfLocalFormula) this.getLeftFormula();
+		LTLfLocalFormula right = (LTLfLocalFormula) this.getRightFormula();
+
+		PropositionalFormula res = new Conjunction(left.toTweetyProp(), right.toTweetyProp());
+
+		return res;
+	}
 }

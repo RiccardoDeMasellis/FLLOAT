@@ -11,12 +11,15 @@ package formula.ltlf;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
 public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
+
+	PropositionalFormula toTweetyProp();
 
     // Used with reflection in LocalVisitor, do not erase.
     static LTLfLocalFormula localFormulaFactory(LocalFormulaType formulaType, LTLfLocalFormula left, LTLfLocalFormula right, Proposition prop) {

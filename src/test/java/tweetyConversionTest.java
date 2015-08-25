@@ -5,6 +5,7 @@ import formula.ltlf.LTLfLocalFormula;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.junit.Assert;
 import org.junit.Test;
 import visitors.LTLfVisitors.LTLfVisitor;
 
@@ -16,12 +17,28 @@ public class tweetyConversionTest {
 	@Test
 	public void testTweetyConversion(){
 
-		//Gets rid of annoying antlr warning messages
+		//Gets annoying antlr warning messages out of the way
 		parseLTLfFormula("a");
 		System.out.println("\n");
 
 		LTLfLocalFormula built = (LTLfLocalFormula) parseLTLfFormula("!a");
-		System.out.println(built.toTweetyProp().toString());
+		System.out.println(built.toTweetyProp().toString() + "\n");
+
+		built = (LTLfLocalFormula) parseLTLfFormula("a && b");
+		System.out.println(built.toTweetyProp().toString() + "\n");
+
+		built = (LTLfLocalFormula) parseLTLfFormula("a || b");
+		System.out.println(built.toTweetyProp().toString() + "\n");
+
+		built = (LTLfLocalFormula) parseLTLfFormula("a -> b");
+		System.out.println(built.toTweetyProp().toString() + "\n");
+
+		built = (LTLfLocalFormula) parseLTLfFormula("a <-> b");
+		System.out.println(built.toTweetyProp().toString() + "\n");
+
+		built = (LTLfLocalFormula) parseLTLfFormula("p || q && ! r -> s");
+		System.out.println(built.toString());
+		System.out.println(built.toTweetyProp().toString() + "\n");
 
 	}
 

@@ -25,6 +25,7 @@ public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
 
     public LTLfLocalVar(Proposition prop) {
         super(prop);
+			this.name = prop.getName();
     }
 
 	public LTLfLocalVar(String name){
@@ -46,7 +47,6 @@ public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
         return FormulaType.LTLf_LOCAL_VAR;
     }
 
-
     @Override
     public LTLfFormula negate() {
         return new LTLfLocalNotFormula((LTLfFormula) this.clone());
@@ -64,6 +64,6 @@ public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
 
 	@Override
 	public PropositionalFormula toTweetyProp(){
-		return new Proposition();
+		return new Proposition(this.getName());
 	}
 }

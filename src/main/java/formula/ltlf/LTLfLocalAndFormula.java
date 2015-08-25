@@ -28,7 +28,6 @@ public class LTLfLocalAndFormula extends LTLfBinaryFormula implements LTLfBoolOp
         return FormulaType.LTLf_LOCAL_AND;
     }
 
-
     @Override
     public LDLfLocalAndFormula toLDLf() {
         return new LDLfLocalAndFormula(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());

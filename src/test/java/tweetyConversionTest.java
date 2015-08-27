@@ -2,12 +2,17 @@ import antlr4_generated.LTLfFormulaParserLexer;
 import antlr4_generated.LTLfFormulaParserParser;
 import formula.ltlf.LTLfFormula;
 import formula.ltlf.LTLfLocalFormula;
+import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
 import org.junit.Test;
 import visitors.LTLfVisitors.LTLfVisitor;
+
+import java.io.Reader;
+import java.io.StringReader;
 
 /**
  * Created by Simone Calciolari on 25/08/15.
@@ -22,23 +27,26 @@ public class tweetyConversionTest {
 		System.out.println("\n");
 
 		LTLfLocalFormula built = (LTLfLocalFormula) parseLTLfFormula("!a");
-		System.out.println(built.toTweetyProp().toString() + "\n");
+		assertEquals("", built.toTweetyProp(), parseTweetyFormula("!a"));
 
 		built = (LTLfLocalFormula) parseLTLfFormula("a && b");
-		System.out.println(built.toTweetyProp().toString() + "\n");
+		assertEquals("", parseTweetyFormula("a && b"), built.toTweetyProp());
 
 		built = (LTLfLocalFormula) parseLTLfFormula("a || b");
-		System.out.println(built.toTweetyProp().toString() + "\n");
+		assertEquals("", parseTweetyFormula("a || b"), built.toTweetyProp());
 
 		built = (LTLfLocalFormula) parseLTLfFormula("a -> b");
-		System.out.println(built.toTweetyProp().toString() + "\n");
+		assertEquals("", parseTweetyFormula("!a || b"), built.toTweetyProp());
 
 		built = (LTLfLocalFormula) parseLTLfFormula("a <-> b");
-		System.out.println(built.toTweetyProp().toString() + "\n");
+		assertEquals("", parseTweetyFormula("(!a || b) && (!b || a)"), built.toTweetyProp());
 
 		built = (LTLfLocalFormula) parseLTLfFormula("p || q && ! r -> s");
-		System.out.println(built.toString());
-		System.out.println(built.toTweetyProp().toString() + "\n");
+		assertEquals("", parseTweetyFormula("(!p && (!q || r)) || s"), built.toTweetyProp());
+
+		built = (LTLfLocalFormula) parseLTLfFormula("! a && b || c -> d <-> e");
+		assertEquals("", parseTweetyFormula("((((!a && b) || (c)) && !d) || e)&& (!e || (((a || !b) && !c) || d))"),
+				built.toTweetyProp());
 
 	}
 
@@ -52,5 +60,33 @@ public class tweetyConversionTest {
 
 		return visitor.visit(tree);
 	}
+
+	private PropositionalFormula parseTweetyFormula(String input){
+		PlParser parser = new PlParser();
+		Reader sr = new StringReader(input);
+		return parser.parseFormula(sr);
+	}
+
+	//<editor-fold desc="assertEquals" defaultstate="collapsed">
+	/**
+	 * Wrapper for the Assert.assertEquals method, used to print some description also in case of success
+	 * @param description brief description of the current test case
+	 * @param expected first object to be compared
+	 * @param computed second object to be compared
+	 */
+	private static void assertEquals(String description, Object expected, Object computed) {
+
+		try {
+			Assert.assertEquals(description, expected, computed);
+			System.out.println("SUCCESS");
+			System.out.println("\t> Expected: " + expected.toString());
+			System.out.println("\t> Computed: " + computed.toString());
+			System.out.println();
+		} catch (AssertionError e){
+			throw e;
+		}
+
+	}
+	//</editor-fold>
 
 }

@@ -11,6 +11,9 @@ package formula.ltlf;
 import formula.FalseLocalFormula;
 import formula.FormulaType;
 import formula.ldlf.LDLfLocalFalseFormula;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -41,4 +44,9 @@ public class LTLfLocalFalseFormula extends FalseLocalFormula implements LTLfLoca
     public LDLfLocalFalseFormula toLDLf() {
         return new LDLfLocalFalseFormula();
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		return new Contradiction();
+	}
 }

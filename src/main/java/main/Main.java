@@ -32,8 +32,8 @@ import java.io.PrintStream;
 public class Main {
 
     public static void main(String[] args) {
-        ldlf2Aut();
-        //ltlf2Aut();
+        //ldlf2Aut();
+        ltlf2Aut();
     }
 
 
@@ -89,7 +89,7 @@ public class Main {
         /*
         Input
          */
-        String input = "G (a U b)";
+        String input = "G (a WU b)";
 
         /*
         Parsing

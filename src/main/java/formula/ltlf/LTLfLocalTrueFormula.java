@@ -13,6 +13,9 @@ import formula.TrueLocalFormula;
 import formula.ldlf.LDLfLocalTrueFormula;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalTrue;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -48,4 +51,9 @@ public class LTLfLocalTrueFormula extends TrueLocalFormula implements LTLfLocalF
     public RegExpLocal toRegExpLocal() {
         return new RegExpLocalTrue();
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		return new Tautology();
+	}
 }

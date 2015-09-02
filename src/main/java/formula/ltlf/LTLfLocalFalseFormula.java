@@ -13,6 +13,9 @@ import formula.FormulaType;
 import formula.ldlf.LDLfLocalFalseFormula;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalFalse;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -48,4 +51,9 @@ public class LTLfLocalFalseFormula extends FalseLocalFormula implements LTLfLoca
     public RegExpLocal toRegExpLocal() {
         return new RegExpLocalFalse();
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		return new Contradiction();
+	}
 }

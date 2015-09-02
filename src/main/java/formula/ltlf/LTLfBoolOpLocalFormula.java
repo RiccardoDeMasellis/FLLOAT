@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.BoolOpType;
 import formula.Formula;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 23/05/15.
@@ -17,7 +18,12 @@ import formula.Formula;
  */
 public interface LTLfBoolOpLocalFormula extends LTLfLocalFormula, LTLfBoolOpFormula {
 
-    @Override
+	@Override
+	default PropositionalFormula toTweetyProp(){
+		return ((LTLfLocalFormula) this.nnf()).toTweetyProp();
+	}
+
+	@Override
     default LTLfLocalFormula boolOpFormulaFactory(BoolOpType boolOp, Formula left, Formula right) {
         switch (boolOp) {
             case AND:

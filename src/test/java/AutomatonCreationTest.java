@@ -184,7 +184,7 @@ public class AutomatonCreationTest {
 
     @Test
     public void prove() {
-        String input = "(F a) && (G(a -> Fb)) && (G(b->Fa) && (G(!a || !b)))";
+        String input = "(F a) && (G(a -> Fb)) && (G(b->Fa)) && (G(!a || !b))";
 
         LTLfFormulaParserLexer lexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
         LTLfFormulaParserParser parser = new LTLfFormulaParserParser(new CommonTokenStream(lexer));
@@ -193,6 +193,7 @@ public class AutomatonCreationTest {
         LTLfFormula f = visitor.visit(tree);
 
         LDLfFormula ldlff = f.toLDLf();
+        System.out.println(ldlff);
         Automaton af = AutomatonUtils.ldlf2Automaton(ldlff, ldlff.getSignature());
         //af = new ToDFA<>().transform(af);
         System.out.println("Automaton for " + ldlff);

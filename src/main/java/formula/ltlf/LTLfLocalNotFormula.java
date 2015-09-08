@@ -14,6 +14,8 @@ import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalNotFormula;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalNot;
+import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -42,4 +44,13 @@ public class LTLfLocalNotFormula extends LTLfUnaryFormula implements LTLfBoolOpL
     public RegExpLocal toRegExpLocal() {
         return new RegExpLocalNot(((LTLfLocalFormula) this.getNestedFormula()).toRegExpLocal());
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		LTLfLocalFormula nested = (LTLfLocalFormula) this.getNestedFormula();
+
+		PropositionalFormula res = new Negation(nested.toTweetyProp());
+
+		return res;
+	}
 }

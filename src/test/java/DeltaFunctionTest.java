@@ -6,11 +6,11 @@
  * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
  */
 
+import antlr4_generated.LDLfFormulaParserLexer;
+import antlr4_generated.LDLfFormulaParserParser;
 import evaluations.PropositionLast;
 import formula.ldlf.*;
 import formula.quotedFormula.*;
-import antlr4_generated.LDLfFormulaParserLexer;
-import antlr4_generated.LDLfFormulaParserParser;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -19,7 +19,6 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import visitors.LDLfVisitors.LDLfVisitor;
 
@@ -133,7 +132,6 @@ public class DeltaFunctionTest {
         Assert.assertEquals(expected, result);
     }
 
-    @Ignore
     @Test
     public void deltaTestGeneric() {
         String input = "<( (a)? ; true )*>b";

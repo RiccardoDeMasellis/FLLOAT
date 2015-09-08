@@ -15,6 +15,7 @@ import formula.ldlf.LDLfLocalVar;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalVar;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -22,15 +23,31 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  */
 public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
 
+	private String name;
+
     public LTLfLocalVar(Proposition prop) {
         super(prop);
+			this.name = prop.getName();
     }
 
-    @Override
+	public LTLfLocalVar(String name){
+		super(new Proposition(name));
+		this.name = name;
+	}
+
+	public String getName(){
+		return this.name;
+	}
+
+	@Override
+	public String toString(){
+		return this.getName();
+	}
+
+	@Override
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_LOCAL_VAR;
     }
-
 
     @Override
     public LTLfFormula negate() {
@@ -51,4 +68,9 @@ public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
     public RegExpLocal toRegExpLocal() {
         return new RegExpLocalVar(this.getProp());
     }
+
+	@Override
+	public PropositionalFormula toTweetyProp(){
+		return new Proposition(this.getName());
+	}
 }

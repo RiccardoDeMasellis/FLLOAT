@@ -17,6 +17,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import visitors.LDLfVisitors.LDLfVisitor;
 import visitors.LTLfVisitors.LTLfVisitor;
@@ -186,7 +187,7 @@ public class FormulaOperationsTest {
         Assert.assertEquals("", sig2, sig1);
     }
 
-
+		@Ignore
     @Test
     public void testLTLf2LDLf() {
         String input;

@@ -25,4 +25,9 @@ public class PropositionLast extends Proposition {
         else
             return this.getClass().equals(other.getClass());
     }
+
+	@Override
+	public PropositionLast clone(){
+		return new PropositionLast();
+	}
 }

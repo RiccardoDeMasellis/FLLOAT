@@ -36,7 +36,7 @@ atom
     ;
 
 
-    ID : ('a'..'z');
+    ID : (('a'..'z') | ('A'..'Z') | ('0'..'9') | '_' | '?');
     TRUE : ('True')|('TRUE')|('true');
     FALSE : ('False')|('FALSE')|('false');
 

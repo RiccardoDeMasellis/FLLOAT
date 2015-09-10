@@ -23,9 +23,7 @@ import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Riccardo De Masellis on 15/07/15.
@@ -115,7 +113,59 @@ public class AutomatonUtils {
             }
             toAnalyze.remove(currentState);
         }
-        return automaton;
+        return eliminateLastTransitions(automaton);
+    }
+
+
+    private static Automaton eliminateLastTransitions(Automaton oldAut) {
+        Set<State> oldStates = oldAut.states();
+        Set<Transition<PossibleWorld>> oldTransitions = oldAut.delta();
+
+        Automaton newAut = new Automaton();
+
+        Map<State, State> oldToNew = new HashMap<>();
+
+        //Add all states
+        for (State oldSt : oldStates) {
+            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
+            oldToNew.put(oldSt, newSt);
+        }
+
+        // Add the new "ended" state
+        State ended = newAut.addState(false, true);
+
+        //Add the *right* transitions according to the transformations
+        for (Transition<PossibleWorld> oldTran : oldTransitions) {
+            State oldStart = oldTran.start();
+            State oldEnd = oldTran.end();
+            PossibleWorld oldLabel = oldTran.label();
+            PossibleWorld newLabel;
+
+            if (oldLabel instanceof EmptyTrace)
+                newLabel = new EmptyTrace();
+            else {
+                newLabel = new PossibleWorld(oldLabel);
+                // Remove proposition last from the label!
+                newLabel.remove(new PropositionLast());
+            }
+
+            Transition<PossibleWorld> newTran;
+
+            //Check if the transition must lead to "ended" state
+            if(oldLabel.contains(new PropositionLast()) && oldEnd.isTerminal()) {
+                newTran = new Transition<>(oldToNew.get(oldStart), newLabel, ended);
+            }
+            else {
+               newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
+            }
+
+            try {
+                newAut.addTransition(newTran);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+        return newAut;
     }
 
 

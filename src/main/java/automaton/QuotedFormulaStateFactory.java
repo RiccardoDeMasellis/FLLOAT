@@ -71,6 +71,7 @@ public class QuotedFormulaStateFactory implements StateFactory, Cloneable {
         return new HashSet<State>(s);
     }
 
+
     public Object clone() {
         QuotedFormulaStateFactory cl;
         try {
@@ -266,7 +267,7 @@ public class QuotedFormulaStateFactory implements StateFactory, Cloneable {
         public boolean equals(Object o) {
             try {
                 QuotedFormulaState qfs = (QuotedFormulaState) o;
-                return (qfs.i == i) && (a == qfs.a);
+                return (qfs.i == i) && (qfs.a == a);
             } catch (ClassCastException e) {
                 return false;
             }

@@ -6,12 +6,12 @@
  * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
  */
 
-import formula.ldlf.LDLfFormula;
-import formula.ltlf.LTLfFormula;
 import antlr4_generated.LDLfFormulaParserLexer;
 import antlr4_generated.LDLfFormulaParserParser;
 import antlr4_generated.LTLfFormulaParserLexer;
 import antlr4_generated.LTLfFormulaParserParser;
+import formula.ldlf.LDLfFormula;
+import formula.ltlf.LTLfFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -187,7 +187,9 @@ public class FormulaOperationsTest {
         Assert.assertEquals("", sig2, sig1);
     }
 
-		@Ignore
+
+    //TODO: Implementare bene secondo le modifiche fatte all'algoritmo di traduzione.
+    @Ignore
     @Test
     public void testLTLf2LDLf() {
         String input;

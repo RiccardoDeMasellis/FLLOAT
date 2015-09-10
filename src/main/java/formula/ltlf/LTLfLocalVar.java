@@ -71,6 +71,6 @@ public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
 
 	@Override
 	public PropositionalFormula toTweetyProp(){
-		return new Proposition(this.getName());
+		return this.getProp().clone();
 	}
 }

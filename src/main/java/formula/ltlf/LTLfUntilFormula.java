@@ -57,14 +57,14 @@ public class LTLfUntilFormula extends LTLfBinaryFormula implements LTLfTempOpTem
             RegExpLocal a = ((LTLfLocalFormula) this.getLeftFormula()).toRegExpLocal();
             RegExpLocal b = ((LTLfLocalFormula) this.getRightFormula()).toRegExpLocal();
             LDLfDiamondFormula innerDiamond = new LDLfDiamondFormula(b, new LDLfttFormula());
-            return new LDLfDiamondFormula(a, innerDiamond);
+            return new LDLfDiamondFormula(new RegExpStar(a), innerDiamond);
         }
 
         // a U psi --> <a*> psi
         if (this.getLeftFormula() instanceof LTLfLocalFormula && this.getRightFormula() instanceof LTLfTempFormula) {
             RegExpLocal a = ((LTLfLocalFormula) this.getLeftFormula()).toRegExpLocal();
             LDLfFormula psi = this.getRightFormula().toLDLf();
-            return new LDLfDiamondFormula(a, psi);
+            return new LDLfDiamondFormula(new RegExpStar(a), psi);
         }
 
         // phi U b --> <(phi? ; true)*><b>tt (me)

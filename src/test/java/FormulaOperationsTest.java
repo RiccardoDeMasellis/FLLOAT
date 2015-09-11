@@ -17,7 +17,6 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import visitors.LDLfVisitors.LDLfVisitor;
 import visitors.LTLfVisitors.LTLfVisitor;
@@ -188,8 +187,6 @@ public class FormulaOperationsTest {
     }
 
 
-    //TODO: Implementare bene secondo le modifiche fatte all'algoritmo di traduzione.
-    @Ignore
     @Test
     public void testLTLf2LDLf() {
         String input;
@@ -206,8 +203,6 @@ public class FormulaOperationsTest {
 
         //F( G( (WX false) <-> (G (!(a & b))) ))
         input = "F( G( (WX false) <-> (G (!(a & b))) ))";
-        //nnf
-        //(true) U ( (false) R ( ((X true) | ((false) R ((!a) | (!b)))) & ((WX false) | ((true) U ((a) & (b)))) ) )
         ltlfLexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
         ltlfParser = new LTLfFormulaParserParser(new CommonTokenStream(ltlfLexer));
         tree = ltlfParser.expression();
@@ -215,39 +210,35 @@ public class FormulaOperationsTest {
         formula1 = ltlfVisitor.visit(tree);
         PropositionalSignature sig1 = formula1.getSignature();
 
-        //<((true ?) ; true)*>( [((true)? ; true)*] (((<true> true) | ( [((true)? ; true)*]((!a) | (!b)) )) & (([true](false)) | ( <((true)? ; true)*>((a) & (b)) ))) )
-        input = "<((true ?) ; true)*>( [((true)? ; true)*] (((<true> true) | ( [((true)? ; true)*]((!a) | (!b)) )) & (([true](false)) | ( <((true)? ; true)*>((a) & (b)) ))) )";
+        /*
+        nnf
+        (true) U ( (false) R ( ((X true) | ((false) R ((!a) | (!b)))) & ((WX false) | ((true) U ((a) & (b)))) ) )
+        */
+        // Check first if nnf is correct.
+        String nnfInput =  "(true) U ( (false) R ( ((X true) | ((false) R ((!a) | (!b)))) & (((true) U ((a) & (b))) | (WX false))))";
+        ltlfLexer = new LTLfFormulaParserLexer(new ANTLRInputStream(nnfInput));
+        ltlfParser = new LTLfFormulaParserParser(new CommonTokenStream(ltlfLexer));
+        tree = ltlfParser.expression();
+        ltlfVisitor = new LTLfVisitor();
+        LTLfFormula formula1nnf = ltlfVisitor.visit(tree);
+        PropositionalSignature sig1nnf = formula1nnf.getSignature();
+
+        Assert.assertEquals("", formula1nnf, formula1.nnf());
+
+        /*
+        Manual translation in ldl
+        <true*> ( (false) R ( ((X true) | ((false) R ((!a) | (!b)))) & (((true) U ((a) & (b)))) | (WX false) ) )
+        <true*>[(!false)*] ((X true) | ((false) R((!a) | (!b)))) & (((true) U ((a) & (b))) | (WX false))
+        <true*>( [(!false)*] (((<true> true) | ([(!false)*]([!((!a) | (!b))]ff)) & ((<true*>(<(a & b)>tt))) | ([true]false) ) ) )
+        */
+
+        input = "<true*>([(true)*] ((((<true> true) | ([(true)*]([a & b]ff))) & ((<true*>(<(a & b)>tt)) | ([true]false))) ))";
         ldlfLexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
         ldlfParser = new LDLfFormulaParserParser(new CommonTokenStream(ldlfLexer));
         tree = ldlfParser.expression();
         ldlfVisitor = new LDLfVisitor();
         formula2 = ldlfVisitor.visit(tree);
         PropositionalSignature sig2 = formula2.getSignature();
-        System.out.println("Formula expected: ");
-        System.out.println(formula2);
-        System.out.println("Formula computed: ");
-        System.out.println(formula1.toLDLf());
-
-        Assert.assertEquals("", formula2, formula1.toLDLf());
-        Assert.assertEquals("", sig2, sig1);
-
-        /* ************************************************************************************** */
-
-        input = "a U b";
-        ltlfLexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
-        ltlfParser = new LTLfFormulaParserParser(new CommonTokenStream(ltlfLexer));
-        tree = ltlfParser.expression();
-        ltlfVisitor = new LTLfVisitor();
-        formula1 = ltlfVisitor.visit(tree);
-        sig1 = formula1.getSignature();
-
-        input = "<((a)? ; true)*>(b)";
-        ldlfLexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
-        ldlfParser = new LDLfFormulaParserParser(new CommonTokenStream(ldlfLexer));
-        tree = ldlfParser.expression();
-        ldlfVisitor = new LDLfVisitor();
-        formula2 = ldlfVisitor.visit(tree);
-        sig2 = formula2.getSignature();
         System.out.println("Formula expected: ");
         System.out.println(formula2);
         System.out.println("Formula computed: ");

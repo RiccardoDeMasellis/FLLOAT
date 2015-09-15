@@ -89,7 +89,7 @@ public class Main {
         /*
         Input
          */
-        String input = "G (a WU b)";
+        String input = "<> Send_Invoice";
 
         /*
         Parsing

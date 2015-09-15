@@ -224,6 +224,7 @@ public class FormulaOperationsTest {
         PropositionalSignature sig1nnf = formula1nnf.getSignature();
 
         Assert.assertEquals("", formula1nnf, formula1.nnf());
+        Assert.assertEquals("", sig1, sig1nnf);
 
         /*
         Manual translation in ldl
@@ -239,6 +240,33 @@ public class FormulaOperationsTest {
         ldlfVisitor = new LDLfVisitor();
         formula2 = ldlfVisitor.visit(tree);
         PropositionalSignature sig2 = formula2.getSignature();
+        System.out.println("Formula expected: ");
+        System.out.println(formula2);
+        System.out.println("Formula computed: ");
+        System.out.println(formula1.toLDLf());
+
+        Assert.assertEquals("", formula2, formula1.toLDLf());
+        Assert.assertEquals("", sig2, sig1);
+
+        /*
+        ********************************************************************
+        */
+
+        input = "((X a) && ((WX b) R c)) U (d)";
+        ltlfLexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
+        ltlfParser = new LTLfFormulaParserParser(new CommonTokenStream(ltlfLexer));
+        tree = ltlfParser.expression();
+        ltlfVisitor = new LTLfVisitor();
+        formula1 = ltlfVisitor.visit(tree);
+        sig1 = formula1.getSignature();
+
+        input = "<(((( (<true> a) && ([(((<true>(!b))?);(true))*]([!c]ff)))?) ; true)*)>(<d>tt)";
+        ldlfLexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
+        ldlfParser = new LDLfFormulaParserParser(new CommonTokenStream(ldlfLexer));
+        tree = ldlfParser.expression();
+        ldlfVisitor = new LDLfVisitor();
+        formula2 = ldlfVisitor.visit(tree);
+        sig2 = formula2.getSignature();
         System.out.println("Formula expected: ");
         System.out.println(formula2);
         System.out.println("Formula computed: ");

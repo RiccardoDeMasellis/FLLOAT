@@ -297,6 +297,31 @@ public class IntegrationGrammarTest {
         Assert.assertEquals("", "(((g) TeAND ([((b) ; (c)) + (*((r) + (s)))]((d) TeIMPL (TeNOT(<(a) + (?((b) OR ((a) AND (b))))>((f) OR (s))))))) TeAND (ff)) TeDOUBLEIMPL ((d) TeAND ([?(true)](ff)))", formula.toString());
         System.out.println(returnedSig);
 
+        /*
+        **************************************************************************************
+         */
+
+        input = "[(<a>b)?]([c]ff)";
+        lexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
+        parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
+        tree = parser.expression();
+        System.out.println(tree.toStringTree(parser));
+        visitor = new LDLfVisitor();
+        formula = visitor.visit(tree);
+        System.out.println(formula);
+
+        returnedSig = formula.getSignature();
+        expectedSig = new PropositionalSignature();
+        a = new Proposition("a");
+        expectedSig.add(a);
+        b = new Proposition("b");
+        expectedSig.add(b);
+        c = new Proposition("c");
+        expectedSig.add(c);
+        Assert.assertEquals("", expectedSig, returnedSig);
+        Assert.assertEquals("", "[?(<a>(b))]([c](ff))", formula.toString());
+        System.out.println(returnedSig);
+
     }
 
 }

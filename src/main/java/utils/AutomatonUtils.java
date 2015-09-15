@@ -10,7 +10,7 @@ package utils;
 
 import automaton.QuotedFormulaStateFactory;
 import automaton.QuotedFormulaStateFactory.QuotedFormulaState;
-import evaluations.EmptyTrace;
+import automaton.EmptyTrace;
 import evaluations.PropositionLast;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;

@@ -8,7 +8,7 @@
 
 package formula.ldlf;
 
-import evaluations.EmptyTrace;
+import automaton.EmptyTrace;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
 import formula.quotedFormula.QuotedFalseFormula;

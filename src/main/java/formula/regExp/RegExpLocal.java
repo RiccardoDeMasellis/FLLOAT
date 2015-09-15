@@ -8,7 +8,7 @@
 
 package formula.regExp;
 
-import evaluations.EmptyTrace;
+import automaton.EmptyTrace;
 import evaluations.PropositionLast;
 import formula.LocalFormula;
 import formula.LocalFormulaType;

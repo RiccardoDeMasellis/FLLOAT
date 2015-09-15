@@ -8,7 +8,7 @@
 
 package formula.regExp;
 
-import evaluations.EmptyTrace;
+import automaton.EmptyTrace;
 import formula.Formula;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;

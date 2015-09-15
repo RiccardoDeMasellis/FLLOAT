@@ -6,14 +6,12 @@
  * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
  */
 
-package evaluations;
-
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+package automaton;
 
 /**
  * Created by Riccardo De Masellis on 09/07/15.
  */
-public class EmptyTrace extends PossibleWorld {
+public class EmptyTrace implements TransitionLabel {
 
     public boolean equals(Object other) {
         if (other == null)

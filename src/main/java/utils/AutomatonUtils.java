@@ -8,9 +8,11 @@
 
 package utils;
 
+import automaton.PossibleWorldWrap;
 import automaton.QuotedFormulaStateFactory;
 import automaton.QuotedFormulaStateFactory.QuotedFormulaState;
 import automaton.EmptyTrace;
+import automaton.TransitionLabel;
 import evaluations.PropositionLast;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
@@ -66,15 +68,22 @@ public class AutomatonUtils {
         All transitions loop in the final state. Hence I get all possible models for the signature
         and then add a transition for each one of them.
          */
+        Set<TransitionLabel> allLabels = new HashSet<>();
         Set<PossibleWorld> allModels = new Tautology().getModels(ps);
 
-        /*
-        Add the emptyTrace to the set of possible models!
-         */
-        allModels.add(new EmptyTrace());
+        // Translates PossibleWorlds in PossibleWorldsWrap
+        for (PossibleWorld p : allModels) {
+            // The magic of inheritance!!!
+            allLabels.add(new PossibleWorldWrap(p));
+        }
 
-        for (PossibleWorld w : allModels) {
-            Transition<PossibleWorld> t = new Transition(finalState, w, finalState);
+        /*
+        Add the emptyTrace to the set of possible labels!
+         */
+        allLabels.add(new EmptyTrace());
+
+        for (TransitionLabel w : allLabels) {
+            Transition<TransitionLabel> t = new Transition(finalState, w, finalState);
             try {
                 automaton.addTransition(t);
             } catch (NoSuchStateException e) {
@@ -88,9 +97,9 @@ public class AutomatonUtils {
             // Conjunction of the QuotedVar belonging to the current state
             QuotedFormula currentFormula = currentState.getQuotedConjunction();
 
-            // For each propositional interpretation, call the delta function on currentFormula
-            for (PossibleWorld world : allModels) {
-                QuotedFormula deltaResult = currentFormula.delta(world);
+            // For each possible label, call the delta function on currentFormula
+            for (TransitionLabel label : allLabels) {
+                QuotedFormula deltaResult = currentFormula.delta(label);
                 // Compute the minimal interpretations satisfying deltaResult, that is, all the q'
                 Set<Set<QuotedVar>> newStateSetFormulas = deltaResult.getMinimalModels();
 
@@ -103,7 +112,7 @@ public class AutomatonUtils {
                     }
 
                     // Add the transition (currentState, world, destinationState)
-                    Transition<PossibleWorld> t = new Transition<>(currentState, world, destinationState);
+                    Transition<TransitionLabel> t = new Transition<>(currentState, label, destinationState);
                     try {
                         automaton.addTransition(t);
                     } catch (NoSuchStateException e) {
@@ -119,7 +128,7 @@ public class AutomatonUtils {
 
     private static Automaton eliminateLastTransitions(Automaton oldAut) {
         Set<State> oldStates = oldAut.states();
-        Set<Transition<PossibleWorld>> oldTransitions = oldAut.delta();
+        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
 
         Automaton newAut = new Automaton();
 
@@ -135,35 +144,42 @@ public class AutomatonUtils {
         State ended = newAut.addState(false, true);
 
         //Add the *right* transitions according to the transformations
-        for (Transition<PossibleWorld> oldTran : oldTransitions) {
+        for (Transition<TransitionLabel> oldTran : oldTransitions) {
             State oldStart = oldTran.start();
             State oldEnd = oldTran.end();
-            PossibleWorld oldLabel = oldTran.label();
-            PossibleWorld newLabel;
+            TransitionLabel oldLabel = oldTran.label();
+            TransitionLabel newLabel;
+            Transition<TransitionLabel> newTran;
 
-            if (oldLabel instanceof EmptyTrace)
+            if (oldLabel instanceof EmptyTrace) {
                 newLabel = new EmptyTrace();
+                newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
+                try {
+                    newAut.addTransition(newTran);
+                } catch (NoSuchStateException e) {
+                    e.printStackTrace();
+                }
+            }
+
             else {
-                newLabel = new PossibleWorld(oldLabel);
+                newLabel = new PossibleWorldWrap((PossibleWorldWrap) oldLabel);
                 // Remove proposition last from the label!
-                newLabel.remove(new PropositionLast());
+                ((PossibleWorldWrap) newLabel).remove(new PropositionLast());
+
+
+                //Check if the transition must lead to "ended" state
+                if (((PossibleWorldWrap)oldLabel).contains(new PropositionLast()) && oldEnd.isTerminal())
+                    newTran = new Transition<>(oldToNew.get(oldStart), newLabel, ended);
+                else
+                    newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
+
+                try {
+                    newAut.addTransition(newTran);
+                } catch (NoSuchStateException e) {
+                    e.printStackTrace();
+                }
             }
 
-            Transition<PossibleWorld> newTran;
-
-            //Check if the transition must lead to "ended" state
-            if(oldLabel.contains(new PropositionLast()) && oldEnd.isTerminal()) {
-                newTran = new Transition<>(oldToNew.get(oldStart), newLabel, ended);
-            }
-            else {
-               newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
-            }
-
-            try {
-                newAut.addTransition(newTran);
-            } catch (NoSuchStateException e) {
-                e.printStackTrace();
-            }
         }
         return newAut;
     }

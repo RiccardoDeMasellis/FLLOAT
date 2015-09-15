@@ -9,10 +9,19 @@
 package automaton;
 
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * Created by Riccardo De Masellis on 15/09/15.
  */
 public class PossibleWorldWrap extends PossibleWorld implements TransitionLabel {
+
+    public PossibleWorldWrap() {
+        super();
+    }
+
+    public PossibleWorldWrap(java.util.Collection<? extends Proposition> propositions) {
+        super(propositions);
+    }
 
 }

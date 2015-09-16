@@ -8,8 +8,8 @@
 
 package formula.quotedFormula;
 
+import automaton.TransitionLabel;
 import formula.ldlf.LDLfFormula;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -68,7 +68,7 @@ public class QuotedVar extends QuotedAtomicFormula {
     }
 
     @Override
-    public QuotedFormula delta(PossibleWorld world) {
-        return this.getUnquotedFormula().delta(world);
+    public QuotedFormula delta(TransitionLabel label) {
+        return this.getUnquotedFormula().delta(label);
     }
 }

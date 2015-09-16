@@ -8,12 +8,12 @@
 
 package formula.ldlf;
 
+import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.OrFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
 import formula.quotedFormula.QuotedVar;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -46,10 +46,10 @@ public class LDLfTempOrFormula extends LDLfBinaryFormula implements LDLfBoolOpTe
     }
 
     @Override
-    public QuotedFormula delta(PossibleWorld world) {
+    public QuotedFormula delta(TransitionLabel label) {
         QuotedVar quotedLeft = new QuotedVar(this.getLeftFormula());
         QuotedVar quotedRight = new QuotedVar(this.getRightFormula());
 
-        return new QuotedOrFormula(quotedLeft.delta(world), quotedRight.delta(world));
+        return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
     }
 }

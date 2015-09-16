@@ -9,13 +9,13 @@
 package formula.regExp;
 
 import automaton.EmptyTrace;
+import automaton.TransitionLabel;
 import formula.Formula;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.*;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -49,15 +49,15 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorld world) {
-        if (world instanceof EmptyTrace) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
+        if (label instanceof EmptyTrace) {
             QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(world);
+            return quoted.delta(label);
         }
 
         if (this.getNestedFormula() instanceof RegExpTest) {
             QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(world);
+            return quoted.delta(label);
         } else {
             LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
             LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), inner);
@@ -65,20 +65,20 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
             QuotedFormula quotedLeft = new QuotedVar((LDLfFormula) goal.clone());
             QuotedFormula quotedRight = new QuotedVar(outer);
 
-            return new QuotedOrFormula(quotedLeft.delta(world), quotedRight.delta(world));
+            return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
         }
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorld world) {
-        if (world instanceof EmptyTrace) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
+        if (label instanceof EmptyTrace) {
             QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(world);
+            return quoted.delta(label);
         }
 
         if (this.getNestedFormula() instanceof RegExpTest) {
             QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(world);
+            return quoted.delta(label);
         } else {
             LDLfBoxFormula inner = new LDLfBoxFormula(this.clone(), (LDLfFormula) goal.clone());
             LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), inner);
@@ -86,7 +86,7 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
             QuotedFormula quotedLeft = new QuotedVar((LDLfFormula) goal.clone());
             QuotedFormula quotedRight = new QuotedVar(outer);
 
-            return new QuotedAndFormula(quotedLeft.delta(world), quotedRight.delta(world));
+            return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
         }
     }
 }

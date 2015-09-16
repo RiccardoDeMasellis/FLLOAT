@@ -8,6 +8,7 @@
 
 package formula.regExp;
 
+import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
@@ -16,7 +17,6 @@ import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
 import formula.quotedFormula.QuotedVar;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -50,24 +50,24 @@ public class RegExpAltern extends RegExpBinary implements RegExpTemp {
     }
 
 
-    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorld world) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
         LDLfDiamondFormula ldlfLeft = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
         LDLfDiamondFormula ldlfRight = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
 
         QuotedVar quotedLeft = new QuotedVar(ldlfLeft);
         QuotedFormula quotedRight = new QuotedVar(ldlfRight);
 
-        return new QuotedOrFormula(quotedLeft.delta(world), quotedRight.delta(world));
+        return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
     }
 
 
-    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorld world) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
         LDLfBoxFormula ldlfLeft = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
         LDLfBoxFormula ldlfRight = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
 
         QuotedVar quotedLeft = new QuotedVar(ldlfLeft);
         QuotedFormula quotedRight = new QuotedVar(ldlfRight);
 
-        return new QuotedAndFormula(quotedLeft.delta(world), quotedRight.delta(world));
+        return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
     }
 }

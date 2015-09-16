@@ -8,6 +8,7 @@
 
 package formula.quotedFormula;
 
+import automaton.TransitionLabel;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -30,7 +31,7 @@ public abstract class QuotedFormula implements Cloneable {
 
     public abstract int hashCode();
 
-    public abstract QuotedFormula delta(PossibleWorld world);
+    public abstract QuotedFormula delta(TransitionLabel label);
 
     public Set<Set<QuotedVar>> getMinimalModels() {
         HashMap<QuotedVar, Proposition> quotedVar2Prop = new HashMap<>();

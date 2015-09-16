@@ -18,6 +18,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import rationals.Automaton;
+import rationals.transformations.Reducer;
 import utils.AutomatonUtils;
 import visitors.LDLfVisitors.LDLfVisitor;
 import visitors.LTLfVisitors.LTLfVisitor;
@@ -115,6 +116,11 @@ public class Main {
         Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
         //automaton = new ToDFA<>().transform(automaton);
+        /*
+        Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
+         */
+        automaton = new Reducer<>().transform(automaton);
+
 
         /*
         Printing

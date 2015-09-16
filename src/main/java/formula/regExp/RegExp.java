@@ -8,10 +8,10 @@
 
 package formula.regExp;
 
+import automaton.TransitionLabel;
 import formula.Formula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -19,7 +19,7 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  */
 public interface RegExp extends Formula {
 
-    QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorld world);
+    QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label);
 
-    QuotedFormula deltaBox(LDLfFormula goal, PossibleWorld world);
+    QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label);
 }

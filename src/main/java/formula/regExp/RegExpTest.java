@@ -8,13 +8,13 @@
 
 package formula.regExp;
 
+import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
 import formula.quotedFormula.QuotedVar;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -49,20 +49,20 @@ public class RegExpTest extends RegExpUnary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorld world) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
         QuotedVar quotedLeft = new QuotedVar((LDLfFormula) this.getNestedFormula().clone());
         QuotedVar quotedRight = new QuotedVar((LDLfFormula) goal.clone());
 
-        return new QuotedAndFormula(quotedLeft.delta(world), quotedRight.delta(world));
+        return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorld world) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
         LDLfFormula left = (LDLfFormula) this.getNestedFormula().negate().nnf();
 
         QuotedVar quotedLeft = new QuotedVar(left);
         QuotedVar quotedRight = new QuotedVar((LDLfFormula) goal.clone());
 
-        return new QuotedOrFormula(quotedLeft.delta(world), quotedRight.delta(world));
+        return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
     }
 }

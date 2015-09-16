@@ -8,6 +8,7 @@
 
 import antlr4_generated.LDLfFormulaParserLexer;
 import antlr4_generated.LDLfFormulaParserParser;
+import automaton.PossibleWorldWrap;
 import evaluations.PropositionLast;
 import formula.ldlf.*;
 import formula.quotedFormula.*;
@@ -35,15 +36,15 @@ public class DeltaFunctionTest {
     public void deltaAtomicTest() {
         LDLfttFormula tt = new LDLfttFormula();
         QuotedVar quoted = new QuotedVar(tt);
-        PossibleWorld world = new PossibleWorld();
-        QuotedFormula result = quoted.delta(world);
+        PossibleWorldWrap pww = new PossibleWorldWrap();
+        QuotedFormula result = quoted.delta(pww);
         QuotedFormula expected = new QuotedTrueFormula();
         Assert.assertEquals(expected, result);
 
         LDLfffFormula ff = new LDLfffFormula();
         quoted = new QuotedVar(ff);
-        world = new PossibleWorld();
-        result = quoted.delta(world);
+        pww = new PossibleWorldWrap();
+        result = quoted.delta(pww);
         expected = new QuotedFalseFormula();
         Assert.assertEquals(expected, result);
 
@@ -64,11 +65,11 @@ public class DeltaFunctionTest {
         if (models.isEmpty())
             throw new RuntimeException("The specified formula is unsatisfiable!");
         Iterator<PossibleWorld> it = models.iterator();
-        world = it.next();
-        result = quoted.delta(world);
+        pww = new PossibleWorldWrap(it.next());
+        result = quoted.delta(pww);
         expected = new QuotedTrueFormula();
         System.out.println(pf);
-        System.out.println("Model: " + world);
+        System.out.println("Model: " + pww);
         Assert.assertEquals(expected, result);
 
         // Try with a non-model of the formula
@@ -78,10 +79,10 @@ public class DeltaFunctionTest {
         if (nonModels.isEmpty())
             throw new RuntimeException("The specified formula is a tautology!");
         it = nonModels.iterator();
-        world = it.next();
-        result = quoted.delta(world);
+        pww = new PossibleWorldWrap(it.next());
+        result = quoted.delta(pww);
         expected = new QuotedFalseFormula();
-        System.out.println("Non-model: " + world);
+        System.out.println("Non-model: " + pww);
         Assert.assertEquals(expected, result);
     }
 
@@ -100,13 +101,13 @@ public class DeltaFunctionTest {
         QuotedFormula quotedAnd = new QuotedAndFormula(quotedLeft, quotedRight);
 
         // Try with a model
-        PossibleWorld world = new PossibleWorld();
-        world.add(new Proposition("ciao"));
-        world.add(new Proposition("a"));
-        world.add(new Proposition("b"));
-        world.add(new Proposition("q"));
+        PossibleWorldWrap pww = new PossibleWorldWrap();
+        pww.add(new Proposition("ciao"));
+        pww.add(new Proposition("a"));
+        pww.add(new Proposition("b"));
+        pww.add(new Proposition("q"));
 
-        QuotedFormula result = quotedAnd.delta(world);
+        QuotedFormula result = quotedAnd.delta(pww);
         QuotedFormula expLeft = new QuotedTrueFormula();
         QuotedFormula expRight = new QuotedTrueFormula();
         QuotedFormula expected = new QuotedAndFormula(expLeft, expRight);
@@ -116,13 +117,13 @@ public class DeltaFunctionTest {
         Assert.assertEquals(expected, result);
 
         // Try with a non-model
-        world = new PossibleWorld();
-        world.add(new Proposition("ciao"));
-        world.add(new Proposition("a"));
-        world.add(new Proposition("b"));
+        pww = new PossibleWorldWrap();
+        pww.add(new Proposition("ciao"));
+        pww.add(new Proposition("a"));
+        pww.add(new Proposition("b"));
         //world.add(new Proposition("q"));
 
-        result = quotedAnd.delta(world);
+        result = quotedAnd.delta(pww);
         expLeft = new QuotedTrueFormula();
         expRight = new QuotedFalseFormula();
         expected = new QuotedAndFormula(expLeft, expRight);
@@ -145,11 +146,11 @@ public class DeltaFunctionTest {
         QuotedFormula quoted = new QuotedVar(formula);
 
         // Try with model Pi={a, last}
-        PossibleWorld world = new PossibleWorld();
-        world.add(new Proposition("a"));
-        world.add(new PropositionLast());
+        PossibleWorldWrap pww = new PossibleWorldWrap();
+        pww.add(new Proposition("a"));
+        pww.add(new PropositionLast());
 
-        QuotedFormula result = quoted.delta(world);
+        QuotedFormula result = quoted.delta(pww);
 
         QuotedFormula andLeft = new QuotedTrueFormula();
         QuotedFormula andRight = new QuotedFalseFormula();
@@ -166,11 +167,11 @@ public class DeltaFunctionTest {
         System.out.println(QuotedModels);
 
         // Try with model Pi={a, b}
-        world = new PossibleWorld();
-        world.add(new Proposition("a"));
-        world.add(new Proposition("b"));
+        pww = new PossibleWorldWrap();
+        pww.add(new Proposition("a"));
+        pww.add(new Proposition("b"));
 
-        result = quoted.delta(world);
+        result = quoted.delta(pww);
 
         andRight = new QuotedVar(formula);
         orLeft = new QuotedTrueFormula();
@@ -197,12 +198,12 @@ public class DeltaFunctionTest {
         quoted = new QuotedVar(formula);
 
         // Try with model Pi={a, c, g}
-        world = new PossibleWorld();
-        world.add(new Proposition("a"));
-        world.add(new Proposition("c"));
-        world.add(new Proposition("g"));
+        pww = new PossibleWorldWrap();
+        pww.add(new Proposition("a"));
+        pww.add(new Proposition("c"));
+        pww.add(new Proposition("g"));
 
-        result = quoted.delta(world);
+        result = quoted.delta(pww);
 
         QuotedFormula quotedG = new QuotedVar(new LDLfLocalVar(new Proposition("g")));
         input = "[d*]g";
@@ -221,12 +222,12 @@ public class DeltaFunctionTest {
         Assert.assertEquals(expected, result);
 
         // Try with model Pi={b, f, last}
-        world = new PossibleWorld();
-        world.add(new Proposition("b"));
-        world.add(new Proposition("f"));
-        world.add(new PropositionLast());
+        pww = new PossibleWorldWrap();
+        pww.add(new Proposition("b"));
+        pww.add(new Proposition("f"));
+        pww.add(new PropositionLast());
 
-        result = quoted.delta(world);
+        result = quoted.delta(pww);
 
         innerAnd = new QuotedAndFormula(new QuotedTrueFormula(), new QuotedTrueFormula());
         expected = new QuotedAndFormula(innerAnd, new QuotedTrueFormula());
@@ -247,12 +248,12 @@ public class DeltaFunctionTest {
         quoted = new QuotedVar(formula);
 
         // Try with model Pi={a, b, last}
-        world = new PossibleWorld();
-        world.add(new Proposition("a"));
-        world.add(new Proposition("b"));
-        world.add(new PropositionLast());
+        pww = new PossibleWorldWrap();
+        pww.add(new Proposition("a"));
+        pww.add(new Proposition("b"));
+        pww.add(new PropositionLast());
 
-        result = quoted.delta(world);
+        result = quoted.delta(pww);
 
         innerAnd = new QuotedAndFormula(new QuotedTrueFormula(), new QuotedFalseFormula());
         QuotedFormula or = new QuotedOrFormula(new QuotedTrueFormula(), innerAnd);
@@ -277,12 +278,12 @@ public class DeltaFunctionTest {
         QuotedFormula quoted = new QuotedVar(formula);
 
         // Try with model Pi={a, b, last}
-        PossibleWorld world= new PossibleWorld();
-        world.add(new Proposition("a"));
-        world.add(new Proposition("b"));
-        world.add(new PropositionLast());
+        PossibleWorldWrap pww= new PossibleWorldWrap();
+        pww.add(new Proposition("a"));
+        pww.add(new Proposition("b"));
+        pww.add(new PropositionLast());
 
-        QuotedFormula result = quoted.delta(world);
+        QuotedFormula result = quoted.delta(pww);
 
         QuotedFormula innerAnd = new QuotedAndFormula(new QuotedTrueFormula(), new QuotedFalseFormula());
         QuotedFormula or = new QuotedOrFormula(new QuotedTrueFormula(), innerAnd);
@@ -299,6 +300,4 @@ public class DeltaFunctionTest {
         System.out.println(prop2QuotedVar);
         System.out.println(pf);
     }
-
-
 }

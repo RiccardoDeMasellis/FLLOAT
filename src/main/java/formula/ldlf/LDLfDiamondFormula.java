@@ -8,10 +8,10 @@
 
 package formula.ldlf;
 
+import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.quotedFormula.QuotedFormula;
 import formula.regExp.RegExp;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
@@ -55,7 +55,7 @@ public class LDLfDiamondFormula extends LDLfTempOpTempFormula {
     }
 
     @Override
-    public QuotedFormula delta(PossibleWorld world) {
-        return this.getRegExp().deltaDiamond(this.getGoalFormula(), world);
+    public QuotedFormula delta(TransitionLabel label) {
+        return this.getRegExp().deltaDiamond(this.getGoalFormula(), label);
     }
 }

@@ -8,10 +8,10 @@
 
 package formula.ldlf;
 
+import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.NotFormula;
 import formula.quotedFormula.QuotedFormula;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -34,7 +34,7 @@ public class LDLfTempNotFormula extends LDLfUnaryFormula implements LDLfBoolOpTe
 
 
     @Override
-    public QuotedFormula delta(PossibleWorld world) {
-        return ((LDLfFormula) this.nnf()).delta(world);
+    public QuotedFormula delta(TransitionLabel label) {
+        return ((LDLfFormula) this.nnf()).delta(label);
     }
 }

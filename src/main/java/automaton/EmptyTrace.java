@@ -21,6 +21,6 @@ public class EmptyTrace implements TransitionLabel {
     }
 
     public String toString() {
-        return "eps";
+        return "EmpTr";
     }
 }

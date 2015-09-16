@@ -8,9 +8,9 @@
 
 package formula.ldlf;
 
+import automaton.TransitionLabel;
 import formula.Formula;
 import formula.quotedFormula.QuotedFormula;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -18,6 +18,6 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  */
 public interface LDLfFormula extends Formula {
 
-    QuotedFormula delta(PossibleWorld world);
+    QuotedFormula delta(TransitionLabel label);
 
 }

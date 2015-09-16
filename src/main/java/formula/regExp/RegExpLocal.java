@@ -9,6 +9,8 @@
 package formula.regExp;
 
 import automaton.EmptyTrace;
+import automaton.PossibleWorldWrap;
+import automaton.TransitionLabel;
 import evaluations.PropositionLast;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
@@ -17,7 +19,6 @@ import formula.quotedFormula.QuotedFalseFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedTrueFormula;
 import formula.quotedFormula.QuotedVar;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -53,40 +54,51 @@ public interface RegExpLocal extends RegExp, LocalFormula {
     PropositionalFormula regExpLocal2Propositional();
 
 
-    default QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorld world) {
-        if (world instanceof EmptyTrace)
+    default QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
+        if (label instanceof EmptyTrace)
             return new QuotedFalseFormula();
 
-        PropositionLast last = new PropositionLast();
-        PropositionalFormula pf = this.regExpLocal2Propositional();
+        if (label instanceof PossibleWorldWrap) {
+            PossibleWorldWrap pwwLabel = (PossibleWorldWrap)label;
+            PropositionLast last = new PropositionLast();
+            PropositionalFormula pf = this.regExpLocal2Propositional();
 
-        if (world.satisfies(pf)) {
-            if (world.contains(last)) {
-                QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-                return quoted.delta(new EmptyTrace());
-            } else
-                return new QuotedVar((LDLfFormula) goal.clone());
-        } else { // !world.satisfies(pf)
-            return new QuotedFalseFormula();
+            if (pwwLabel.satisfies(pf)) {
+                if (pwwLabel.contains(last)) {
+                    QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
+                    return quoted.delta(new EmptyTrace());
+                } else
+                    return new QuotedVar((LDLfFormula) goal.clone());
+            } else { // !world.satisfies(pf)
+                return new QuotedFalseFormula();
+            }
         }
+        else
+            throw new RuntimeException("The label is neither EmptyTrace nor PossibleWorldWrap");
     }
 
-    default QuotedFormula deltaBox(LDLfFormula goal, PossibleWorld world) {
-        if (world instanceof EmptyTrace)
+
+    default QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
+        if (label instanceof EmptyTrace)
             return new QuotedTrueFormula();
 
-        PropositionLast last = new PropositionLast();
-        PropositionalFormula pf = this.regExpLocal2Propositional();
+        if (label instanceof PossibleWorldWrap) {
+            PossibleWorldWrap pwwLabel = (PossibleWorldWrap)label;
+            PropositionLast last = new PropositionLast();
+            PropositionalFormula pf = this.regExpLocal2Propositional();
 
-        if (world.satisfies(pf)) {
-            if (world.contains(last)) {
-                QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-                return quoted.delta(new EmptyTrace());
-            } else
-                return new QuotedVar((LDLfFormula) goal.clone());
-        } else { // !world.satisfies(pf)
-            return new QuotedTrueFormula();
+            if (pwwLabel.satisfies(pf)) {
+                if (pwwLabel.contains(last)) {
+                    QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
+                    return quoted.delta(new EmptyTrace());
+                } else
+                    return new QuotedVar((LDLfFormula) goal.clone());
+            } else { // !world.satisfies(pf)
+                return new QuotedTrueFormula();
+            }
         }
+        else
+            throw new RuntimeException("The label is neither EmptyTrace nor PossibleWorldWrap");
     }
 
 }

@@ -8,13 +8,13 @@
 
 package formula.regExp;
 
+import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedVar;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -49,22 +49,22 @@ public class RegExpConcat extends RegExpBinary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorld world) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
         LDLfDiamondFormula nestedLdlf = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
         LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
 
         QuotedVar quotedFormula = new QuotedVar(outer);
 
-        return quotedFormula.delta(world);
+        return quotedFormula.delta(label);
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorld world) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
         LDLfBoxFormula nestedLdlf = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
         LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
 
         QuotedVar quotedFormula = new QuotedVar(outer);
 
-        return quotedFormula.delta(world);
+        return quotedFormula.delta(label);
     }
 }

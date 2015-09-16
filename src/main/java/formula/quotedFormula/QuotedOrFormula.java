@@ -8,7 +8,7 @@
 
 package formula.quotedFormula;
 
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import automaton.TransitionLabel;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -30,7 +30,7 @@ public class QuotedOrFormula extends QuotedBinaryFormula {
     }
 
     @Override
-    public QuotedFormula delta(PossibleWorld world) {
+    public QuotedFormula delta(TransitionLabel label) {
         throw new RuntimeException("Something wrong: delta method cannot be called on QuotedOrFormula");
     }
 

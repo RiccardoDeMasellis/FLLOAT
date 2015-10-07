@@ -8,17 +8,20 @@
 
 package main;
 
+import RuntimeVerification.ExecutableAutomaton;
 import antlr4_generated.LDLfFormulaParserLexer;
 import antlr4_generated.LDLfFormulaParserParser;
 import antlr4_generated.LTLfFormulaParserLexer;
 import antlr4_generated.LTLfFormulaParserParser;
 import formula.ldlf.LDLfFormula;
 import formula.ltlf.LTLfFormula;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import rationals.Automaton;
-import rationals.transformations.Reducer;
+import rationals.transformations.ToDFA;
 import utils.AutomatonUtils;
 import visitors.LDLfVisitors.LDLfVisitor;
 import visitors.LTLfVisitors.LTLfVisitor;
@@ -33,13 +36,13 @@ import java.io.PrintStream;
 public class Main {
 
     public static void main(String[] args) {
-        //ldlf2Aut();
+        ldlf2Aut();
         ltlf2Aut();
     }
 
 
     public static void ldlf2Aut() {
-        String input = "<(a + (b ; c)) + (f ; d*)>g";
+        String input = "<a>tt";
 
         /*
         Parsing
@@ -56,12 +59,21 @@ public class Main {
         /*
         Automaton construction method invocation
          */
+        PropositionalSignature signature = formula.getSignature();
+        Proposition w = new Proposition("w");
+        Proposition x = new Proposition("x");
+        Proposition y = new Proposition("y");
+        Proposition z = new Proposition("z");
+        signature.add(w);
+        signature.add(x);
+        signature.add(y);
+        signature.add(z);
         Automaton automaton = AutomatonUtils.ldlf2Automaton(formula, formula.getSignature());
 
         /*
         Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
-        //automaton = new ToDFA<>().transform(automaton);
+        automaton = new ToDFA<>().transform(automaton);
 
         /*
         Printing
@@ -90,7 +102,7 @@ public class Main {
         /*
         Input
          */
-        String input = "<> Send_Invoice";
+        String input = "a && (!(X true))";
 
         /*
         Parsing
@@ -115,11 +127,11 @@ public class Main {
         /*
         Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
-        //automaton = new ToDFA<>().transform(automaton);
+        automaton = new ToDFA<>().transform(automaton);
         /*
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
-        automaton = new Reducer<>().transform(automaton);
+        //automaton = new Reducer<>().transform(automaton);
 
 
         /*
@@ -142,5 +154,34 @@ public class Main {
         ps.println(AutomatonUtils.toDot(automaton));
         ps.flush();
         ps.close();
+
+        //provaExecutableAutomaton(automaton);
+
+    }
+
+
+    public static void provaExecutableAutomaton(Automaton a) {
+        ExecutableAutomaton ea = new ExecutableAutomaton(a);
+        System.out.println(ea.getCurrentState());
+        System.out.println("Performing transition a");
+        ea.step("a");
+        System.out.println("New state and truth value: ");
+        System.out.println(ea.getCurrentState());
+        System.out.println(ea.currentRVTruthValue());
+
+        System.out.println("Performing transition b");
+        ea.step("b");
+        System.out.println(ea.getCurrentState());
+        System.out.println(ea.currentRVTruthValue());
+
+        System.out.println("Performing transition c");
+        ea.step("c");
+        System.out.println(ea.getCurrentState());
+        System.out.println(ea.currentRVTruthValue());
+
+        System.out.println("Performing transition c");
+        ea.step("c");
+        System.out.println(ea.getCurrentState());
+        System.out.println(ea.currentRVTruthValue());
     }
 }

@@ -6,26 +6,21 @@
  * under certain conditions; see http://www.gnu.org/licenses/gpl-3.0.html for details.
  */
 
-package automaton;
+package RuntimeVerification;
 
 /**
- * Created by Riccardo De Masellis on 09/07/15.
+ * Created by Riccardo De Masellis on 05/10/15.
  */
-public class
-        EmptyTrace implements TransitionLabel {
+public abstract class RVTruthValue {
 
-    public boolean equals(Object other) {
-        if (other == null)
+    public boolean equals(Object o) {
+        if (o == null)
             return false;
         else
-            return this.getClass().equals(other.getClass());
+            return this.getClass().equals(o.getClass());
     }
 
     public int hashCode() {
         return this.getClass().hashCode();
-    }
-
-    public String toString() {
-        return "EmpTr";
     }
 }

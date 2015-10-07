@@ -47,6 +47,11 @@ public class AutomatonUtils {
          */
         LinkedList<QuotedFormulaState> toAnalyze = new LinkedList<>();
 
+        /*
+        Initialize the data structure for the "false" state.
+         */
+        QuotedFormulaState falseState = (QuotedFormulaState) stateFactory.create(false, false, null);
+
 
         // Initialize the data structure for the initial state;
         initialFormula = (LDLfFormula) initialFormula.nnf();
@@ -82,10 +87,15 @@ public class AutomatonUtils {
          */
         allLabels.add(new EmptyTrace());
 
+        /*
+        All transition loops in the final state AND the false state
+         */
         for (TransitionLabel w : allLabels) {
-            Transition<TransitionLabel> t = new Transition(finalState, w, finalState);
+            Transition<TransitionLabel> t1 = new Transition(finalState, w, finalState);
+            Transition<TransitionLabel> t2 = new Transition(falseState, w, falseState);
             try {
-                automaton.addTransition(t);
+                automaton.addTransition(t1);
+                automaton.addTransition(t2);
             } catch (NoSuchStateException e) {
                 e.printStackTrace();
             }
@@ -103,25 +113,42 @@ public class AutomatonUtils {
                 // Compute the minimal interpretations satisfying deltaResult, that is, all the q'
                 Set<Set<QuotedVar>> newStateSetFormulas = deltaResult.getMinimalModels();
 
-                for (Set<QuotedVar> newStateFormulas : newStateSetFormulas) {
-                    //Add the new state if new, or give me the already existing one with the same Set<QuotedVar>
-                    QuotedFormulaState destinationState = getStateIfExists(automaton, newStateFormulas);
-                    if (destinationState == null) {
-                        destinationState = (QuotedFormulaState) stateFactory.create(false, false, newStateFormulas);
-                        toAnalyze.addLast(destinationState);
-                    }
-
-                    // Add the transition (currentState, world, destinationState)
-                    Transition<TransitionLabel> t = new Transition<>(currentState, label, destinationState);
+                // newStateFormulas empty means that the current interpretation lead to the "false" state.
+                if (newStateSetFormulas.isEmpty()) {
+                    // Add the transition (currentState, world, falseState)
+                    Transition<TransitionLabel> t = new Transition<>(currentState, label, falseState);
                     try {
                         automaton.addTransition(t);
                     } catch (NoSuchStateException e) {
                         e.printStackTrace();
                     }
                 }
+
+                // Otherwise the transition DOES NOT lead to the false state.
+                else {
+                    for (Set<QuotedVar> newStateFormulas : newStateSetFormulas) {
+                        //Add the new state if new, or give me the already existing one with the same Set<QuotedVar>
+                        QuotedFormulaState destinationState = getStateIfExists(automaton, newStateFormulas);
+                        if (destinationState == null) {
+                            destinationState = (QuotedFormulaState) stateFactory.create(false, false, newStateFormulas);
+                            toAnalyze.addLast(destinationState);
+                        }
+
+                        // Add the transition (currentState, world, destinationState)
+                        Transition<TransitionLabel> t = new Transition<>(currentState, label, destinationState);
+                        try {
+                            automaton.addTransition(t);
+                        } catch (NoSuchStateException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+
             }
             toAnalyze.remove(currentState);
         }
+        //return automaton;
         return eliminateLastTransitions(automaton);
     }
 
@@ -154,10 +181,12 @@ public class AutomatonUtils {
             if (oldLabel instanceof EmptyTrace) {
                 newLabel = new EmptyTrace();
                 newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
-                try {
-                    newAut.addTransition(newTran);
-                } catch (NoSuchStateException e) {
-                    e.printStackTrace();
+                if(! newAut.delta().contains(newTran)) {
+                    try {
+                        newAut.addTransition(newTran);
+                    } catch (NoSuchStateException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -173,13 +202,15 @@ public class AutomatonUtils {
                 else
                     newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
 
-                try {
-                    newAut.addTransition(newTran);
-                } catch (NoSuchStateException e) {
-                    e.printStackTrace();
+                // Check if the transitions already exists in the new automaton
+                if(! newAut.delta().contains(newTran)) {
+                    try {
+                        newAut.addTransition(newTran);
+                    } catch (NoSuchStateException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
         }
         return newAut;
     }
@@ -190,7 +221,7 @@ public class AutomatonUtils {
         QuotedFormulaState result = null;
         Set<QuotedFormulaState> states = a.states();
         for (QuotedFormulaState s : states) {
-            if (s.getFormulaSet().equals(sqv))
+            if (s.getFormulaSet() != null && s.getFormulaSet().equals(sqv))
                 return s;
         }
         return result;

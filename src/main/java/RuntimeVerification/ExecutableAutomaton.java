@@ -170,9 +170,10 @@ public class ExecutableAutomaton {
         for (Transition<TransitionLabel> t : goodTransitions) {
             TransitionLabel label = t.label();
             if (label instanceof PossibleWorldWrap) {
-                Proposition[] events = (Proposition[]) ((PossibleWorldWrap)label).toArray();
-                if(events.length==1)
-                    result.add(events[0].toString());
+                if(((PossibleWorldWrap) label).size()==1) {
+                    Iterator it = ((PossibleWorldWrap) label).iterator();
+                    result.add(it.next().toString());
+                }
             }
         }
         return result;

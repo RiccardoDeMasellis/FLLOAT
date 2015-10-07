@@ -153,6 +153,47 @@ public class AutomatonUtils {
     }
 
 
+
+    /*
+    Call this method **BEFORE** eliminateLastTransitions!
+     */
+    public static Automaton eliminateSelfLoops(Automaton oldAut) {
+        Set<State> oldStates = oldAut.states();
+        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
+
+        Automaton newAut = new Automaton();
+
+        Map<State, State> oldToNew = new HashMap<>();
+
+        //Add all states
+        for (State oldSt : oldStates) {
+            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
+            oldToNew.put(oldSt, newSt);
+        }
+
+        // Add the new trueLastState
+        State trueLastState = newAut.addState(false, true);
+
+        // Add the falseLastState
+        State falseLastState = newAut.addState(false, false);
+
+        for (Transition<TransitionLabel> oldTran : oldTransitions) {
+            State oldStart = oldTran.start();
+            State oldEnd = oldTran.end();
+            TransitionLabel oldLabel = oldTran.label();
+
+            TransitionLabel newLabel;
+            Transition<TransitionLabel> newTran;
+
+            if ()
+
+        }
+
+
+    }
+
+
+
     private static Automaton eliminateLastTransitions(Automaton oldAut) {
         Set<State> oldStates = oldAut.states();
         Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();

@@ -155,7 +155,7 @@ public class Main {
         ps.flush();
         ps.close();
 
-        //provaExecutableAutomaton(automaton);
+        provaExecutableAutomaton(automaton);
 
     }
 
@@ -169,19 +169,19 @@ public class Main {
         System.out.println(ea.getCurrentState());
         System.out.println(ea.currentRVTruthValue());
 
-        System.out.println("Performing transition b");
-        ea.step("b");
+        System.out.println("Performing transition EmptyTrace");
+        ea.step("EmptyTrace");
         System.out.println(ea.getCurrentState());
         System.out.println(ea.currentRVTruthValue());
-
-        System.out.println("Performing transition c");
-        ea.step("c");
-        System.out.println(ea.getCurrentState());
-        System.out.println(ea.currentRVTruthValue());
-
-        System.out.println("Performing transition c");
-        ea.step("c");
-        System.out.println(ea.getCurrentState());
-        System.out.println(ea.currentRVTruthValue());
+//
+//        System.out.println("Performing transition c");
+//        ea.step("c");
+//        System.out.println(ea.getCurrentState());
+//        System.out.println(ea.currentRVTruthValue());
+//
+//        System.out.println("Performing transition c");
+//        ea.step("c");
+//        System.out.println(ea.getCurrentState());
+//        System.out.println(ea.currentRVTruthValue());
     }
 }

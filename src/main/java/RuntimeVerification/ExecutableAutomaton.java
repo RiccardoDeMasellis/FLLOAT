@@ -8,6 +8,7 @@
 
 package RuntimeVerification;
 
+import automaton.EmptyTrace;
 import automaton.PossibleWorldWrap;
 import automaton.TransitionLabel;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -60,11 +61,17 @@ public class ExecutableAutomaton {
 
 
     public State step(String eventName) {
-        Proposition event = new Proposition(eventName);
-        Set<Proposition> eventSet = new HashSet<>();
-        eventSet.add(event);
-        PossibleWorldWrap pww = new PossibleWorldWrap(eventSet);
-        return step(pww);
+        TransitionLabel label;
+        if (eventName.equals("EmptyTrace")) {
+            label = new EmptyTrace();
+        }
+        else {
+            Proposition event = new Proposition(eventName);
+            Set<Proposition> eventSet = new HashSet<>();
+            eventSet.add(event);
+            label = new PossibleWorldWrap(eventSet);
+        }
+        return step(label);
     }
 
 

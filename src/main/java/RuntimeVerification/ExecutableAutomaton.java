@@ -135,6 +135,7 @@ public class ExecutableAutomaton {
         }
     }
 
+
     public RVTruthValue currentRVTruthValue() {
         return stateRVTruthValue(this.currentState);
     }
@@ -163,7 +164,7 @@ public class ExecutableAutomaton {
      * RVFalse state from the current state.
      * @return
      */
-    public Set<String> notFailingEvents() {
+    public Set<String> declareNotFailingEvents() {
         Set<String> result = new HashSet<>();
         Set<Transition<TransitionLabel>> goodTransitions = this.notFailingOutgoingTransitions(currentState);
 

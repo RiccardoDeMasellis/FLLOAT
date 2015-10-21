@@ -36,7 +36,7 @@ import java.io.PrintStream;
 public class Main {
 
     public static void main(String[] args) {
-        ldlf2Aut();
+        //ldlf2Aut();
         ltlf2Aut();
     }
 
@@ -102,7 +102,7 @@ public class Main {
         /*
         Input
          */
-        String input = "a && (!(X true))";
+        String input = "(a U b) && X(c & d)";
 
         /*
         Parsing
@@ -128,6 +128,7 @@ public class Main {
         Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
         automaton = new ToDFA<>().transform(automaton);
+        automaton = AutomatonUtils.declareAssumption(automaton);
         /*
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
@@ -155,7 +156,7 @@ public class Main {
         ps.flush();
         ps.close();
 
-        provaExecutableAutomaton(automaton);
+        //provaExecutableAutomaton(automaton);
 
     }
 

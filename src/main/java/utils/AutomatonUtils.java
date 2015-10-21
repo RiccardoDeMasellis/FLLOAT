@@ -216,6 +216,66 @@ public class AutomatonUtils {
     }
 
 
+    /**
+     * Only to be used with ProM. Returns the automaton which transitions contain ONE event only.
+     * @param oldAut
+     * @return
+     */
+    public static Automaton declareAssumption(Automaton oldAut) {
+        Set<State> oldStates = oldAut.states();
+        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
+
+        Automaton newAut = new Automaton();
+
+        Map<State, State> oldToNew = new HashMap<>();
+
+        //Add all states
+        for (State oldSt : oldStates) {
+            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
+            oldToNew.put(oldSt, newSt);
+        }
+
+        for (Transition<TransitionLabel> oldTran : oldTransitions) {
+            State oldStart = oldTran.start();
+            State oldEnd = oldTran.end();
+            TransitionLabel oldLabel = oldTran.label();
+            TransitionLabel newLabel;
+            Transition<TransitionLabel> newTran;
+
+            if (oldLabel instanceof EmptyTrace) {
+                newLabel = new EmptyTrace();
+                newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
+                if(! newAut.delta().contains(newTran)) {
+                    try {
+                        newAut.addTransition(newTran);
+                    } catch (NoSuchStateException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            else {
+                //Check if the transitions contains an event only.
+                if (((PossibleWorldWrap) oldLabel).size() == 1) {
+                    newLabel = new PossibleWorldWrap((PossibleWorldWrap) oldLabel);
+                    newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
+
+                    // Check if the transitions already exists in the new automaton
+                    if(! newAut.delta().contains(newTran)) {
+                        try {
+                            newAut.addTransition(newTran);
+                        } catch (NoSuchStateException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+        }
+        return newAut;
+    }
+
+
 
     private static QuotedFormulaState getStateIfExists(Automaton a, Set<QuotedVar> sqv) {
         QuotedFormulaState result = null;

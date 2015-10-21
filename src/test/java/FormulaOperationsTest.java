@@ -233,7 +233,7 @@ public class FormulaOperationsTest {
         <true*>( [(!false)*] (((<true> true) | ([(!false)*]([!((!a) | (!b))]ff)) & ((<true*>(<(a & b)>tt))) | ([true]false) ) ) )
         */
 
-        input = "<true*>([(true)*] ((((<true> true) | ([(true)*]([a & b]ff))) & ((<true*>(<(a & b)>tt)) | ([true]false))) ))";
+        input = "<true*>([(true)*] ((((<true>(<true>tt)) | ([(true)*]([a & b]ff))) & ((<true*>(<(a & b)>tt)) | ([true]([!false]ff)))) ))";
         ldlfLexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
         ldlfParser = new LDLfFormulaParserParser(new CommonTokenStream(ldlfLexer));
         tree = ldlfParser.expression();
@@ -260,7 +260,7 @@ public class FormulaOperationsTest {
         formula1 = ltlfVisitor.visit(tree);
         sig1 = formula1.getSignature();
 
-        input = "<(((( (<true> a) && ([(((<true>(!b))?);(true))*]([!c]ff)))?) ; true)*)>(<d>tt)";
+        input = "<(((( (<true>(<a>tt)) && ([(((<true>(<!b>ff))?);(true))*]([!c]ff)))?) ; true)*)>(<d>tt)";
         ldlfLexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
         ldlfParser = new LDLfFormulaParserParser(new CommonTokenStream(ldlfLexer));
         tree = ldlfParser.expression();

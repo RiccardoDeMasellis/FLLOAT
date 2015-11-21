@@ -42,7 +42,7 @@ public class Main {
 
 
     public static void ldlf2Aut() {
-        String input = "<a>tt";
+        String input = "[true*]([!a]ff)";
 
         /*
         Parsing
@@ -68,6 +68,9 @@ public class Main {
         signature.add(x);
         signature.add(y);
         signature.add(z);
+
+        System.out.println(formula);
+
         Automaton automaton = AutomatonUtils.ldlf2Automaton(formula, formula.getSignature());
 
         /*
@@ -102,7 +105,8 @@ public class Main {
         /*
         Input
          */
-        String input = "(a U b) && X(c & d)";
+        //String input = "G (a -> (F b))";
+        String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
 
         /*
         Parsing
@@ -123,12 +127,13 @@ public class Main {
         Automaton construction method invocation
          */
         Automaton automaton = AutomatonUtils.ldlf2Automaton(ldlff, ldlff.getSignature());
+        System.out.println(automaton);
 
         /*
         Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
         automaton = new ToDFA<>().transform(automaton);
-        automaton = AutomatonUtils.declareAssumption(automaton);
+        //automaton = AutomatonUtils.declareAssumption(automaton);
         /*
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
@@ -163,17 +168,23 @@ public class Main {
 
     public static void provaExecutableAutomaton(Automaton a) {
         ExecutableAutomaton ea = new ExecutableAutomaton(a);
-        System.out.println(ea.getCurrentState());
+        System.out.println("Current state: " + ea.getCurrentState());
+        System.out.println("Current state value: " + ea.currentRVTruthValue());
+        System.out.println("outgoing good transition: ");
+        System.out.println(ea.notFailingOutgoingTransitions(ea.getCurrentState()));
+        //System.out.println(ea.declareNotFailingEvents());
         System.out.println("Performing transition a");
         ea.step("a");
-        System.out.println("New state and truth value: ");
-        System.out.println(ea.getCurrentState());
-        System.out.println(ea.currentRVTruthValue());
+        System.out.println("Current state: " + ea.getCurrentState());
+        System.out.println("Current state value: " + ea.currentRVTruthValue());
+        System.out.println("outgoing good transition: ");
+        System.out.println(ea.notFailingOutgoingTransitions(ea.getCurrentState()));
+        //System.out.println(ea.declareNotFailingEvents());
 
         System.out.println("Performing transition EmptyTrace");
         ea.step("EmptyTrace");
-        System.out.println(ea.getCurrentState());
-        System.out.println(ea.currentRVTruthValue());
+        System.out.println("Current state: " + ea.getCurrentState());
+        System.out.println("Current state value: " + ea.currentRVTruthValue());
 //
 //        System.out.println("Performing transition c");
 //        ea.step("c");

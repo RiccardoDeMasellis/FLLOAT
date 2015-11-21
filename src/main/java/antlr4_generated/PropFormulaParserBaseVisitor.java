@@ -1,4 +1,4 @@
-// Generated from PropFormulaParser.g4 by ANTLR 4.3
+// Generated from PropFormulaParser.g4 by ANTLR 4.5
 
 	package antlr4_generated;
 
@@ -20,53 +20,47 @@ public class PropFormulaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitOrProp(@NotNull PropFormulaParserParser.OrPropContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitPropositionalFormula(PropFormulaParserParser.PropositionalFormulaContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAndProp(@NotNull PropFormulaParserParser.AndPropContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitDoubleImplicationProp(PropFormulaParserParser.DoubleImplicationPropContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitImplicationProp(@NotNull PropFormulaParserParser.ImplicationPropContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitImplicationProp(PropFormulaParserParser.ImplicationPropContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNotProp(@NotNull PropFormulaParserParser.NotPropContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitOrProp(PropFormulaParserParser.OrPropContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDoubleImplicationProp(@NotNull PropFormulaParserParser.DoubleImplicationPropContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitAndProp(PropFormulaParserParser.AndPropContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPropositionalFormula(@NotNull PropFormulaParserParser.PropositionalFormulaContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitNotProp(PropFormulaParserParser.NotPropContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAtom(@NotNull PropFormulaParserParser.AtomContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAtom(PropFormulaParserParser.AtomContext ctx) { return visitChildren(ctx); }
 }

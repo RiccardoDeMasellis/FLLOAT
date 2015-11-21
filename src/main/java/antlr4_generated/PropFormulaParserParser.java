@@ -1,4 +1,4 @@
-// Generated from PropFormulaParser.g4 by ANTLR 4.3
+// Generated from PropFormulaParser.g4 by ANTLR 4.5
 
 	package antlr4_generated;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class PropFormulaParserParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.3", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.5", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -21,10 +21,6 @@ public class PropFormulaParserParser extends Parser {
 	public static final int
 		ID=1, TRUE=2, FALSE=3, DOUBLEIMPLY=4, IMPLY=5, OR=6, AND=7, NOT=8, LSEPARATOR=9, 
 		RSEPARATOR=10, WS=11;
-	public static final String[] tokenNames = {
-		"<INVALID>", "ID", "TRUE", "FALSE", "DOUBLEIMPLY", "IMPLY", "OR", "AND", 
-		"NOT", "LSEPARATOR", "RSEPARATOR", "WS"
-	};
 	public static final int
 		RULE_propositionalFormula = 0, RULE_doubleImplicationProp = 1, RULE_implicationProp = 2, 
 		RULE_orProp = 3, RULE_andProp = 4, RULE_notProp = 5, RULE_atom = 6;
@@ -33,11 +29,47 @@ public class PropFormulaParserParser extends Parser {
 		"andProp", "notProp", "atom"
 	};
 
-	@Override
-	public String getGrammarFileName() { return "PropFormulaParser.g4"; }
+	private static final String[] _LITERAL_NAMES = {
+	};
+	private static final String[] _SYMBOLIC_NAMES = {
+		null, "ID", "TRUE", "FALSE", "DOUBLEIMPLY", "IMPLY", "OR", "AND", "NOT", 
+		"LSEPARATOR", "RSEPARATOR", "WS"
+	};
+	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+
+	/**
+	 * @deprecated Use {@link #VOCABULARY} instead.
+	 */
+	@Deprecated
+	public static final String[] tokenNames;
+	static {
+		tokenNames = new String[_SYMBOLIC_NAMES.length];
+		for (int i = 0; i < tokenNames.length; i++) {
+			tokenNames[i] = VOCABULARY.getLiteralName(i);
+			if (tokenNames[i] == null) {
+				tokenNames[i] = VOCABULARY.getSymbolicName(i);
+			}
+
+			if (tokenNames[i] == null) {
+				tokenNames[i] = "<INVALID>";
+			}
+		}
+	}
 
 	@Override
-	public String[] getTokenNames() { return tokenNames; }
+	@Deprecated
+	public String[] getTokenNames() {
+		return tokenNames;
+	}
+
+	@Override
+
+	public Vocabulary getVocabulary() {
+		return VOCABULARY;
+	}
+
+	@Override
+	public String getGrammarFileName() { return "PropFormulaParser.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -73,7 +105,8 @@ public class PropFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(14); doubleImplicationProp();
+			setState(14);
+			doubleImplicationProp();
 			}
 		}
 		catch (RecognitionException re) {
@@ -88,15 +121,15 @@ public class PropFormulaParserParser extends Parser {
 	}
 
 	public static class DoubleImplicationPropContext extends ParserRuleContext {
-		public List<TerminalNode> DOUBLEIMPLY() { return getTokens(PropFormulaParserParser.DOUBLEIMPLY); }
+		public List<ImplicationPropContext> implicationProp() {
+			return getRuleContexts(ImplicationPropContext.class);
+		}
 		public ImplicationPropContext implicationProp(int i) {
 			return getRuleContext(ImplicationPropContext.class,i);
 		}
+		public List<TerminalNode> DOUBLEIMPLY() { return getTokens(PropFormulaParserParser.DOUBLEIMPLY); }
 		public TerminalNode DOUBLEIMPLY(int i) {
 			return getToken(PropFormulaParserParser.DOUBLEIMPLY, i);
-		}
-		public List<ImplicationPropContext> implicationProp() {
-			return getRuleContexts(ImplicationPropContext.class);
 		}
 		public DoubleImplicationPropContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -116,15 +149,18 @@ public class PropFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(16); implicationProp();
+			setState(16);
+			implicationProp();
 			setState(21);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==DOUBLEIMPLY) {
 				{
 				{
-				setState(17); match(DOUBLEIMPLY);
-				setState(18); implicationProp();
+				setState(17);
+				match(DOUBLEIMPLY);
+				setState(18);
+				implicationProp();
 				}
 				}
 				setState(23);
@@ -145,15 +181,15 @@ public class PropFormulaParserParser extends Parser {
 	}
 
 	public static class ImplicationPropContext extends ParserRuleContext {
-		public List<TerminalNode> IMPLY() { return getTokens(PropFormulaParserParser.IMPLY); }
-		public TerminalNode IMPLY(int i) {
-			return getToken(PropFormulaParserParser.IMPLY, i);
-		}
 		public List<OrPropContext> orProp() {
 			return getRuleContexts(OrPropContext.class);
 		}
 		public OrPropContext orProp(int i) {
 			return getRuleContext(OrPropContext.class,i);
+		}
+		public List<TerminalNode> IMPLY() { return getTokens(PropFormulaParserParser.IMPLY); }
+		public TerminalNode IMPLY(int i) {
+			return getToken(PropFormulaParserParser.IMPLY, i);
 		}
 		public ImplicationPropContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -173,15 +209,18 @@ public class PropFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(24); orProp();
+			setState(24);
+			orProp();
 			setState(29);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==IMPLY) {
 				{
 				{
-				setState(25); match(IMPLY);
-				setState(26); orProp();
+				setState(25);
+				match(IMPLY);
+				setState(26);
+				orProp();
 				}
 				}
 				setState(31);
@@ -230,15 +269,18 @@ public class PropFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(32); andProp();
+			setState(32);
+			andProp();
 			setState(37);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==OR) {
 				{
 				{
-				setState(33); match(OR);
-				setState(34); andProp();
+				setState(33);
+				match(OR);
+				setState(34);
+				andProp();
 				}
 				}
 				setState(39);
@@ -259,15 +301,15 @@ public class PropFormulaParserParser extends Parser {
 	}
 
 	public static class AndPropContext extends ParserRuleContext {
-		public TerminalNode AND(int i) {
-			return getToken(PropFormulaParserParser.AND, i);
-		}
 		public List<NotPropContext> notProp() {
 			return getRuleContexts(NotPropContext.class);
 		}
-		public List<TerminalNode> AND() { return getTokens(PropFormulaParserParser.AND); }
 		public NotPropContext notProp(int i) {
 			return getRuleContext(NotPropContext.class,i);
+		}
+		public List<TerminalNode> AND() { return getTokens(PropFormulaParserParser.AND); }
+		public TerminalNode AND(int i) {
+			return getToken(PropFormulaParserParser.AND, i);
 		}
 		public AndPropContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -287,15 +329,18 @@ public class PropFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(40); notProp();
+			setState(40);
+			notProp();
 			setState(45);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==AND) {
 				{
 				{
-				setState(41); match(AND);
-				setState(42); notProp();
+				setState(41);
+				match(AND);
+				setState(42);
+				notProp();
 				}
 				}
 				setState(47);
@@ -316,15 +361,15 @@ public class PropFormulaParserParser extends Parser {
 	}
 
 	public static class NotPropContext extends ParserRuleContext {
+		public AtomContext atom() {
+			return getRuleContext(AtomContext.class,0);
+		}
 		public TerminalNode NOT() { return getToken(PropFormulaParserParser.NOT, 0); }
+		public TerminalNode LSEPARATOR() { return getToken(PropFormulaParserParser.LSEPARATOR, 0); }
 		public PropositionalFormulaContext propositionalFormula() {
 			return getRuleContext(PropositionalFormulaContext.class,0);
 		}
 		public TerminalNode RSEPARATOR() { return getToken(PropFormulaParserParser.RSEPARATOR, 0); }
-		public TerminalNode LSEPARATOR() { return getToken(PropFormulaParserParser.LSEPARATOR, 0); }
-		public AtomContext atom() {
-			return getRuleContext(AtomContext.class,0);
-		}
 		public NotPropContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -350,14 +395,15 @@ public class PropFormulaParserParser extends Parser {
 				_la = _input.LA(1);
 				if (_la==NOT) {
 					{
-					setState(48); match(NOT);
+					setState(48);
+					match(NOT);
 					}
 				}
 
-				setState(51); atom();
+				setState(51);
+				atom();
 				}
 				break;
-
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
@@ -365,13 +411,17 @@ public class PropFormulaParserParser extends Parser {
 				_la = _input.LA(1);
 				if (_la==NOT) {
 					{
-					setState(52); match(NOT);
+					setState(52);
+					match(NOT);
 					}
 				}
 
-				setState(55); match(LSEPARATOR);
-				setState(56); propositionalFormula();
-				setState(57); match(RSEPARATOR);
+				setState(55);
+				match(LSEPARATOR);
+				setState(56);
+				propositionalFormula();
+				setState(57);
+				match(RSEPARATOR);
 				}
 				break;
 			}
@@ -389,11 +439,11 @@ public class PropFormulaParserParser extends Parser {
 
 	public static class AtomContext extends ParserRuleContext {
 		public List<TerminalNode> ID() { return getTokens(PropFormulaParserParser.ID); }
-		public TerminalNode FALSE() { return getToken(PropFormulaParserParser.FALSE, 0); }
-		public TerminalNode TRUE() { return getToken(PropFormulaParserParser.TRUE, 0); }
 		public TerminalNode ID(int i) {
 			return getToken(PropFormulaParserParser.ID, i);
 		}
+		public TerminalNode TRUE() { return getToken(PropFormulaParserParser.TRUE, 0); }
+		public TerminalNode FALSE() { return getToken(PropFormulaParserParser.FALSE, 0); }
 		public AtomContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -426,7 +476,8 @@ public class PropFormulaParserParser extends Parser {
 				while (_la==ID) {
 					{
 					{
-					setState(61); match(ID);
+					setState(61);
+					match(ID);
 					}
 					}
 					setState(66);
@@ -438,13 +489,15 @@ public class PropFormulaParserParser extends Parser {
 			case TRUE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(67); match(TRUE);
+				setState(67);
+				match(TRUE);
 				}
 				break;
 			case FALSE:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(68); match(FALSE);
+				setState(68);
+				match(FALSE);
 				}
 				break;
 			default:

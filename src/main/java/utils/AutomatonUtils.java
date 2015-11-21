@@ -88,7 +88,7 @@ public class AutomatonUtils {
         allLabels.add(new EmptyTrace());
 
         /*
-        All transition loops in the final state AND the false state
+        All transition loops in the final state AND in the false state
          */
         for (TransitionLabel w : allLabels) {
             Transition<TransitionLabel> t1 = new Transition(finalState, w, finalState);

@@ -1,4 +1,4 @@
-// Generated from LDLfFormulaParser.g4 by ANTLR 4.3
+// Generated from LDLfFormulaParser.g4 by ANTLR 4.5
 
 	package antlr4_generated;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class LDLfFormulaParserParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.3", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.5", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -23,12 +23,6 @@ public class LDLfFormulaParserParser extends Parser {
 		DIAMONDLSEPARATOR=8, DIAMONDRSEPARATOR=9, STAR=10, TEST=11, ALTERNATION=12, 
 		CONCATENATION=13, ID=14, TRUE=15, FALSE=16, DOUBLEIMPLY=17, IMPLY=18, 
 		OR=19, AND=20, NOT=21, LSEPARATOR=22, RSEPARATOR=23, WS=24;
-	public static final String[] tokenNames = {
-		"<INVALID>", "LAST", "EPSILON", "TT", "FF", "END", "BOXLSEPARATOR", "BOXRSEPARATOR", 
-		"DIAMONDLSEPARATOR", "DIAMONDRSEPARATOR", "STAR", "TEST", "ALTERNATION", 
-		"CONCATENATION", "ID", "TRUE", "FALSE", "DOUBLEIMPLY", "IMPLY", "OR", 
-		"AND", "NOT", "LSEPARATOR", "RSEPARATOR", "WS"
-	};
 	public static final int
 		RULE_start = 0, RULE_expression = 1, RULE_doubleImplicationTemp = 2, RULE_implicationTemp = 3, 
 		RULE_orTemp = 4, RULE_andTemp = 5, RULE_ldlfBox = 6, RULE_ldlfDiamond = 7, 
@@ -44,11 +38,49 @@ public class LDLfFormulaParserParser extends Parser {
 		"atom"
 	};
 
-	@Override
-	public String getGrammarFileName() { return "LDLfFormulaParser.g4"; }
+	private static final String[] _LITERAL_NAMES = {
+	};
+	private static final String[] _SYMBOLIC_NAMES = {
+		null, "LAST", "EPSILON", "TT", "FF", "END", "BOXLSEPARATOR", "BOXRSEPARATOR", 
+		"DIAMONDLSEPARATOR", "DIAMONDRSEPARATOR", "STAR", "TEST", "ALTERNATION", 
+		"CONCATENATION", "ID", "TRUE", "FALSE", "DOUBLEIMPLY", "IMPLY", "OR", 
+		"AND", "NOT", "LSEPARATOR", "RSEPARATOR", "WS"
+	};
+	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+
+	/**
+	 * @deprecated Use {@link #VOCABULARY} instead.
+	 */
+	@Deprecated
+	public static final String[] tokenNames;
+	static {
+		tokenNames = new String[_SYMBOLIC_NAMES.length];
+		for (int i = 0; i < tokenNames.length; i++) {
+			tokenNames[i] = VOCABULARY.getLiteralName(i);
+			if (tokenNames[i] == null) {
+				tokenNames[i] = VOCABULARY.getSymbolicName(i);
+			}
+
+			if (tokenNames[i] == null) {
+				tokenNames[i] = "<INVALID>";
+			}
+		}
+	}
 
 	@Override
-	public String[] getTokenNames() { return tokenNames; }
+	@Deprecated
+	public String[] getTokenNames() {
+		return tokenNames;
+	}
+
+	@Override
+
+	public Vocabulary getVocabulary() {
+		return VOCABULARY;
+	}
+
+	@Override
+	public String getGrammarFileName() { return "LDLfFormulaParser.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -64,10 +96,10 @@ public class LDLfFormulaParserParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class StartContext extends ParserRuleContext {
-		public TerminalNode EOF() { return getToken(LDLfFormulaParserParser.EOF, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
+		public TerminalNode EOF() { return getToken(LDLfFormulaParserParser.EOF, 0); }
 		public StartContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -85,8 +117,10 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(44); expression();
-			setState(45); match(EOF);
+			setState(44);
+			expression();
+			setState(45);
+			match(EOF);
 			}
 		}
 		catch (RecognitionException re) {
@@ -121,7 +155,8 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(47); doubleImplicationTemp();
+			setState(47);
+			doubleImplicationTemp();
 			}
 		}
 		catch (RecognitionException re) {
@@ -136,13 +171,13 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class DoubleImplicationTempContext extends ParserRuleContext {
-		public List<TerminalNode> DOUBLEIMPLY() { return getTokens(LDLfFormulaParserParser.DOUBLEIMPLY); }
 		public List<ImplicationTempContext> implicationTemp() {
 			return getRuleContexts(ImplicationTempContext.class);
 		}
 		public ImplicationTempContext implicationTemp(int i) {
 			return getRuleContext(ImplicationTempContext.class,i);
 		}
+		public List<TerminalNode> DOUBLEIMPLY() { return getTokens(LDLfFormulaParserParser.DOUBLEIMPLY); }
 		public TerminalNode DOUBLEIMPLY(int i) {
 			return getToken(LDLfFormulaParserParser.DOUBLEIMPLY, i);
 		}
@@ -164,15 +199,18 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(49); implicationTemp();
+			setState(49);
+			implicationTemp();
 			setState(54);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==DOUBLEIMPLY) {
 				{
 				{
-				setState(50); match(DOUBLEIMPLY);
-				setState(51); implicationTemp();
+				setState(50);
+				match(DOUBLEIMPLY);
+				setState(51);
+				implicationTemp();
 				}
 				}
 				setState(56);
@@ -193,15 +231,15 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class ImplicationTempContext extends ParserRuleContext {
-		public List<TerminalNode> IMPLY() { return getTokens(LDLfFormulaParserParser.IMPLY); }
-		public TerminalNode IMPLY(int i) {
-			return getToken(LDLfFormulaParserParser.IMPLY, i);
+		public List<OrTempContext> orTemp() {
+			return getRuleContexts(OrTempContext.class);
 		}
 		public OrTempContext orTemp(int i) {
 			return getRuleContext(OrTempContext.class,i);
 		}
-		public List<OrTempContext> orTemp() {
-			return getRuleContexts(OrTempContext.class);
+		public List<TerminalNode> IMPLY() { return getTokens(LDLfFormulaParserParser.IMPLY); }
+		public TerminalNode IMPLY(int i) {
+			return getToken(LDLfFormulaParserParser.IMPLY, i);
 		}
 		public ImplicationTempContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -221,15 +259,18 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(57); orTemp();
+			setState(57);
+			orTemp();
 			setState(62);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==IMPLY) {
 				{
 				{
-				setState(58); match(IMPLY);
-				setState(59); orTemp();
+				setState(58);
+				match(IMPLY);
+				setState(59);
+				orTemp();
 				}
 				}
 				setState(64);
@@ -278,15 +319,18 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(65); andTemp();
+			setState(65);
+			andTemp();
 			setState(70);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==OR) {
 				{
 				{
-				setState(66); match(OR);
-				setState(67); andTemp();
+				setState(66);
+				match(OR);
+				setState(67);
+				andTemp();
 				}
 				}
 				setState(72);
@@ -310,12 +354,12 @@ public class LDLfFormulaParserParser extends Parser {
 		public List<LdlfBoxContext> ldlfBox() {
 			return getRuleContexts(LdlfBoxContext.class);
 		}
-		public TerminalNode AND(int i) {
-			return getToken(LDLfFormulaParserParser.AND, i);
-		}
-		public List<TerminalNode> AND() { return getTokens(LDLfFormulaParserParser.AND); }
 		public LdlfBoxContext ldlfBox(int i) {
 			return getRuleContext(LdlfBoxContext.class,i);
+		}
+		public List<TerminalNode> AND() { return getTokens(LDLfFormulaParserParser.AND); }
+		public TerminalNode AND(int i) {
+			return getToken(LDLfFormulaParserParser.AND, i);
 		}
 		public AndTempContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -335,15 +379,18 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(73); ldlfBox();
+			setState(73);
+			ldlfBox();
 			setState(78);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==AND) {
 				{
 				{
-				setState(74); match(AND);
-				setState(75); ldlfBox();
+				setState(74);
+				match(AND);
+				setState(75);
+				ldlfBox();
 				}
 				}
 				setState(80);
@@ -367,10 +414,10 @@ public class LDLfFormulaParserParser extends Parser {
 		public LdlfDiamondContext ldlfDiamond() {
 			return getRuleContext(LdlfDiamondContext.class,0);
 		}
+		public TerminalNode BOXLSEPARATOR() { return getToken(LDLfFormulaParserParser.BOXLSEPARATOR, 0); }
 		public RegularExpressionContext regularExpression() {
 			return getRuleContext(RegularExpressionContext.class,0);
 		}
-		public TerminalNode BOXLSEPARATOR() { return getToken(LDLfFormulaParserParser.BOXLSEPARATOR, 0); }
 		public TerminalNode BOXRSEPARATOR() { return getToken(LDLfFormulaParserParser.BOXRSEPARATOR, 0); }
 		public LdlfBoxContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -394,13 +441,17 @@ public class LDLfFormulaParserParser extends Parser {
 			_la = _input.LA(1);
 			if (_la==BOXLSEPARATOR) {
 				{
-				setState(81); match(BOXLSEPARATOR);
-				setState(82); regularExpression();
-				setState(83); match(BOXRSEPARATOR);
+				setState(81);
+				match(BOXLSEPARATOR);
+				setState(82);
+				regularExpression();
+				setState(83);
+				match(BOXRSEPARATOR);
 				}
 			}
 
-			setState(87); ldlfDiamond();
+			setState(87);
+			ldlfDiamond();
 			}
 		}
 		catch (RecognitionException re) {
@@ -415,14 +466,14 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class LdlfDiamondContext extends ParserRuleContext {
-		public TerminalNode DIAMONDRSEPARATOR() { return getToken(LDLfFormulaParserParser.DIAMONDRSEPARATOR, 0); }
-		public RegularExpressionContext regularExpression() {
-			return getRuleContext(RegularExpressionContext.class,0);
-		}
-		public TerminalNode DIAMONDLSEPARATOR() { return getToken(LDLfFormulaParserParser.DIAMONDLSEPARATOR, 0); }
 		public NotTempContext notTemp() {
 			return getRuleContext(NotTempContext.class,0);
 		}
+		public TerminalNode DIAMONDLSEPARATOR() { return getToken(LDLfFormulaParserParser.DIAMONDLSEPARATOR, 0); }
+		public RegularExpressionContext regularExpression() {
+			return getRuleContext(RegularExpressionContext.class,0);
+		}
+		public TerminalNode DIAMONDRSEPARATOR() { return getToken(LDLfFormulaParserParser.DIAMONDRSEPARATOR, 0); }
 		public LdlfDiamondContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -445,13 +496,17 @@ public class LDLfFormulaParserParser extends Parser {
 			_la = _input.LA(1);
 			if (_la==DIAMONDLSEPARATOR) {
 				{
-				setState(89); match(DIAMONDLSEPARATOR);
-				setState(90); regularExpression();
-				setState(91); match(DIAMONDRSEPARATOR);
+				setState(89);
+				match(DIAMONDLSEPARATOR);
+				setState(90);
+				regularExpression();
+				setState(91);
+				match(DIAMONDRSEPARATOR);
 				}
 			}
 
-			setState(95); notTemp();
+			setState(95);
+			notTemp();
 			}
 		}
 		catch (RecognitionException re) {
@@ -466,15 +521,15 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class NotTempContext extends ParserRuleContext {
-		public TerminalNode NOT() { return getToken(LDLfFormulaParserParser.NOT, 0); }
 		public LdlfAtomContext ldlfAtom() {
 			return getRuleContext(LdlfAtomContext.class,0);
 		}
-		public TerminalNode RSEPARATOR() { return getToken(LDLfFormulaParserParser.RSEPARATOR, 0); }
 		public TerminalNode LSEPARATOR() { return getToken(LDLfFormulaParserParser.LSEPARATOR, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
+		public TerminalNode RSEPARATOR() { return getToken(LDLfFormulaParserParser.RSEPARATOR, 0); }
+		public TerminalNode NOT() { return getToken(LDLfFormulaParserParser.NOT, 0); }
 		public NotTempContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -496,10 +551,10 @@ public class LDLfFormulaParserParser extends Parser {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(97); ldlfAtom();
+				setState(97);
+				ldlfAtom();
 				}
 				break;
-
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
@@ -507,13 +562,17 @@ public class LDLfFormulaParserParser extends Parser {
 				_la = _input.LA(1);
 				if (_la==NOT) {
 					{
-					setState(98); match(NOT);
+					setState(98);
+					match(NOT);
 					}
 				}
 
-				setState(101); match(LSEPARATOR);
-				setState(102); expression();
-				setState(103); match(RSEPARATOR);
+				setState(101);
+				match(LSEPARATOR);
+				setState(102);
+				expression();
+				setState(103);
+				match(RSEPARATOR);
 				}
 				break;
 			}
@@ -531,12 +590,12 @@ public class LDLfFormulaParserParser extends Parser {
 
 	public static class LdlfAtomContext extends ParserRuleContext {
 		public TerminalNode TT() { return getToken(LDLfFormulaParserParser.TT, 0); }
+		public TerminalNode FF() { return getToken(LDLfFormulaParserParser.FF, 0); }
+		public TerminalNode LAST() { return getToken(LDLfFormulaParserParser.LAST, 0); }
+		public TerminalNode END() { return getToken(LDLfFormulaParserParser.END, 0); }
 		public PropositionalFormulaContext propositionalFormula() {
 			return getRuleContext(PropositionalFormulaContext.class,0);
 		}
-		public TerminalNode END() { return getToken(LDLfFormulaParserParser.END, 0); }
-		public TerminalNode FF() { return getToken(LDLfFormulaParserParser.FF, 0); }
-		public TerminalNode LAST() { return getToken(LDLfFormulaParserParser.LAST, 0); }
 		public LdlfAtomContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -557,25 +616,29 @@ public class LDLfFormulaParserParser extends Parser {
 			case TT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(107); match(TT);
+				setState(107);
+				match(TT);
 				}
 				break;
 			case FF:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(108); match(FF);
+				setState(108);
+				match(FF);
 				}
 				break;
 			case LAST:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(109); match(LAST);
+				setState(109);
+				match(LAST);
 				}
 				break;
 			case END:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(110); match(END);
+				setState(110);
+				match(END);
 				}
 				break;
 			case EOF:
@@ -591,7 +654,8 @@ public class LDLfFormulaParserParser extends Parser {
 			case RSEPARATOR:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(111); propositionalFormula();
+				setState(111);
+				propositionalFormula();
 				}
 				break;
 			default:
@@ -630,7 +694,8 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(114); alternation();
+			setState(114);
+			alternation();
 			}
 		}
 		catch (RecognitionException re) {
@@ -645,16 +710,16 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class AlternationContext extends ParserRuleContext {
-		public ConcatenationContext concatenation(int i) {
-			return getRuleContext(ConcatenationContext.class,i);
-		}
 		public List<ConcatenationContext> concatenation() {
 			return getRuleContexts(ConcatenationContext.class);
 		}
+		public ConcatenationContext concatenation(int i) {
+			return getRuleContext(ConcatenationContext.class,i);
+		}
+		public List<TerminalNode> ALTERNATION() { return getTokens(LDLfFormulaParserParser.ALTERNATION); }
 		public TerminalNode ALTERNATION(int i) {
 			return getToken(LDLfFormulaParserParser.ALTERNATION, i);
 		}
-		public List<TerminalNode> ALTERNATION() { return getTokens(LDLfFormulaParserParser.ALTERNATION); }
 		public AlternationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -673,15 +738,18 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(116); concatenation();
+			setState(116);
+			concatenation();
 			setState(121);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==ALTERNATION) {
 				{
 				{
-				setState(117); match(ALTERNATION);
-				setState(118); concatenation();
+				setState(117);
+				match(ALTERNATION);
+				setState(118);
+				concatenation();
 				}
 				}
 				setState(123);
@@ -702,16 +770,16 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class ConcatenationContext extends ParserRuleContext {
-		public TerminalNode CONCATENATION(int i) {
-			return getToken(LDLfFormulaParserParser.CONCATENATION, i);
+		public List<StarContext> star() {
+			return getRuleContexts(StarContext.class);
 		}
 		public StarContext star(int i) {
 			return getRuleContext(StarContext.class,i);
 		}
-		public List<StarContext> star() {
-			return getRuleContexts(StarContext.class);
-		}
 		public List<TerminalNode> CONCATENATION() { return getTokens(LDLfFormulaParserParser.CONCATENATION); }
+		public TerminalNode CONCATENATION(int i) {
+			return getToken(LDLfFormulaParserParser.CONCATENATION, i);
+		}
 		public ConcatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -730,15 +798,18 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(124); star();
+			setState(124);
+			star();
 			setState(129);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==CONCATENATION) {
 				{
 				{
-				setState(125); match(CONCATENATION);
-				setState(126); star();
+				setState(125);
+				match(CONCATENATION);
+				setState(126);
+				star();
 				}
 				}
 				setState(131);
@@ -759,15 +830,15 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class StarContext extends ParserRuleContext {
-		public TerminalNode RSEPARATOR() { return getToken(LDLfFormulaParserParser.RSEPARATOR, 0); }
-		public TerminalNode LSEPARATOR() { return getToken(LDLfFormulaParserParser.LSEPARATOR, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
+		public TerminalNode STAR() { return getToken(LDLfFormulaParserParser.STAR, 0); }
+		public TerminalNode LSEPARATOR() { return getToken(LDLfFormulaParserParser.LSEPARATOR, 0); }
 		public RegularExpressionContext regularExpression() {
 			return getRuleContext(RegularExpressionContext.class,0);
 		}
-		public TerminalNode STAR() { return getToken(LDLfFormulaParserParser.STAR, 0); }
+		public TerminalNode RSEPARATOR() { return getToken(LDLfFormulaParserParser.RSEPARATOR, 0); }
 		public StarContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -789,29 +860,34 @@ public class LDLfFormulaParserParser extends Parser {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(132); test();
+				setState(132);
+				test();
 				setState(134);
 				_la = _input.LA(1);
 				if (_la==STAR) {
 					{
-					setState(133); match(STAR);
+					setState(133);
+					match(STAR);
 					}
 				}
 
 				}
 				break;
-
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(136); match(LSEPARATOR);
-				setState(137); regularExpression();
-				setState(138); match(RSEPARATOR);
+				setState(136);
+				match(LSEPARATOR);
+				setState(137);
+				regularExpression();
+				setState(138);
+				match(RSEPARATOR);
 				setState(140);
 				_la = _input.LA(1);
 				if (_la==STAR) {
 					{
-					setState(139); match(STAR);
+					setState(139);
+					match(STAR);
 					}
 				}
 
@@ -831,19 +907,19 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class TestContext extends ParserRuleContext {
-		public TerminalNode RSEPARATOR() { return getToken(LDLfFormulaParserParser.RSEPARATOR, 0); }
-		public PropositionalFormulaContext propositionalFormula() {
-			return getRuleContext(PropositionalFormulaContext.class,0);
-		}
 		public TerminalNode LSEPARATOR() { return getToken(LDLfFormulaParserParser.LSEPARATOR, 0); }
-		public TerminalNode EPSILON() { return getToken(LDLfFormulaParserParser.EPSILON, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
+		public TerminalNode RSEPARATOR() { return getToken(LDLfFormulaParserParser.RSEPARATOR, 0); }
+		public TerminalNode TEST() { return getToken(LDLfFormulaParserParser.TEST, 0); }
 		public AtomContext atom() {
 			return getRuleContext(AtomContext.class,0);
 		}
-		public TerminalNode TEST() { return getToken(LDLfFormulaParserParser.TEST, 0); }
+		public PropositionalFormulaContext propositionalFormula() {
+			return getRuleContext(PropositionalFormulaContext.class,0);
+		}
+		public TerminalNode EPSILON() { return getToken(LDLfFormulaParserParser.EPSILON, 0); }
 		public TestContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -864,32 +940,37 @@ public class LDLfFormulaParserParser extends Parser {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(144); match(LSEPARATOR);
-				setState(145); expression();
-				setState(146); match(RSEPARATOR);
-				setState(147); match(TEST);
+				setState(144);
+				match(LSEPARATOR);
+				setState(145);
+				expression();
+				setState(146);
+				match(RSEPARATOR);
+				setState(147);
+				match(TEST);
 				}
 				break;
-
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(149); atom();
-				setState(150); match(TEST);
+				setState(149);
+				atom();
+				setState(150);
+				match(TEST);
 				}
 				break;
-
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(152); propositionalFormula();
+				setState(152);
+				propositionalFormula();
 				}
 				break;
-
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(153); match(EPSILON);
+				setState(153);
+				match(EPSILON);
 				}
 				break;
 			}
@@ -926,7 +1007,8 @@ public class LDLfFormulaParserParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(156); doubleImplicationProp();
+			setState(156);
+			doubleImplicationProp();
 			}
 		}
 		catch (RecognitionException re) {
@@ -941,15 +1023,15 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class DoubleImplicationPropContext extends ParserRuleContext {
-		public List<TerminalNode> DOUBLEIMPLY() { return getTokens(LDLfFormulaParserParser.DOUBLEIMPLY); }
+		public List<ImplicationPropContext> implicationProp() {
+			return getRuleContexts(ImplicationPropContext.class);
+		}
 		public ImplicationPropContext implicationProp(int i) {
 			return getRuleContext(ImplicationPropContext.class,i);
 		}
+		public List<TerminalNode> DOUBLEIMPLY() { return getTokens(LDLfFormulaParserParser.DOUBLEIMPLY); }
 		public TerminalNode DOUBLEIMPLY(int i) {
 			return getToken(LDLfFormulaParserParser.DOUBLEIMPLY, i);
-		}
-		public List<ImplicationPropContext> implicationProp() {
-			return getRuleContexts(ImplicationPropContext.class);
 		}
 		public DoubleImplicationPropContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -969,7 +1051,8 @@ public class LDLfFormulaParserParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(158); implicationProp();
+			setState(158);
+			implicationProp();
 			setState(163);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,15,_ctx);
@@ -977,8 +1060,10 @@ public class LDLfFormulaParserParser extends Parser {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(159); match(DOUBLEIMPLY);
-					setState(160); implicationProp();
+					setState(159);
+					match(DOUBLEIMPLY);
+					setState(160);
+					implicationProp();
 					}
 					} 
 				}
@@ -1000,15 +1085,15 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class ImplicationPropContext extends ParserRuleContext {
-		public List<TerminalNode> IMPLY() { return getTokens(LDLfFormulaParserParser.IMPLY); }
-		public TerminalNode IMPLY(int i) {
-			return getToken(LDLfFormulaParserParser.IMPLY, i);
-		}
 		public List<OrPropContext> orProp() {
 			return getRuleContexts(OrPropContext.class);
 		}
 		public OrPropContext orProp(int i) {
 			return getRuleContext(OrPropContext.class,i);
+		}
+		public List<TerminalNode> IMPLY() { return getTokens(LDLfFormulaParserParser.IMPLY); }
+		public TerminalNode IMPLY(int i) {
+			return getToken(LDLfFormulaParserParser.IMPLY, i);
 		}
 		public ImplicationPropContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1028,7 +1113,8 @@ public class LDLfFormulaParserParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(166); orProp();
+			setState(166);
+			orProp();
 			setState(171);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
@@ -1036,8 +1122,10 @@ public class LDLfFormulaParserParser extends Parser {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(167); match(IMPLY);
-					setState(168); orProp();
+					setState(167);
+					match(IMPLY);
+					setState(168);
+					orProp();
 					}
 					} 
 				}
@@ -1087,7 +1175,8 @@ public class LDLfFormulaParserParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(174); andProp();
+			setState(174);
+			andProp();
 			setState(179);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
@@ -1095,8 +1184,10 @@ public class LDLfFormulaParserParser extends Parser {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(175); match(OR);
-					setState(176); andProp();
+					setState(175);
+					match(OR);
+					setState(176);
+					andProp();
 					}
 					} 
 				}
@@ -1118,15 +1209,15 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class AndPropContext extends ParserRuleContext {
-		public TerminalNode AND(int i) {
-			return getToken(LDLfFormulaParserParser.AND, i);
-		}
 		public List<NotPropContext> notProp() {
 			return getRuleContexts(NotPropContext.class);
 		}
-		public List<TerminalNode> AND() { return getTokens(LDLfFormulaParserParser.AND); }
 		public NotPropContext notProp(int i) {
 			return getRuleContext(NotPropContext.class,i);
+		}
+		public List<TerminalNode> AND() { return getTokens(LDLfFormulaParserParser.AND); }
+		public TerminalNode AND(int i) {
+			return getToken(LDLfFormulaParserParser.AND, i);
 		}
 		public AndPropContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1146,7 +1237,8 @@ public class LDLfFormulaParserParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(182); notProp();
+			setState(182);
+			notProp();
 			setState(187);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,18,_ctx);
@@ -1154,8 +1246,10 @@ public class LDLfFormulaParserParser extends Parser {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(183); match(AND);
-					setState(184); notProp();
+					setState(183);
+					match(AND);
+					setState(184);
+					notProp();
 					}
 					} 
 				}
@@ -1177,15 +1271,15 @@ public class LDLfFormulaParserParser extends Parser {
 	}
 
 	public static class NotPropContext extends ParserRuleContext {
+		public AtomContext atom() {
+			return getRuleContext(AtomContext.class,0);
+		}
 		public TerminalNode NOT() { return getToken(LDLfFormulaParserParser.NOT, 0); }
+		public TerminalNode LSEPARATOR() { return getToken(LDLfFormulaParserParser.LSEPARATOR, 0); }
 		public PropositionalFormulaContext propositionalFormula() {
 			return getRuleContext(PropositionalFormulaContext.class,0);
 		}
 		public TerminalNode RSEPARATOR() { return getToken(LDLfFormulaParserParser.RSEPARATOR, 0); }
-		public TerminalNode LSEPARATOR() { return getToken(LDLfFormulaParserParser.LSEPARATOR, 0); }
-		public AtomContext atom() {
-			return getRuleContext(AtomContext.class,0);
-		}
 		public NotPropContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1211,14 +1305,15 @@ public class LDLfFormulaParserParser extends Parser {
 				_la = _input.LA(1);
 				if (_la==NOT) {
 					{
-					setState(190); match(NOT);
+					setState(190);
+					match(NOT);
 					}
 				}
 
-				setState(193); atom();
+				setState(193);
+				atom();
 				}
 				break;
-
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
@@ -1226,13 +1321,17 @@ public class LDLfFormulaParserParser extends Parser {
 				_la = _input.LA(1);
 				if (_la==NOT) {
 					{
-					setState(194); match(NOT);
+					setState(194);
+					match(NOT);
 					}
 				}
 
-				setState(197); match(LSEPARATOR);
-				setState(198); propositionalFormula();
-				setState(199); match(RSEPARATOR);
+				setState(197);
+				match(LSEPARATOR);
+				setState(198);
+				propositionalFormula();
+				setState(199);
+				match(RSEPARATOR);
 				}
 				break;
 			}
@@ -1250,11 +1349,11 @@ public class LDLfFormulaParserParser extends Parser {
 
 	public static class AtomContext extends ParserRuleContext {
 		public List<TerminalNode> ID() { return getTokens(LDLfFormulaParserParser.ID); }
-		public TerminalNode FALSE() { return getToken(LDLfFormulaParserParser.FALSE, 0); }
-		public TerminalNode TRUE() { return getToken(LDLfFormulaParserParser.TRUE, 0); }
 		public TerminalNode ID(int i) {
 			return getToken(LDLfFormulaParserParser.ID, i);
 		}
+		public TerminalNode TRUE() { return getToken(LDLfFormulaParserParser.TRUE, 0); }
+		public TerminalNode FALSE() { return getToken(LDLfFormulaParserParser.FALSE, 0); }
 		public AtomContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1294,7 +1393,8 @@ public class LDLfFormulaParserParser extends Parser {
 				while (_la==ID) {
 					{
 					{
-					setState(203); match(ID);
+					setState(203);
+					match(ID);
 					}
 					}
 					setState(208);
@@ -1306,13 +1406,15 @@ public class LDLfFormulaParserParser extends Parser {
 			case TRUE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(209); match(TRUE);
+				setState(209);
+				match(TRUE);
 				}
 				break;
 			case FALSE:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(210); match(FALSE);
+				setState(210);
+				match(FALSE);
 				}
 				break;
 			default:

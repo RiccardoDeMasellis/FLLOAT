@@ -24,6 +24,7 @@ import rationals.Automaton;
 import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
+import rationals.transformations.Reducer;
 
 import java.util.*;
 
@@ -33,6 +34,15 @@ import java.util.*;
 public class AutomatonUtils {
 
     public static Automaton ldlf2Automaton(LDLfFormula initialFormula, PropositionalSignature ps) {
+
+        boolean performance = true;
+
+        //Performance
+        long startTime, stopTime, overallStart, overallEnd;
+        if (performance)
+            System.out.print("Initializing the automaton...");
+        overallStart = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
 
         //Add last to the signature
         ps.add(new PropositionLast());
@@ -101,9 +111,21 @@ public class AutomatonUtils {
             }
         }
 
+        //Performance
+        stopTime = System.currentTimeMillis();
+        if(performance)
+            System.out.println(" done in " + (stopTime - startTime) + " ms.");
+
+
         // Cycle on states yet to be analyzed
         while (!toAnalyze.isEmpty()) {
             QuotedFormulaState currentState = toAnalyze.getFirst();
+
+            //Performance
+            startTime = System.currentTimeMillis();
+            if (performance)
+                System.out.print("Analyzing state " + currentState + " ...");
+
             // Conjunction of the QuotedVar belonging to the current state
             QuotedFormula currentFormula = currentState.getQuotedConjunction();
 
@@ -147,19 +169,78 @@ public class AutomatonUtils {
 
             }
             toAnalyze.remove(currentState);
+
+            //Performance
+            stopTime = System.currentTimeMillis();
+            if (performance)
+                System.out.println(" done in " + (stopTime-startTime) + " ms");
         }
+
+        //Performance
+        overallEnd = System.currentTimeMillis();
+        if (performance) {
+            System.out.println("********************************************");
+            System.out.println("Automaton built in " + (overallEnd - overallStart) + " ms.");
+            System.out.println("********************************************");
+            System.out.println("Number of states: " + automaton.states().size());
+            System.out.println("Number of transitions: " + automaton.delta().size());
+
+            System.out.print("Eliminating last transition... ");
+        }
+        startTime = System.currentTimeMillis();
+
+
+        /*
+        ATTENZIONE
+         */
+        automaton = new Reducer<>().transform(automaton);
+        /*
+        ATTENZIONE
+         */
+
+
+
+
+
+
         //return automaton;
-        return eliminateLastTransitions(automaton);
+        automaton = eliminateLastTransitions(automaton);
+
+        //Performance
+        stopTime = System.currentTimeMillis();
+        if (performance)
+            System.out.println(" done in " + (stopTime-startTime) + " ms");
+
+        return automaton;
     }
 
 
     private static Automaton eliminateLastTransitions(Automaton oldAut) {
+
+        boolean performance = false;
+
+        //Performance
+        long startTime, stopTime;
+        startTime = System.currentTimeMillis();
+        if (performance)
+            System.out.print("Initializing the new automaton... ");
+
         Set<State> oldStates = oldAut.states();
         Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
 
         Automaton newAut = new Automaton();
 
         Map<State, State> oldToNew = new HashMap<>();
+
+        //Performance
+        stopTime = System.currentTimeMillis();
+        if (performance)
+            System.out.println(" done in " + (stopTime-startTime) + " ms.");
+
+        //Performance
+        startTime = System.currentTimeMillis();
+        if (performance)
+            System.out.print("Copying the states to the new automaton... ");
 
         //Add all states
         for (State oldSt : oldStates) {
@@ -170,8 +251,20 @@ public class AutomatonUtils {
         // Add the new "ended" state
         State ended = newAut.addState(false, true);
 
+        //Performance
+        stopTime = System.currentTimeMillis();
+        if (performance)
+            System.out.println(" done in " + (stopTime-startTime) + " ms.");
+
+
         //Add the *right* transitions according to the transformations
         for (Transition<TransitionLabel> oldTran : oldTransitions) {
+
+            //Performance
+            startTime = System.currentTimeMillis();
+            if (performance)
+                System.out.print("Adding transition " + oldTran + "to the new automaton...");
+
             State oldStart = oldTran.start();
             State oldEnd = oldTran.end();
             TransitionLabel oldLabel = oldTran.label();
@@ -211,6 +304,11 @@ public class AutomatonUtils {
                     }
                 }
             }
+
+            //Performance
+            stopTime = System.currentTimeMillis();
+            if (performance)
+                System.out.println(" done in " + (stopTime-startTime) + " ms.");
         }
         return newAut;
     }

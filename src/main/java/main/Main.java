@@ -107,6 +107,8 @@ public class Main {
          */
         //String input = "G (a -> (F b))";
         String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
+        //String input = "(a U (b WU (c U (d WU (e U (f WU (g U (h WU (i U (l WU m))))))))))";
+        //String input = "(a & (b WU (c | d)) -> (X (WX (X (e U (f & g))))) <-> ((G h) || ((F i) -> (l R (m R (n R o))) && X(p U q))))";
 
         /*
         Parsing
@@ -127,41 +129,41 @@ public class Main {
         Automaton construction method invocation
          */
         Automaton automaton = AutomatonUtils.ldlf2Automaton(ldlff, ldlff.getSignature());
-        System.out.println(automaton);
-
-        /*
-        Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
-         */
-        automaton = new ToDFA<>().transform(automaton);
-        //automaton = AutomatonUtils.declareAssumption(automaton);
-        /*
-        Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
-         */
-        //automaton = new Reducer<>().transform(automaton);
-
-
-        /*
-        Printing
-         */
-        System.out.println(automaton);
-
-
-        /*
-        Printing to .gv (graphviz) file
-         */
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream("ltlfAutomaton.gv");
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        PrintStream ps = new PrintStream(fos);
-        ps.println(AutomatonUtils.toDot(automaton));
-        ps.flush();
-        ps.close();
-
-        //provaExecutableAutomaton(automaton);
+//        System.out.println(automaton);
+//
+//        /*
+//        Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
+//         */
+//        automaton = new ToDFA<>().transform(automaton);
+//        //automaton = AutomatonUtils.declareAssumption(automaton);
+//        /*
+//        Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
+//         */
+//        //automaton = new Reducer<>().transform(automaton);
+//
+//
+//        /*
+//        Printing
+//         */
+//        System.out.println(automaton);
+//
+//
+//        /*
+//        Printing to .gv (graphviz) file
+//         */
+//        FileOutputStream fos = null;
+//        try {
+//            fos = new FileOutputStream("ltlfAutomaton.gv");
+//        } catch (FileNotFoundException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        PrintStream ps = new PrintStream(fos);
+//        ps.println(AutomatonUtils.toDot(automaton));
+//        ps.flush();
+//        ps.close();
+//
+//        //provaExecutableAutomaton(automaton);
 
     }
 

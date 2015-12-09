@@ -19,8 +19,18 @@ import formula.quotedFormula.QuotedFalseFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedTrueFormula;
 import formula.quotedFormula.QuotedVar;
-import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.*;
+import rationals.Automaton;
+import rationals.NoSuchStateException;
+import rationals.State;
+import rationals.Transition;
+import rationals.transformations.Concatenation;
+import rationals.transformations.Reducer;
+import rationals.transformations.Union;
+import utils.AutomatonUtils;
+
+import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -100,5 +110,105 @@ public interface RegExpLocal extends RegExp, LocalFormula {
         else
             throw new RuntimeException("The label is neither EmptyTrace nor PossibleWorldWrap");
     }
+
+    /*
+    This is a base case. Uses concatenation and union!
+     */
+    default Automaton buildAutomatonDiamond(LDLfFormula goal, PropositionalSignature ps) {
+
+        PropositionalFormula regExpProp = this.regExpLocal2Propositional();
+
+        /*
+        First case
+         */
+        Automaton firstCase = new Automaton();
+        State initial = firstCase.addState(true, false);
+
+        // First case: not last and \Pi \models \phi
+        Proposition last = new PropositionLast();
+        Negation notLast = new Negation(last);
+        Conjunction conj = new Conjunction(notLast, regExpProp);
+        Set<PossibleWorld> models = conj.getModels(ps);
+
+        Set<TransitionLabel> labels = AutomatonUtils.possWorldToTransLabel(models);
+
+        State ending = firstCase.addState(false, true);
+
+        for(TransitionLabel l : labels) {
+            Transition<TransitionLabel> trans = new Transition<>(initial, l, ending);
+            try {
+                firstCase.addTransition(trans);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+        // Creation of the automaton with "\varphi"
+        Automaton varphi = goal.buildAutomaton(ps);
+        // CONCATENATION!
+        Automaton result1 = new Concatenation<>().transform(firstCase, varphi);
+        result1 = new Reducer<>().transform(result1);
+
+
+        /*
+        Second case
+         */
+        Automaton secondCase = new Automaton();
+        State initial2 = secondCase.addState(true, false);
+        Conjunction conj2 = new Conjunction(last, regExpProp);
+        Set<PossibleWorld> models2 = conj2.getModels(ps);
+        Set<TransitionLabel> labels2 = AutomatonUtils.possWorldToTransLabel(models2);
+
+        State ending2 = secondCase.addState(false, true);
+        for(TransitionLabel l : labels2) {
+            Transition<TransitionLabel> trans = new Transition<>(initial2, l, ending2);
+            try {
+                secondCase.addTransition(trans);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Automaton varphiEmpty = goal.buildAutomatonForEmptyTrace(ps);
+        Automaton result2 = new Concatenation<>().transform(secondCase, varphiEmpty);
+        result2 = new Reducer<>().transform(result2);
+
+
+        /*
+        Third case
+         */
+        Automaton thirdCase = new Automaton();
+        State initial3 = secondCase.addState(true, false);
+        State ending3 = secondCase.addState(false, false);
+
+        Negation notPhi = new Negation(regExpProp);
+        Set<PossibleWorld> models3 = notPhi.getModels(ps);
+        Set<TransitionLabel> labels3 = AutomatonUtils.possWorldToTransLabel(models3);
+
+        for(TransitionLabel l : labels3) {
+            Transition<TransitionLabel> trans = new Transition<>(initial3, l, ending3);
+            try {
+                thirdCase.addTransition(trans);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        /*
+        Building the result
+         */
+        Automaton result = new Union<>().transform(result1, result2);
+        result = new Union<>().transform(result, thirdCase);
+
+        return result;
+    }
+
+
+    default Automaton buildAutomatonForEmptyTraceDiamond(LDLfFormula goal, PropositionalSignature ps) {
+
+    }
+
+    default Automaton buildAutomatonBox(LDLfFormula goal, PropositionalSignature ps);
+    default Automaton buildAutomatonForEmptyTraceBox(LDLfFormula goal, PropositionalSignature ps);
 
 }

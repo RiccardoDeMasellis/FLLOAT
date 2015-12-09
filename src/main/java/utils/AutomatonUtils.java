@@ -332,4 +332,12 @@ public class AutomatonUtils {
         b.append("\"]\n");
     }
 
+    public static Set<TransitionLabel> possWorldToTransLabel(Set<PossibleWorld> worlds) {
+        HashSet<TransitionLabel> labels = new HashSet<>();
+        for (PossibleWorld world : worlds) {
+            labels.add(new PossibleWorldWrap(world));
+        }
+        return labels;
+    }
+
 }

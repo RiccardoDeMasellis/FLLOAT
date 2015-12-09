@@ -16,8 +16,17 @@ import formula.LocalFormulaType;
 import formula.quotedFormula.QuotedFalseFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedTrueFormula;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import rationals.Automaton;
+import rationals.NoSuchStateException;
+import rationals.State;
+import rationals.Transition;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 14/05/15.
@@ -64,5 +73,57 @@ public interface LDLfLocalFormula extends LDLfFormula, LocalFormula {
         }
         else
             throw new RuntimeException("The label is neither EmptyTrace nor PossibleWorldWrap");
+    }
+
+
+    /*
+    This is a base case for the optimized algorithm.
+     */
+
+    /*
+    As a first step, we DO NOT add all the transitions but only the ones which bring to the true state.
+    Therefore, I am building a sort of already TRIMMED automaton.
+     */
+    default Automaton buildAutomaton(PropositionalSignature ps) {
+        // First create a new automaton with the default state factory
+        Automaton result = new Automaton(null);
+
+        // Add the current state
+        State currState = result.addState(true, false);
+
+        // Add the final state
+        State finalState = result.addState(false, true);
+
+        //Find the transitions
+        PropositionalFormula pf = this.LDLfLocal2Prop();
+        Set<PossibleWorld> models = pf.getModels(ps);
+
+        //Convert PossibleWorld in PossibleWorldWrap
+        Set<PossibleWorldWrap> pwwModels = new HashSet<>();
+        for (PossibleWorld pw : models) {
+            pwwModels.add(new PossibleWorldWrap(pw));
+        }
+
+        for (PossibleWorldWrap pww : pwwModels) {
+            Transition<TransitionLabel> t = new Transition<>(currState, pww, finalState);
+            try {
+                result.addTransition(t);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+    return result;
+    }
+
+
+
+    default Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
+        // First create a new automaton with the default state factory
+        Automaton result = new Automaton(null);
+
+        // Add the current state
+        State currState = result.addState(true, false);
+
+        return result;
     }
 }

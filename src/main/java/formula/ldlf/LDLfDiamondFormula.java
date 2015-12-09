@@ -13,6 +13,7 @@ import formula.FormulaType;
 import formula.quotedFormula.QuotedFormula;
 import formula.regExp.RegExp;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import rationals.Automaton;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -57,5 +58,15 @@ public class LDLfDiamondFormula extends LDLfTempOpTempFormula {
     @Override
     public QuotedFormula delta(TransitionLabel label) {
         return this.getRegExp().deltaDiamond(this.getGoalFormula(), label);
+    }
+
+    @Override
+    public Automaton buildAutomaton(PropositionalSignature ps) {
+        return this.getRegExp().buildAutomatonDiamond(PropositionalSignature ps);
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
+        return this.getRegExp().buildAutomatonForEmptyTraceDiamond(PropositionalSignature ps);
     }
 }

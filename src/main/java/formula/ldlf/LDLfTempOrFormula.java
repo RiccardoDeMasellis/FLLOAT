@@ -14,6 +14,10 @@ import formula.OrFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
 import formula.quotedFormula.QuotedVar;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import rationals.Automaton;
+import rationals.transformations.Reducer;
+import rationals.transformations.Union;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -51,5 +55,22 @@ public class LDLfTempOrFormula extends LDLfBinaryFormula implements LDLfBoolOpTe
         QuotedVar quotedRight = new QuotedVar(this.getRightFormula());
 
         return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
+    }
+
+    @Override
+    public Automaton buildAutomaton(PropositionalSignature ps) {
+        Automaton a1 = this.getLeftFormula().buildAutomaton(ps);
+        Automaton a2 = this.getRightFormula().buildAutomaton(ps);
+        Automaton result = new Union<>().transform(a1, a2);
+        return new Reducer<>().transform(result);
+
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
+        Automaton a1 = this.getLeftFormula().buildAutomatonForEmptyTrace(ps);
+        Automaton a2 = this.getRightFormula().buildAutomatonForEmptyTrace(ps);
+        Automaton result = new Union<>().transform(a1, a2);
+        return new Reducer<>().transform(result);
     }
 }

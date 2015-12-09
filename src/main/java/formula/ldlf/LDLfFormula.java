@@ -11,6 +11,8 @@ package formula.ldlf;
 import automaton.TransitionLabel;
 import formula.Formula;
 import formula.quotedFormula.QuotedFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import rationals.Automaton;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -19,5 +21,8 @@ import formula.quotedFormula.QuotedFormula;
 public interface LDLfFormula extends Formula {
 
     QuotedFormula delta(TransitionLabel label);
+
+    Automaton buildAutomaton(PropositionalSignature ps);
+    Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps);
 
 }

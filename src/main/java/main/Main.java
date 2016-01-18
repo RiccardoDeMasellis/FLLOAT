@@ -13,14 +13,15 @@ import antlr4_generated.LDLfFormulaParserLexer;
 import antlr4_generated.LDLfFormulaParserParser;
 import antlr4_generated.LTLfFormulaParserLexer;
 import antlr4_generated.LTLfFormulaParserParser;
+import evaluations.PropositionLast;
 import formula.ldlf.LDLfFormula;
 import formula.ltlf.LTLfFormula;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import rationals.Automaton;
+import rationals.transformations.Reducer;
 import rationals.transformations.ToDFA;
 import utils.AutomatonUtils;
 import visitors.LDLfVisitors.LDLfVisitor;
@@ -36,13 +37,13 @@ import java.io.PrintStream;
 public class Main {
 
     public static void main(String[] args) {
-        //ldlf2Aut();
-        ltlf2Aut();
+        ldlf2Aut();
+        //ltlf2Aut();
     }
 
 
     public static void ldlf2Aut() {
-        String input = "[true*]([!a]ff)";
+        String input = "[a*]b";
 
         /*
         Parsing
@@ -59,43 +60,62 @@ public class Main {
         /*
         Automaton construction method invocation
          */
-        PropositionalSignature signature = formula.getSignature();
-        Proposition w = new Proposition("w");
-        Proposition x = new Proposition("x");
-        Proposition y = new Proposition("y");
-        Proposition z = new Proposition("z");
-        signature.add(w);
-        signature.add(x);
-        signature.add(y);
-        signature.add(z);
-
-        System.out.println(formula);
-
-        Automaton automaton = AutomatonUtils.ldlf2Automaton(formula, formula.getSignature());
-
+        Automaton oldAutomaton = AutomatonUtils.ldlf2Automaton(formula, formula.getSignature());
         /*
-        Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
+        Minimization (And determinization)!
          */
-        automaton = new ToDFA<>().transform(automaton);
+        oldAutomaton = new Reducer<>().transform(oldAutomaton);
 
         /*
         Printing
          */
-        System.out.println(automaton);
-
+        System.out.println("********** OLD AUTOMATON ***********");
+        System.out.println(oldAutomaton);
 
         /*
         Printing to .gv (graphviz) file
          */
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream("ldlfAutomaton.gv");
+            fos = new FileOutputStream("ldlfOldAutomaton.gv");
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         PrintStream ps = new PrintStream(fos);
-        ps.println(AutomatonUtils.toDot(automaton));
+        ps.println(AutomatonUtils.toDot(oldAutomaton));
+        ps.flush();
+        ps.close();
+
+        /*
+        New automaton construction!
+         */
+        PropositionalSignature newSignature = formula.getSignature();
+        newSignature.add(new PropositionLast());
+        Automaton newAutomaton = formula.buildAutomaton(newSignature);
+        /*
+        Minimization (And determinization)!
+         */
+        newAutomaton = new Reducer<>().transform(newAutomaton);
+
+        /*
+        Printing
+         */
+        System.out.println("********** NEW AUTOMATON ***********");
+        System.out.println(newAutomaton);
+
+        /*
+        Printing to .gv (graphviz) file
+         */
+        fos = null;
+        try {
+            fos = new FileOutputStream("ldlfNewAutomaton.gv");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        ps = new PrintStream(fos);
+        ps.println(AutomatonUtils.toDot(newAutomaton));
         ps.flush();
         ps.close();
     }

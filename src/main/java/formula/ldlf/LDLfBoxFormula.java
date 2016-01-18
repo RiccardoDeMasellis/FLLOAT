@@ -62,11 +62,11 @@ public class LDLfBoxFormula extends LDLfTempOpTempFormula {
 
     @Override
     public Automaton buildAutomaton(PropositionalSignature ps) {
-        return this.getRegExp().buildAutomatonBox(PropositionalSignature ps);
+        return this.getRegExp().buildAutomatonBox(this.getGoalFormula(), ps);
     }
 
     @Override
     public Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
-        return this.getRegExp().buildAutomatonForEmptyTraceBox(PropositionalSignature ps);
+        return this.getRegExp().buildAutomatonForEmptyTraceBox(this.getGoalFormula(), ps);
     }
 }

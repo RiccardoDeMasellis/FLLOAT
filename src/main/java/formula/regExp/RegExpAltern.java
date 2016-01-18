@@ -17,6 +17,11 @@ import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
 import formula.quotedFormula.QuotedVar;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import rationals.Automaton;
+import rationals.transformations.Mix;
+import rationals.transformations.Reducer;
+import rationals.transformations.Union;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -69,5 +74,49 @@ public class RegExpAltern extends RegExpBinary implements RegExpTemp {
         QuotedFormula quotedRight = new QuotedVar(ldlfRight);
 
         return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
+    }
+
+    @Override
+    public Automaton buildAutomatonDiamond(LDLfFormula goal, PropositionalSignature ps) {
+        LDLfDiamondFormula ldlfLeft = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
+        LDLfDiamondFormula ldlfRight = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
+
+        Automaton a1 = ldlfLeft.buildAutomaton(ps);
+        Automaton a2 = ldlfRight.buildAutomaton(ps);
+        Automaton result = new Union<>().transform(a1, a2);
+        return new Reducer<>().transform(result);
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTraceDiamond(LDLfFormula goal, PropositionalSignature ps) {
+        LDLfDiamondFormula ldlfLeft = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
+        LDLfDiamondFormula ldlfRight = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
+
+        Automaton a1 = ldlfLeft.buildAutomatonForEmptyTrace(ps);
+        Automaton a2 = ldlfRight.buildAutomatonForEmptyTrace(ps);
+        Automaton result = new Union<>().transform(a1, a2);
+        return new Reducer<>().transform(result);
+    }
+
+    @Override
+    public Automaton buildAutomatonBox(LDLfFormula goal, PropositionalSignature ps) {
+        LDLfDiamondFormula ldlfLeft = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
+        LDLfDiamondFormula ldlfRight = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
+
+        Automaton a1 = ldlfLeft.buildAutomaton(ps);
+        Automaton a2 = ldlfRight.buildAutomaton(ps);
+        Automaton result = new Mix<>().transform(a1, a2);
+        return new Reducer<>().transform(result);
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTraceBox(LDLfFormula goal, PropositionalSignature ps) {
+        LDLfDiamondFormula ldlfLeft = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
+        LDLfDiamondFormula ldlfRight = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
+
+        Automaton a1 = ldlfLeft.buildAutomatonForEmptyTrace(ps);
+        Automaton a2 = ldlfRight.buildAutomatonForEmptyTrace(ps);
+        Automaton result = new Mix<>().transform(a1, a2);
+        return new Reducer<>().transform(result);
     }
 }

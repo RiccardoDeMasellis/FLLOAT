@@ -16,7 +16,7 @@ import formula.quotedFormula.QuotedFalseFormula;
 import formula.quotedFormula.QuotedFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import rationals.Automaton;
-import rationals.State;
+import utils.AutomatonUtils;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -80,18 +80,12 @@ public class LDLfffFormula implements AtomicFormula, LDLfTempFormula {
 
     @Override
     public Automaton buildAutomaton(PropositionalSignature ps) {
-        // First create a new automaton with the default state factory
-        Automaton result = new Automaton(null);
-
-        // Add the current state
-        State currState = result.addState(true, false);
-
-        return result;
+        return AutomatonUtils.buildFalseAutomaton(ps);
     }
 
     @Override
     public Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
-        return buildAutomaton(ps);
+        return this.buildAutomaton(ps);
     }
 
 }

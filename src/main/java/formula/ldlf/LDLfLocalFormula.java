@@ -17,15 +17,15 @@ import formula.quotedFormula.QuotedFalseFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedTrueFormula;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.*;
 import rationals.Automaton;
 import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
+import rationals.transformations.Reducer;
+import rationals.transformations.Union;
+import utils.AutomatonUtils;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -79,51 +79,84 @@ public interface LDLfLocalFormula extends LDLfFormula, LocalFormula {
     /*
     This is a base case for the optimized algorithm.
      */
-
-    /*
-    As a first step, we DO NOT add all the transitions but only the ones which bring to the true state.
-    Therefore, I am building a sort of already TRIMMED automaton.
-     */
     default Automaton buildAutomaton(PropositionalSignature ps) {
         // First create a new automaton with the default state factory
-        Automaton result = new Automaton(null);
+        Automaton firstCase = new Automaton();
+        PropositionalFormula pf = this.LDLfLocal2Prop();
 
         // Add the current state
-        State currState = result.addState(true, false);
+        State currState = firstCase.addState(true, false);
 
-        // Add the final state
-        State finalState = result.addState(false, true);
+        /*
+        First case: transitions to the accpting state.
+         */
+        // Add the final accepting state
+        State acceptingState = firstCase.addState(false, true);
 
-        //Find the transitions
-        PropositionalFormula pf = this.LDLfLocal2Prop();
+        //Find the transitions leading to the acceptingState
         Set<PossibleWorld> models = pf.getModels(ps);
 
-        //Convert PossibleWorld in PossibleWorldWrap
-        Set<PossibleWorldWrap> pwwModels = new HashSet<>();
-        for (PossibleWorld pw : models) {
-            pwwModels.add(new PossibleWorldWrap(pw));
-        }
+        Set<TransitionLabel> labels = AutomatonUtils.possWorldToTransLabel(models);
 
-        for (PossibleWorldWrap pww : pwwModels) {
-            Transition<TransitionLabel> t = new Transition<>(currState, pww, finalState);
+        for (TransitionLabel l : labels) {
+            Transition<TransitionLabel> t = new Transition<>(currState, l, acceptingState);
             try {
-                result.addTransition(t);
+                firstCase.addTransition(t);
             } catch (NoSuchStateException e) {
                 e.printStackTrace();
             }
         }
-    return result;
+
+        // Looping in the final state with all transitions.
+        Set<PossibleWorld> allModels = new Tautology().getModels(ps);
+        Set<TransitionLabel> allLabels = AutomatonUtils.possWorldToTransLabel(allModels);
+        for (TransitionLabel l : allLabels) {
+            Transition<TransitionLabel> t = new Transition<>(acceptingState, l, acceptingState);
+            try {
+                firstCase.addTransition(t);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /*
+        Second case: transition to the non-accepting state.
+         */
+        // Add the final accepting state
+        Automaton secondCase = new Automaton();
+        State currState2 = secondCase.addState(true, false);
+        State nonAcceptingState = secondCase.addState(false, false);
+
+        Negation notPf = new Negation(pf);
+        Set<PossibleWorld> notModels = notPf.getModels(ps);
+        Set<TransitionLabel> notLabels = AutomatonUtils.possWorldToTransLabel(notModels);
+        for (TransitionLabel l : notLabels) {
+            Transition<TransitionLabel> t = new Transition<>(currState2, l, nonAcceptingState);
+            try {
+                secondCase.addTransition(t);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Looping in the nonAcceptingState with all transitions
+        for (TransitionLabel l : allLabels) {
+            Transition<TransitionLabel> t = new Transition<>(nonAcceptingState, l, nonAcceptingState);
+            try {
+                secondCase.addTransition(t);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Putting all together
+        Automaton result = new Union<>().transform(firstCase, secondCase);
+        return new Reducer<>().transform(result);
     }
 
 
 
     default Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
-        // First create a new automaton with the default state factory
-        Automaton result = new Automaton(null);
-
-        // Add the current state
-        State currState = result.addState(true, false);
-
-        return result;
+        return AutomatonUtils.buildFalseAutomaton(ps);
     }
 }

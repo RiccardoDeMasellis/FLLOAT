@@ -12,6 +12,8 @@ import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.ImplFormula;
 import formula.quotedFormula.QuotedFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import rationals.Automaton;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -35,5 +37,15 @@ public class LDLfTempImplFormula extends LDLfBinaryFormula implements LDLfBoolOp
     @Override
     public QuotedFormula delta(TransitionLabel label) {
         return ((LDLfFormula) this.nnf()).delta(label);
+    }
+
+    @Override
+    public Automaton buildAutomaton(PropositionalSignature ps) {
+        return ((LDLfFormula)this.nnf()).buildAutomaton(ps);
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
+        return ((LDLfFormula)this.nnf()).buildAutomaton(ps);
     }
 }

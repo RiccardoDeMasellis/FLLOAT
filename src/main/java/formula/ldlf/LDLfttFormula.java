@@ -14,16 +14,9 @@ import formula.Formula;
 import formula.FormulaType;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedTrueFormula;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.logics.pl.syntax.Tautology;
 import rationals.Automaton;
-import rationals.NoSuchStateException;
-import rationals.State;
-import rationals.Transition;
 import utils.AutomatonUtils;
-
-import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -87,31 +80,12 @@ public class LDLfttFormula implements AtomicFormula, LDLfTempFormula {
 
     @Override
     public Automaton buildAutomaton(PropositionalSignature ps) {
-        // First create a new automaton with the default state factory
-        Automaton result = new Automaton(null);
-
-        // Add the current state
-        State currState = result.addState(true, true);
-
-        Set<PossibleWorld> models = new Tautology().getModels(ps);
-
-        //Convert PossibleWorld in PossibleWorldWrap
-        Set<TransitionLabel> labels = AutomatonUtils.possWorldToTransLabel(models);
-
-        for (TransitionLabel l : labels) {
-            Transition<TransitionLabel> t = new Transition<>(currState, l, currState);
-            try {
-                result.addTransition(t);
-            } catch (NoSuchStateException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
+        return AutomatonUtils.buildTrueAutomaton(ps);
     }
 
     @Override
     public Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
         // Same as before for the empty trace;
-        return buildAutomaton(ps);
+        return this.buildAutomaton(ps);
     }
 }

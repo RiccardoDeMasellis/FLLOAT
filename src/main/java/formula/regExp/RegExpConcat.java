@@ -15,6 +15,8 @@ import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedVar;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import rationals.Automaton;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -66,5 +68,33 @@ public class RegExpConcat extends RegExpBinary implements RegExpTemp {
         QuotedVar quotedFormula = new QuotedVar(outer);
 
         return quotedFormula.delta(label);
+    }
+
+    @Override
+    public Automaton buildAutomatonDiamond(LDLfFormula goal, PropositionalSignature ps) {
+        LDLfDiamondFormula nestedLdlf = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
+        LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
+        return outer.buildAutomaton(ps);
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTraceDiamond(LDLfFormula goal, PropositionalSignature ps) {
+        LDLfDiamondFormula nestedLdlf = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
+        LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
+        return outer.buildAutomatonForEmptyTrace(ps);
+    }
+
+    @Override
+    public Automaton buildAutomatonBox(LDLfFormula goal, PropositionalSignature ps) {
+        LDLfBoxFormula nestedLdlf = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
+        LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
+        return outer.buildAutomaton(ps);
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTraceBox(LDLfFormula goal, PropositionalSignature ps) {
+        LDLfBoxFormula nestedLdlf = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
+        LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
+        return outer.buildAutomatonForEmptyTrace(ps);
     }
 }

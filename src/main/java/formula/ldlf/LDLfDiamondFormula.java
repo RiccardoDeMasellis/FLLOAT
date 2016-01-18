@@ -62,11 +62,11 @@ public class LDLfDiamondFormula extends LDLfTempOpTempFormula {
 
     @Override
     public Automaton buildAutomaton(PropositionalSignature ps) {
-        return this.getRegExp().buildAutomatonDiamond(PropositionalSignature ps);
+        return this.getRegExp().buildAutomatonDiamond(this.getGoalFormula(), ps);
     }
 
     @Override
     public Automaton buildAutomatonForEmptyTrace(PropositionalSignature ps) {
-        return this.getRegExp().buildAutomatonForEmptyTraceDiamond(PropositionalSignature ps);
+        return this.getRegExp().buildAutomatonForEmptyTraceDiamond(this.getGoalFormula(), ps);
     }
 }

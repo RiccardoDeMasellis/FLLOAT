@@ -15,7 +15,16 @@ import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
-import formula.quotedFormula.*;
+import formula.quotedFormula.QuotedAndFormula;
+import formula.quotedFormula.QuotedFormula;
+import formula.quotedFormula.QuotedOrFormula;
+import formula.quotedFormula.QuotedVar;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import rationals.Automaton;
+import rationals.transformations.Mix;
+import rationals.transformations.Reducer;
+import rationals.transformations.Star;
+import rationals.transformations.Union;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -88,5 +97,53 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
 
             return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
         }
+    }
+
+    /*
+    CHECK CHECK CHECK
+     */
+    @Override
+    public Automaton buildAutomatonDiamond(LDLfFormula goal, PropositionalSignature ps) {
+        if (this.getNestedFormula() instanceof RegExpTest)
+            return goal.buildAutomaton(ps);
+        else {
+            LDLfDiamondFormula f = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), goal);
+
+            Automaton a1 = goal.buildAutomaton(ps);
+            Automaton a2 = f.buildAutomaton(ps);
+            Automaton result = new Union<>().transform(a1, a2);
+            result = new Reducer<>().transform(result);
+            result = new Star<>().transform(result);
+            return new Reducer<>().transform(result);
+        }
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTraceDiamond(LDLfFormula goal, PropositionalSignature ps) {
+        return goal.buildAutomaton(ps);
+    }
+
+    /*
+    CHECK CHECK CHECK
+     */
+    @Override
+    public Automaton buildAutomatonBox(LDLfFormula goal, PropositionalSignature ps) {
+        if (this.getNestedFormula() instanceof RegExpTest)
+            return goal.buildAutomaton(ps);
+        else {
+            LDLfBoxFormula f = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), goal);
+
+            Automaton a1 = goal.buildAutomaton(ps);
+            Automaton a2 = f.buildAutomaton(ps);
+            Automaton result = new Mix<>().transform(a1, a2);
+            result = new Reducer<>().transform(result);
+            result = new Star<>().transform(result);
+            return new Reducer<>().transform(result);
+        }
+    }
+
+    @Override
+    public Automaton buildAutomatonForEmptyTraceBox(LDLfFormula goal, PropositionalSignature ps) {
+        return goal.buildAutomaton(ps);
     }
 }

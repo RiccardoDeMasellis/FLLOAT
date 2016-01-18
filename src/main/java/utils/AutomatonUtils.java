@@ -148,8 +148,8 @@ public class AutomatonUtils {
             }
             toAnalyze.remove(currentState);
         }
-        //return automaton;
-        return eliminateLastTransitions(automaton);
+        return automaton;
+        //return eliminateLastTransitions(automaton);
     }
 
 
@@ -338,6 +338,60 @@ public class AutomatonUtils {
             labels.add(new PossibleWorldWrap(world));
         }
         return labels;
+    }
+
+    /*
+    Returns the automaton which loops in the initial and also final state
+    accepting every interpretation for symbols in ps.
+     */
+    public static Automaton buildTrueAutomaton(PropositionalSignature ps) {
+        // First create a new automaton with the default state factory
+        Automaton result = new Automaton(null);
+
+        // Add the current state
+        State currState = result.addState(true, true);
+
+        Set<PossibleWorld> models = new Tautology().getModels(ps);
+
+        //Convert PossibleWorld in PossibleWorldWrap
+        Set<TransitionLabel> labels = AutomatonUtils.possWorldToTransLabel(models);
+
+        for (TransitionLabel l : labels) {
+            Transition<TransitionLabel> t = new Transition<>(currState, l, currState);
+            try {
+                result.addTransition(t);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+
+    /*
+    Returns the empty automaton, i.e., the automaton containing a unique non-accepting state.
+     */
+    public static Automaton buildFalseAutomaton(PropositionalSignature ps) {
+        // First create a new automaton with the default state factory
+        Automaton result = new Automaton();
+
+        // Add the current state
+        State currState = result.addState(true, false);
+
+        Set<PossibleWorld> models = new Tautology().getModels(ps);
+
+        //Convert PossibleWorld in PossibleWorldWrap
+        Set<TransitionLabel> labels = AutomatonUtils.possWorldToTransLabel(models);
+
+        for (TransitionLabel l : labels) {
+            Transition<TransitionLabel> t = new Transition<>(currState, l, currState);
+            try {
+                result.addTransition(t);
+            } catch (NoSuchStateException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
 }

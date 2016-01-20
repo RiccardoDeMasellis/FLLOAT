@@ -9,11 +9,8 @@
 package formula.ltlf;
 
 import formula.FormulaType;
+import formula.NotFormula;
 import formula.ldlf.LDLfBoxFormula;
-import formula.ldlf.LDLfffFormula;
-import formula.regExp.RegExpLocal;
-import formula.regExp.RegExpLocalNot;
-import formula.regExp.RegExpLocalTrue;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -58,14 +55,29 @@ public class LTLfWeakNextFormula extends LTLfUnaryFormula implements LTLfTempOpT
 
     @Override
     public LDLfBoxFormula toLDLf() {
-        //WX a --> [true][!a]ff
-        if(this.getNestedFormula() instanceof LTLfLocalFormula) {
-            RegExpLocal a = ((LTLfLocalFormula)this.getNestedFormula()).toRegExpLocal();
-            LDLfBoxFormula nested = new LDLfBoxFormula(new RegExpLocalNot(a), new LDLfffFormula());
-            return new LDLfBoxFormula(new RegExpLocalTrue(), nested);
+        throw new RuntimeException();
+    }
+
+    @Override
+    public LTLfFormula antinnf() {
+        LTLfFormula nested, nestedNot;
+        nested = this.getNestedFormula().antinnf();
+
+        if(nested instanceof NotFormula) {
+            if (nested instanceof LTLfTempNotFormula)
+                nestedNot = (LTLfFormula) ((LTLfTempNotFormula) nested).getNestedFormula().clone();
+            else
+                nestedNot = (LTLfFormula) ((LTLfLocalNotFormula) nested).getNestedFormula().clone();
         }
-        //WX phi --> [true]phi
-        else
-            return new LDLfBoxFormula(new RegExpLocalTrue(), this.getNestedFormula().toLDLf());
+
+        else {
+            if (this.getNestedFormula() instanceof LTLfTempFormula)
+                nestedNot = new LTLfTempNotFormula(nested);
+            else
+                nestedNot = new LTLfLocalNotFormula(nested);
+        }
+
+        LTLfNextFormula next = new LTLfNextFormula(nestedNot);
+        return new LTLfTempNotFormula(next);
     }
 }

@@ -10,8 +10,6 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.NotFormula;
-import formula.ldlf.LDLfFormula;
-import formula.ldlf.LDLfLocalNotFormula;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalNot;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -29,15 +27,6 @@ public class LTLfLocalNotFormula extends LTLfUnaryFormula implements LTLfBoolOpL
 
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_LOCAL_NOT;
-    }
-
-    @Override
-    public LDLfFormula toLDLf() {
-        if (this.getNestedFormula() instanceof LTLfLocalVar) {
-            return new LDLfLocalNotFormula(this.getNestedFormula().toLDLf());
-        } else {
-            return ((LTLfFormula) this.nnf()).toLDLf();
-        }
     }
 
     @Override

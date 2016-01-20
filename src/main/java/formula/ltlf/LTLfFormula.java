@@ -18,4 +18,6 @@ import formula.ldlf.LDLfFormula;
 public interface LTLfFormula extends Formula {
 
     LDLfFormula toLDLf();
+
+    LTLfFormula antinnf();
 }

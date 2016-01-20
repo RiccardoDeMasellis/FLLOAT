@@ -21,7 +21,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import rationals.Automaton;
-import rationals.transformations.ToDFA;
+import rationals.transformations.Reducer;
 import utils.AutomatonUtils;
 import visitors.LDLfVisitors.LDLfVisitor;
 import visitors.LTLfVisitors.LTLfVisitor;
@@ -36,13 +36,13 @@ import java.io.PrintStream;
 public class Main {
 
     public static void main(String[] args) {
-        //ldlf2Aut();
+        ldlf2Aut();
         ltlf2Aut();
     }
 
 
     public static void ldlf2Aut() {
-        String input = "[true*]([!a]ff)";
+        String input = "!( <true*> ( (<!a>tt) && (<true*>(<b>tt)) ) )";
 
         /*
         Parsing
@@ -69,19 +69,24 @@ public class Main {
         signature.add(y);
         signature.add(z);
 
-        System.out.println(formula);
+        //System.out.println(formula);
 
         Automaton automaton = AutomatonUtils.ldlf2Automaton(formula, formula.getSignature());
 
         /*
         Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
-        automaton = new ToDFA<>().transform(automaton);
+        //automaton = new ToDFA<>().transform(automaton);
+
+        /*
+        Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
+         */
+        automaton = new Reducer<>().transform(automaton);
 
         /*
         Printing
          */
-        System.out.println(automaton);
+        //System.out.println(automaton);
 
 
         /*
@@ -105,8 +110,9 @@ public class Main {
         /*
         Input
          */
-        //String input = "G (a -> (F b))";
-        String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
+        //String input = "F a";
+        String input = "G (a -> (F b))";
+        //String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
 
         /*
         Parsing
@@ -120,30 +126,33 @@ public class Main {
         /*
         Translation to ldlf!
          */
-        LDLfFormula ldlff = formula.toLDLf();
-        System.out.println(ldlff.nnf());
+        LTLfFormula antinnfFormula = formula.antinnf();
+        System.out.println("Antinnf: " + antinnfFormula);
+
+        LDLfFormula ldlff = antinnfFormula.toLDLf();
+        System.out.println("To LDLF: " + ldlff);
 
         /*
         Automaton construction method invocation
          */
         Automaton automaton = AutomatonUtils.ldlf2Automaton(ldlff, ldlff.getSignature());
-        System.out.println(automaton);
+        //System.out.println(automaton);
 
         /*
         Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
-        automaton = new ToDFA<>().transform(automaton);
+        //automaton = new ToDFA<>().transform(automaton);
         //automaton = AutomatonUtils.declareAssumption(automaton);
         /*
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
-        //automaton = new Reducer<>().transform(automaton);
+        automaton = new Reducer<>().transform(automaton);
 
 
         /*
         Printing
          */
-        System.out.println(automaton);
+        //System.out.println(automaton);
 
 
         /*

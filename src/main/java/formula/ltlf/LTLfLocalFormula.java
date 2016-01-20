@@ -10,6 +10,9 @@ package formula.ltlf;
 
 import formula.LocalFormula;
 import formula.LocalFormulaType;
+import formula.ldlf.LDLfDiamondFormula;
+import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfttFormula;
 import formula.regExp.RegExpLocal;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -46,5 +49,15 @@ public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
             default:
                 throw new RuntimeException("Enum " + formulaType + " in LTLfLocalFormula.propFormulaFactory not found.");
         }
+    }
+
+    @Override
+    default LTLfFormula antinnf() {
+        return (LTLfLocalFormula) this.clone();
+    }
+
+    @Override
+    default LDLfFormula toLDLf() {
+        return new LDLfDiamondFormula(this.toRegExpLocal(), new LDLfttFormula());
     }
 }

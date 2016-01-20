@@ -10,7 +10,6 @@ package formula.ltlf;
 
 import formula.DoubleImplFormula;
 import formula.FormulaType;
-import formula.ldlf.LDLfFormula;
 import formula.regExp.RegExpLocal;
 
 /**
@@ -27,13 +26,6 @@ public class LTLfLocalDoubleImplFormula extends LTLfBinaryFormula implements LTL
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_LOCAL_DOUBLEIMPL;
     }
-
-
-    @Override
-    public LDLfFormula toLDLf() {
-        return ((LTLfFormula) this.nnf()).toLDLf();
-    }
-
 
     @Override
     public RegExpLocal toRegExpLocal() {

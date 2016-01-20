@@ -17,6 +17,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import visitors.LDLfVisitors.LDLfVisitor;
 import visitors.LTLfVisitors.LTLfVisitor;
@@ -42,6 +43,24 @@ public class FormulaOperationsTest {
         tree = parser.expression();
         visitor = new LTLfVisitor();
         LTLfFormula formula2 = visitor.visit(tree);
+
+        Assert.assertEquals("", formula2, formula1.nnf());
+
+        /* ************************************************************************************** */
+
+        input = "a -> (X b)";
+        lexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
+        parser = new LTLfFormulaParserParser(new CommonTokenStream(lexer));
+        tree = parser.expression();
+        visitor = new LTLfVisitor();
+        formula1 = visitor.visit(tree);
+
+        input = "(!a) || (X b)";
+        lexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
+        parser = new LTLfFormulaParserParser(new CommonTokenStream(lexer));
+        tree = parser.expression();
+        visitor = new LTLfVisitor();
+        formula2 = visitor.visit(tree);
 
         Assert.assertEquals("", formula2, formula1.nnf());
 
@@ -187,6 +206,7 @@ public class FormulaOperationsTest {
     }
 
 
+    @Ignore
     @Test
     public void testLTLf2LDLf() {
         String input;

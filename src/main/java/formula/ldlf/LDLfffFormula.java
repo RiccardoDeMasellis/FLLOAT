@@ -53,7 +53,7 @@ public class LDLfffFormula implements AtomicFormula, LDLfTempFormula {
 
     @Override
     public Formula negate() {
-        return new LDLfffFormula();
+        return new LDLfttFormula();
     }
 
     @Override

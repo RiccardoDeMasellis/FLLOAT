@@ -43,6 +43,11 @@ public class LTLfWeakUntilFormula extends LTLfBinaryFormula implements LTLfTempO
     }
 
     @Override
+    public LTLfFormula antinnf() {
+        return ((LTLfFormula) this.nnf()).antinnf();
+    }
+
+    @Override
     public LTLfFormula negate() {
         return (LTLfFormula) this.nnf().negate();
     }
@@ -55,6 +60,6 @@ public class LTLfWeakUntilFormula extends LTLfBinaryFormula implements LTLfTempO
 
     @Override
     public LDLfFormula toLDLf() {
-        return this.nnf().toLDLf();
+        throw new RuntimeException();
     }
 }

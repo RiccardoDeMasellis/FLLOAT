@@ -9,6 +9,8 @@
 package formula.ltlf;
 
 import formula.FormulaType;
+import formula.NotFormula;
+import formula.TemporalFormula;
 import formula.ldlf.LDLfFormula;
 
 /**
@@ -52,7 +54,32 @@ public class LTLfGloballyFormula extends LTLfUnaryFormula implements LTLfTempOpT
 
     @Override
     public LDLfFormula toLDLf() {
-        return this.nnf().toLDLf();
+        throw new RuntimeException();
+    }
+
+    @Override
+    public LTLfFormula antinnf() {
+        LTLfFormula nestedNot;
+        LTLfFormula nested = this.getNestedFormula().antinnf();
+
+        if (nested instanceof NotFormula) {
+            if (nested instanceof LTLfLocalNotFormula)
+                nestedNot = (LTLfFormula) ((LTLfLocalNotFormula) nested).getNestedFormula().clone();
+
+            else
+                nestedNot = (LTLfFormula) ((LTLfTempNotFormula) nested).getNestedFormula().clone();
+        }
+
+        else {
+            if (this.getNestedFormula() instanceof TemporalFormula)
+                nestedNot = new LTLfTempNotFormula(nested);
+
+            else
+                nestedNot = new LTLfLocalNotFormula(nested);
+        }
+
+        LTLfEventuallyFormula eventually = new LTLfEventuallyFormula(nestedNot);
+        return new LTLfTempNotFormula(eventually);
     }
 
 }

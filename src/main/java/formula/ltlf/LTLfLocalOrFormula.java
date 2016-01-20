@@ -10,7 +10,6 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.OrFormula;
-import formula.ldlf.LDLfLocalOrFormula;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalOr;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
@@ -28,11 +27,6 @@ public class LTLfLocalOrFormula extends LTLfBinaryFormula implements LTLfBoolOpL
 
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_LOCAL_OR;
-    }
-
-    @Override
-    public LDLfLocalOrFormula toLDLf() {
-        return new LDLfLocalOrFormula(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());
     }
 
     @Override

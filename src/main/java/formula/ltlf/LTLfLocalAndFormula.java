@@ -10,7 +10,6 @@ package formula.ltlf;
 
 import formula.AndFormula;
 import formula.FormulaType;
-import formula.ldlf.LDLfLocalAndFormula;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalAnd;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
@@ -31,11 +30,6 @@ public class LTLfLocalAndFormula extends LTLfBinaryFormula implements LTLfBoolOp
     }
 
     @Override
-    public LDLfLocalAndFormula toLDLf() {
-        return new LDLfLocalAndFormula(this.getLeftFormula().toLDLf(), this.getRightFormula().toLDLf());
-    }
-
-    @Override
     public RegExpLocal toRegExpLocal() {
         RegExpLocal left = ((LTLfLocalFormula) this.getLeftFormula()).toRegExpLocal();
         RegExpLocal right = ((LTLfLocalFormula) this.getRightFormula()).toRegExpLocal();
@@ -51,4 +45,6 @@ public class LTLfLocalAndFormula extends LTLfBinaryFormula implements LTLfBoolOp
 
 		return res;
 	}
+
+
 }

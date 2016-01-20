@@ -10,8 +10,6 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfDiamondFormula;
-import formula.ldlf.LDLfttFormula;
-import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalTrue;
 
 /**
@@ -50,14 +48,11 @@ public class LTLfNextFormula extends LTLfUnaryFormula implements LTLfTempOpTempF
 
     @Override
     public LDLfDiamondFormula toLDLf() {
-        //X a --> <true>(<a>tt)
-        if(this.getNestedFormula() instanceof LTLfLocalFormula) {
-            RegExpLocal a = ((LTLfLocalFormula)this.getNestedFormula()).toRegExpLocal();
-            LDLfDiamondFormula nested = new LDLfDiamondFormula(a, new LDLfttFormula());
-            return new LDLfDiamondFormula(new RegExpLocalTrue(), nested);
-        }
-        //X phi --> <true> phi
-        else
             return new LDLfDiamondFormula(new RegExpLocalTrue(), this.getNestedFormula().toLDLf());
+    }
+
+    @Override
+    public LTLfFormula antinnf() {
+        return new LTLfNextFormula(this.getNestedFormula().antinnf());
     }
 }

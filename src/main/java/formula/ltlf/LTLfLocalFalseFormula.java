@@ -10,11 +10,9 @@ package formula.ltlf;
 
 import formula.FalseLocalFormula;
 import formula.FormulaType;
-import formula.ldlf.LDLfLocalFalseFormula;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalFalse;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -40,11 +38,6 @@ public class LTLfLocalFalseFormula extends FalseLocalFormula implements LTLfLoca
 
     public FormulaType getFormulaType() {
         return FormulaType.LTLf_LOCAL_FALSE;
-    }
-
-    @Override
-    public LDLfLocalFalseFormula toLDLf() {
-        return new LDLfLocalFalseFormula();
     }
 
     @Override

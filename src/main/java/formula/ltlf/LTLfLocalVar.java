@@ -10,8 +10,6 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.LocalVar;
-import formula.ldlf.LDLfFormula;
-import formula.ldlf.LDLfLocalVar;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalVar;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -57,11 +55,6 @@ public class LTLfLocalVar extends LocalVar implements LTLfLocalFormula {
     @Override
     public LTLfFormula nnf() {
         return (LTLfFormula) this.clone();
-    }
-
-    @Override
-    public LDLfFormula toLDLf() {
-        return new LDLfLocalVar(this.getProp());
     }
 
     @Override

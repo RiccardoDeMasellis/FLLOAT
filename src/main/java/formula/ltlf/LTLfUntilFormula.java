@@ -10,9 +10,10 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfDiamondFormula;
-import formula.ldlf.LDLfFormula;
-import formula.ldlf.LDLfttFormula;
-import formula.regExp.*;
+import formula.regExp.RegExpConcat;
+import formula.regExp.RegExpLocalTrue;
+import formula.regExp.RegExpStar;
+import formula.regExp.RegExpTest;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -51,42 +52,16 @@ public class LTLfUntilFormula extends LTLfBinaryFormula implements LTLfTempOpTem
 
     @Override
     public LDLfDiamondFormula toLDLf() {
-
-        // a U b --> <a*><b>tt
-        if (this.getLeftFormula() instanceof LTLfLocalFormula && this.getRightFormula() instanceof LTLfLocalFormula) {
-            RegExpLocal a = ((LTLfLocalFormula) this.getLeftFormula()).toRegExpLocal();
-            RegExpLocal b = ((LTLfLocalFormula) this.getRightFormula()).toRegExpLocal();
-            LDLfDiamondFormula innerDiamond = new LDLfDiamondFormula(b, new LDLfttFormula());
-            return new LDLfDiamondFormula(new RegExpStar(a), innerDiamond);
-        }
-
-        // a U psi --> <a*> psi
-        if (this.getLeftFormula() instanceof LTLfLocalFormula && this.getRightFormula() instanceof LTLfTempFormula) {
-            RegExpLocal a = ((LTLfLocalFormula) this.getLeftFormula()).toRegExpLocal();
-            LDLfFormula psi = this.getRightFormula().toLDLf();
-            return new LDLfDiamondFormula(new RegExpStar(a), psi);
-        }
-
-        // phi U b --> <(phi? ; true)*><b>tt (me)
-        if (this.getLeftFormula() instanceof LTLfTempFormula && this.getRightFormula() instanceof LTLfLocalFormula) {
-            LDLfFormula phi = this.getLeftFormula().toLDLf();
-            RegExpLocal b = ((LTLfLocalFormula) this.getRightFormula()).toRegExpLocal();
-            LDLfDiamondFormula innerDiamond = new LDLfDiamondFormula(b, new LDLfttFormula());
-            RegExpTest test = new RegExpTest(phi);
-            RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
-            RegExpStar star = new RegExpStar(concat);
-            return new LDLfDiamondFormula(star, innerDiamond);
-        }
-
         // phi U psi --> <(phi? ; true)*>psi
-        if (this.getLeftFormula() instanceof LTLfTempFormula && this.getRightFormula() instanceof LTLfTempFormula) {
-            RegExpTest test = new RegExpTest(this.getLeftFormula().toLDLf());
-            RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
-            RegExpStar star = new RegExpStar(concat);
-            return new LDLfDiamondFormula(star, this.getRightFormula().toLDLf());
-        }
+        RegExpTest test = new RegExpTest(this.getLeftFormula().toLDLf());
+        RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
+        RegExpStar star = new RegExpStar(concat);
+        return new LDLfDiamondFormula(star, this.getRightFormula().toLDLf());
+    }
 
-        throw new RuntimeException("Error in Until toLDLf()");
+    @Override
+    public LTLfFormula antinnf() {
+        return new LTLfUntilFormula(this.getLeftFormula().antinnf(), this.getRightFormula().antinnf());
     }
 
 }

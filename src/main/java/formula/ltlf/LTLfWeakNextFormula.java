@@ -9,7 +9,6 @@
 package formula.ltlf;
 
 import formula.FormulaType;
-import formula.NotFormula;
 import formula.ldlf.LDLfBoxFormula;
 
 /**
@@ -63,19 +62,10 @@ public class LTLfWeakNextFormula extends LTLfUnaryFormula implements LTLfTempOpT
         LTLfFormula nested, nestedNot;
         nested = this.getNestedFormula().antinnf();
 
-        if(nested instanceof NotFormula) {
-            if (nested instanceof LTLfTempNotFormula)
-                nestedNot = (LTLfFormula) ((LTLfTempNotFormula) nested).getNestedFormula().clone();
-            else
-                nestedNot = (LTLfFormula) ((LTLfLocalNotFormula) nested).getNestedFormula().clone();
-        }
-
-        else {
-            if (this.getNestedFormula() instanceof LTLfTempFormula)
-                nestedNot = new LTLfTempNotFormula(nested);
-            else
-                nestedNot = new LTLfLocalNotFormula(nested);
-        }
+        if (this.getNestedFormula() instanceof LTLfTempFormula)
+            nestedNot = new LTLfTempNotFormula(nested);
+        else
+            nestedNot = new LTLfLocalNotFormula(nested);
 
         LTLfNextFormula next = new LTLfNextFormula(nestedNot);
         return new LTLfTempNotFormula(next);

@@ -44,7 +44,10 @@ public class LTLfWeakUntilFormula extends LTLfBinaryFormula implements LTLfTempO
 
     @Override
     public LTLfFormula antinnf() {
-        return ((LTLfFormula) this.nnf()).antinnf();
+        LTLfUntilFormula until = new LTLfUntilFormula((LTLfFormula) this.getLeftFormula().clone(), (LTLfFormula) this.getRightFormula().clone());
+        LTLfGloballyFormula globally = new LTLfGloballyFormula((LTLfFormula) this.getLeftFormula().clone());
+        LTLfTempOrFormula or = new LTLfTempOrFormula(until, globally);
+        return or.antinnf();
     }
 
     @Override

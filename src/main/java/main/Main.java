@@ -110,8 +110,8 @@ public class Main {
         /*
         Input
          */
-        //String input = "F a";
-        String input = "G (a -> (F b))";
+        String input = "!(G (F ((a) U (WX (c R (X (!d WU f)))))))";
+        //String input = "G (a -> (F b))";
         //String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
 
         /*

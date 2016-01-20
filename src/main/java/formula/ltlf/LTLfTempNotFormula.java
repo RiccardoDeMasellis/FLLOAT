@@ -83,6 +83,9 @@ public class LTLfTempNotFormula extends LTLfUnaryFormula implements NotFormula, 
             return new LDLfTempAndFormula(leftNot.toLDLf(), rightNot.toLDLf());
         }
 
+        if (this.getNestedFormula() instanceof LTLfTempNotFormula)
+            return ((LTLfTempNotFormula) this.getNestedFormula()).getNestedFormula().toLDLf();
+
         System.out.println(this.getNestedFormula().getClass());
         throw new RuntimeException();
     }

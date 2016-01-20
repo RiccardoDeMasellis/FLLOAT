@@ -9,7 +9,6 @@
 package formula.ltlf;
 
 import formula.FormulaType;
-import formula.NotFormula;
 import formula.TemporalFormula;
 import formula.ldlf.LDLfBoxFormula;
 
@@ -58,32 +57,16 @@ public class LTLfReleaseFormula extends LTLfBinaryFormula implements LTLfTempOpT
         left = this.getLeftFormula().antinnf();
         right = this.getRightFormula().antinnf();
 
-        if (left instanceof NotFormula) {
-            if (left instanceof LTLfTempNotFormula)
-                leftNot = (LTLfFormula) ((LTLfTempNotFormula) left).getNestedFormula().clone();
-            else
-                leftNot = (LTLfFormula) ((LTLfLocalNotFormula) left).getNestedFormula().clone();
-        }
-        else {
-            if (left instanceof TemporalFormula)
-                leftNot = new LTLfTempNotFormula(left);
-            else
-                leftNot = new LTLfLocalNotFormula(left);
-        }
+        if (left instanceof TemporalFormula)
+            leftNot = new LTLfTempNotFormula(left);
+        else
+            leftNot = new LTLfLocalNotFormula(left);
 
 
-        if (right instanceof NotFormula) {
-            if (right instanceof LTLfTempNotFormula)
-                rightNot = (LTLfFormula) ((LTLfTempNotFormula) right).getNestedFormula().clone();
-            else
-                rightNot = (LTLfFormula) ((LTLfLocalNotFormula) right).getNestedFormula().clone();
-        }
-        else {
-            if (right instanceof TemporalFormula)
-                rightNot = new LTLfTempNotFormula(right);
-            else
-                rightNot = new LTLfLocalNotFormula(right);
-        }
+        if (right instanceof TemporalFormula)
+            rightNot = new LTLfTempNotFormula(right);
+        else
+            rightNot = new LTLfLocalNotFormula(right);
 
         LTLfUntilFormula until = new LTLfUntilFormula(leftNot, rightNot);
         return new LTLfTempNotFormula(until);

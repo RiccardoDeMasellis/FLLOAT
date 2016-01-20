@@ -28,4 +28,5 @@ public interface NotFormula extends UnaryFormula, BooleanOpFormula {
     default Formula negate() {
         return this.getNestedFormula().clone();
     }
+
 }

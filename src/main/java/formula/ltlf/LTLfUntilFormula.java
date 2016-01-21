@@ -51,12 +51,12 @@ public class LTLfUntilFormula extends LTLfBinaryFormula implements LTLfTempOpTem
 
 
     @Override
-    public LDLfDiamondFormula toLDLf() {
+    public LDLfDiamondFormula toLDLfRec() {
         // phi U psi --> <(phi? ; true)*>psi
-        RegExpTest test = new RegExpTest(this.getLeftFormula().toLDLf());
+        RegExpTest test = new RegExpTest(this.getLeftFormula().toLDLfRec());
         RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
         RegExpStar star = new RegExpStar(concat);
-        return new LDLfDiamondFormula(star, this.getRightFormula().toLDLf());
+        return new LDLfDiamondFormula(star, this.getRightFormula().toLDLfRec());
     }
 
     @Override

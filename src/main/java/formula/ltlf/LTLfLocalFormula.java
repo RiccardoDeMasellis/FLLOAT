@@ -57,7 +57,7 @@ public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
     }
 
     @Override
-    default LDLfFormula toLDLf() {
+    default LDLfFormula toLDLfRec() {
         return new LDLfDiamondFormula(this.toRegExpLocal(), new LDLfttFormula());
     }
 }

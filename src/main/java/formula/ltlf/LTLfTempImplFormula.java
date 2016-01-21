@@ -34,7 +34,7 @@ public class LTLfTempImplFormula extends LTLfBinaryFormula implements ImplFormul
     }
 
     @Override
-    public LDLfFormula toLDLf() {
+    public LDLfFormula toLDLfRec() {
         throw new RuntimeException();
     }
 

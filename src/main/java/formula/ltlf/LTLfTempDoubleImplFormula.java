@@ -32,7 +32,7 @@ public class LTLfTempDoubleImplFormula extends LTLfBinaryFormula implements Doub
     }
 
     @Override
-    public LDLfFormula toLDLf() {
+    public LDLfFormula toLDLfRec() {
         throw new RuntimeException();
     }
 

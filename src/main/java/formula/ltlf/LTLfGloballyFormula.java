@@ -52,7 +52,7 @@ public class LTLfGloballyFormula extends LTLfUnaryFormula implements LTLfTempOpT
     }
 
     @Override
-    public LDLfFormula toLDLf() {
+    public LDLfFormula toLDLfRec() {
         throw new RuntimeException();
     }
 

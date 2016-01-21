@@ -47,8 +47,8 @@ public class LTLfNextFormula extends LTLfUnaryFormula implements LTLfTempOpTempF
     }
 
     @Override
-    public LDLfDiamondFormula toLDLf() {
-            return new LDLfDiamondFormula(new RegExpLocalTrue(), this.getNestedFormula().toLDLf());
+    public LDLfDiamondFormula toLDLfRec() {
+            return new LDLfDiamondFormula(new RegExpLocalTrue(), this.getNestedFormula().toLDLfRec());
     }
 
     @Override

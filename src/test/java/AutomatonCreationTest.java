@@ -117,7 +117,7 @@ public class AutomatonCreationTest {
 //        LTLfVisitor visitor = new LTLfVisitor();
 //        LTLfFormula f = visitor.visit(tree);
 //
-//        LDLfFormula ldlff = f.toLDLf();
+//        LDLfFormula ldlff = f.toLDLfRec();
 //        Automaton af = AutomatonUtils.ldlf2Automaton(ldlff, ldlff.getSignature());
 //        //af = new ToDFA<>().transform(af);
 //        System.out.println("Automaton for (G(a U b)) && (!( G(a U b) )), should be empty.");
@@ -139,8 +139,8 @@ public class AutomatonCreationTest {
 //        visitor = new LTLfVisitor();
 //        LTLfFormula f2 = visitor.visit(tree);
 //
-//        LDLfFormula ldlff1 = f1.toLDLf();
-//        LDLfFormula ldlff2 = f2.toLDLf();
+//        LDLfFormula ldlff1 = f1.toLDLfRec();
+//        LDLfFormula ldlff2 = f2.toLDLfRec();
 
 
 
@@ -158,7 +158,7 @@ public class AutomatonCreationTest {
 //        Automaton af1 = AutomatonUtils.ldlf2Automaton(ldlff1, ldlff1.getSignature());
 //        //af1 = new ToDFA<>().transform(af1);
 //        System.out.println("Automaton A1 for " + f1);
-//        System.out.println("Automaton A1 for " + f1.toLDLf());
+//        System.out.println("Automaton A1 for " + f1.toLDLfRec());
 //        System.out.println();
 //        System.out.println(af1);
 //        System.out.println();

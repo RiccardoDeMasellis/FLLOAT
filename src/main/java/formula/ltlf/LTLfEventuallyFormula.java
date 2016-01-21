@@ -52,9 +52,9 @@ public class LTLfEventuallyFormula extends LTLfUnaryFormula implements LTLfTempO
     }
 
     @Override
-    public LDLfFormula toLDLf() {
+    public LDLfFormula toLDLfRec() {
         RegExpStar star = new RegExpStar(new RegExpLocalTrue());
-        return new LDLfDiamondFormula(star, this.getNestedFormula().toLDLf());
+        return new LDLfDiamondFormula(star, this.getNestedFormula().toLDLfRec());
     }
 
     @Override

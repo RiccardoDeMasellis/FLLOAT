@@ -17,7 +17,17 @@ import formula.ldlf.LDLfFormula;
  */
 public interface LTLfFormula extends Formula {
 
-    LDLfFormula toLDLf();
+    /*
+    To be used only inside this package!
+    */
+    LDLfFormula toLDLfRec();
+
+    /*
+    To be used publicly
+    */
+    default LDLfFormula toLDLf() {
+        return this.antinnf().toLDLfRec();
+    }
 
     LTLfFormula antinnf();
 }

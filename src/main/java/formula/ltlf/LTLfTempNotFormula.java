@@ -37,15 +37,15 @@ public class LTLfTempNotFormula extends LTLfUnaryFormula implements NotFormula, 
 
 
     @Override
-    public LDLfFormula toLDLf() {
+    public LDLfFormula toLDLfRec() {
         if(this.getNestedFormula() instanceof LTLfNextFormula)
-            return new LDLfTempNotFormula(this.getNestedFormula().toLDLf());
+            return new LDLfTempNotFormula(this.getNestedFormula().toLDLfRec());
 
         if(this.getNestedFormula() instanceof LTLfEventuallyFormula)
-            return new LDLfTempNotFormula(this.getNestedFormula().toLDLf());
+            return new LDLfTempNotFormula(this.getNestedFormula().toLDLfRec());
 
         if(this.getNestedFormula() instanceof LTLfUntilFormula)
-            return new LDLfTempNotFormula(this.getNestedFormula().toLDLf());
+            return new LDLfTempNotFormula(this.getNestedFormula().toLDLfRec());
 
         if(this.getNestedFormula() instanceof LTLfTempAndFormula) {
             LTLfFormula left = ((LTLfTempAndFormula) this.getNestedFormula()).getLeftFormula();
@@ -62,7 +62,7 @@ public class LTLfTempNotFormula extends LTLfUnaryFormula implements NotFormula, 
             else
                 rightNot = new LTLfLocalNotFormula((LTLfFormula) right.clone());
 
-            return new LDLfTempOrFormula(leftNot.toLDLf(), rightNot.toLDLf());
+            return new LDLfTempOrFormula(leftNot.toLDLfRec(), rightNot.toLDLfRec());
         }
 
         if(this.getNestedFormula() instanceof LTLfTempOrFormula) {
@@ -80,11 +80,11 @@ public class LTLfTempNotFormula extends LTLfUnaryFormula implements NotFormula, 
             else
                 rightNot = new LTLfLocalNotFormula((LTLfFormula) right.clone());
 
-            return new LDLfTempAndFormula(leftNot.toLDLf(), rightNot.toLDLf());
+            return new LDLfTempAndFormula(leftNot.toLDLfRec(), rightNot.toLDLfRec());
         }
 
         if (this.getNestedFormula() instanceof LTLfTempNotFormula)
-            return ((LTLfTempNotFormula) this.getNestedFormula()).getNestedFormula().toLDLf();
+            return ((LTLfTempNotFormula) this.getNestedFormula()).getNestedFormula().toLDLfRec();
 
         System.out.println(this.getNestedFormula().getClass());
         throw new RuntimeException();

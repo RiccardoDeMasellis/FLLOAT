@@ -53,7 +53,7 @@ public class LTLfWeakNextFormula extends LTLfUnaryFormula implements LTLfTempOpT
     }
 
     @Override
-    public LDLfBoxFormula toLDLf() {
+    public LDLfBoxFormula toLDLfRec() {
         throw new RuntimeException();
     }
 

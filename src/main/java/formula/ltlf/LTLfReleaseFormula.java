@@ -47,7 +47,7 @@ public class LTLfReleaseFormula extends LTLfBinaryFormula implements LTLfTempOpT
 
 
     @Override
-    public LDLfBoxFormula toLDLf() {
+    public LDLfBoxFormula toLDLfRec() {
         throw new RuntimeException();
     }
 

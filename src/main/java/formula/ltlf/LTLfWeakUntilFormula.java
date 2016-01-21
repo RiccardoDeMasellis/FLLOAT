@@ -62,7 +62,7 @@ public class LTLfWeakUntilFormula extends LTLfBinaryFormula implements LTLfTempO
 
 
     @Override
-    public LDLfFormula toLDLf() {
+    public LDLfFormula toLDLfRec() {
         throw new RuntimeException();
     }
 }

@@ -36,13 +36,14 @@ import java.io.PrintStream;
 public class Main {
 
     public static void main(String[] args) {
-        ldlf2Aut();
+        //ldlf2Aut();
         ltlf2Aut();
     }
 
 
     public static void ldlf2Aut() {
-        String input = "!( <true*> ( (<!a>tt) && (<true*>(<b>tt)) ) )";
+        //String input = "[true*](([true]ff) || (<!a>tt) || (<true*>(<b>tt)))";
+        String input = "[((a)*)*]b";
 
         /*
         Parsing
@@ -110,9 +111,11 @@ public class Main {
         /*
         Input
          */
-        String input = "!(G (F ((a) U (WX (c R (X (!d WU f)))))))";
+        String input = "(a R b)";
         //String input = "G (a -> (F b))";
         //String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
+        //String input = "(G(rl -> (F aa))) & (G(aa -> (F dl))) & (G(aa -> (X dl)))";
+        //String input = "(G(rl -> (F aa))) & (G(aa -> (X dl)))";
 
         /*
         Parsing
@@ -135,6 +138,7 @@ public class Main {
         /*
         Automaton construction method invocation
          */
+        //Automaton automaton = AutomatonUtils.ldlf2AutomatonDeclare(ldlff, ldlff.getSignature());
         Automaton automaton = AutomatonUtils.ldlf2Automaton(ldlff, ldlff.getSignature());
         //System.out.println(automaton);
 
@@ -146,13 +150,20 @@ public class Main {
         /*
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
+
+
+
         automaton = new Reducer<>().transform(automaton);
+
+
 
 
         /*
         Printing
          */
         //System.out.println(automaton);
+        System.out.println("Number of states: " + automaton.states().size());
+        System.out.println("Number of transitions: " + automaton.delta().size());
 
 
         /*

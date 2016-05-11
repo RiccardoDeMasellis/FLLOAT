@@ -14,7 +14,8 @@ import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
-import formula.quotedFormula.QuotedVar;
+
+import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -49,20 +50,18 @@ public class RegExpTest extends RegExpUnary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
-        QuotedVar quotedLeft = new QuotedVar((LDLfFormula) this.getNestedFormula().clone());
-        QuotedVar quotedRight = new QuotedVar((LDLfFormula) goal.clone());
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+        LDLfFormula left = (LDLfFormula) this.getNestedFormula().clone();
+        LDLfFormula right = (LDLfFormula) goal.clone();
 
-        return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
+        return new QuotedAndFormula(left.delta(label, visited), right.delta(label, visited));
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
         LDLfFormula left = (LDLfFormula) this.getNestedFormula().negate().nnf();
+        LDLfFormula right = (LDLfFormula) goal.clone();
 
-        QuotedVar quotedLeft = new QuotedVar(left);
-        QuotedVar quotedRight = new QuotedVar((LDLfFormula) goal.clone());
-
-        return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
+        return new QuotedOrFormula(left.delta(label, visited), right.delta(label, visited));
     }
 }

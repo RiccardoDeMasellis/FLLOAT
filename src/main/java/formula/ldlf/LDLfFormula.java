@@ -12,12 +12,14 @@ import automaton.TransitionLabel;
 import formula.Formula;
 import formula.quotedFormula.QuotedFormula;
 
+import java.util.Set;
+
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
 public interface LDLfFormula extends Formula {
 
-    QuotedFormula delta(TransitionLabel label);
+    QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> visited);
 
 }

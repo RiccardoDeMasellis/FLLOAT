@@ -13,7 +13,8 @@ import formula.FormulaType;
 import formula.OrFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
-import formula.quotedFormula.QuotedVar;
+
+import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -46,10 +47,7 @@ public class LDLfTempOrFormula extends LDLfBinaryFormula implements LDLfBoolOpTe
     }
 
     @Override
-    public QuotedFormula delta(TransitionLabel label) {
-        QuotedVar quotedLeft = new QuotedVar(this.getLeftFormula());
-        QuotedVar quotedRight = new QuotedVar(this.getRightFormula());
-
-        return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
+    public QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> visited) {
+        return new QuotedOrFormula(this.getLeftFormula().delta(label, visited), this.getRightFormula().delta(label, visited));
     }
 }

@@ -14,6 +14,7 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by Riccardo De Masellis on 08/06/15.
@@ -69,6 +70,6 @@ public class QuotedVar extends QuotedAtomicFormula {
 
     @Override
     public QuotedFormula delta(TransitionLabel label) {
-        return this.getUnquotedFormula().delta(label);
+        return this.getUnquotedFormula().delta(label, new HashSet<>());
     }
 }

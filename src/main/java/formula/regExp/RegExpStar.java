@@ -17,6 +17,8 @@ import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.*;
 
+import java.util.Set;
+
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -49,44 +51,77 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
-        if (label instanceof EmptyTrace) {
-            QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(label);
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+        /*
+           To see if I reached a fixpoint, I check if I already expanded the same formula
+        */
+        // First of all, I re-build the formula that caused this recursive call:
+        LDLfDiamondFormula caller = new LDLfDiamondFormula(this, goal);
+
+        if (visited.contains(caller)) {
+            // I am expanding a diamond formula, so if I reached a fixpoint is bad!
+            return new QuotedFalseFormula();
         }
 
-        if (this.getNestedFormula() instanceof RegExpTest) {
-            QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(label);
-        } else {
-            LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
-            LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), inner);
+        else {
 
-            QuotedFormula quotedLeft = new QuotedVar((LDLfFormula) goal.clone());
-            QuotedFormula quotedRight = new QuotedVar(outer);
+            // Add the formula that caused this recursive call to the visited set
+            visited.add(caller);
 
-            return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
+            if (label instanceof EmptyTrace) {
+                return ((LDLfFormula) goal.clone()).delta(label, visited);
+            }
+
+            if (this.getNestedFormula() instanceof RegExpTest) {
+                return ((LDLfFormula) goal.clone()).delta(label, visited);
+            }
+
+            else {
+                LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
+                LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), inner);
+
+                LDLfFormula left = (LDLfFormula) goal.clone();
+
+                return new QuotedOrFormula(left.delta(label, visited), outer.delta(label, visited));
+            }
         }
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
-        if (label instanceof EmptyTrace) {
-            QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(label);
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+        /*
+           To see if I reached a fixpoint, I check if I already expanded the same formula
+        */
+        // First of all, I re-build the formula that caused this recursive call:
+        LDLfBoxFormula caller = new LDLfBoxFormula(this, goal);
+
+        if (visited.contains(caller)) {
+            // I am expanding a box formula, so if I reached a fixpoint is good!
+            return new QuotedTrueFormula();
         }
 
-        if (this.getNestedFormula() instanceof RegExpTest) {
-            QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(label);
-        } else {
-            LDLfBoxFormula inner = new LDLfBoxFormula(this.clone(), (LDLfFormula) goal.clone());
-            LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), inner);
+        else {
 
-            QuotedFormula quotedLeft = new QuotedVar((LDLfFormula) goal.clone());
-            QuotedFormula quotedRight = new QuotedVar(outer);
+            // Add the formula that caused this recursive call to the visited set
+            visited.add(caller);
 
-            return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
+            if (label instanceof EmptyTrace) {
+                return ((LDLfFormula) goal.clone()).delta(label, visited);
+            }
+
+            if (this.getNestedFormula() instanceof RegExpTest) {
+                return ((LDLfFormula) goal.clone()).delta(label, visited);
+
+
+            }
+            else {
+                LDLfBoxFormula inner = new LDLfBoxFormula(this.clone(), (LDLfFormula) goal.clone());
+                LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), inner);
+
+                LDLfFormula left = (LDLfFormula) goal.clone();
+
+                return new QuotedAndFormula(left.delta(label, visited), outer.delta(label, visited));
+            }
         }
     }
 }

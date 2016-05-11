@@ -14,7 +14,8 @@ import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
-import formula.quotedFormula.QuotedVar;
+
+import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -49,22 +50,18 @@ public class RegExpConcat extends RegExpBinary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
         LDLfDiamondFormula nestedLdlf = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
         LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
 
-        QuotedVar quotedFormula = new QuotedVar(outer);
-
-        return quotedFormula.delta(label);
+        return outer.delta(label, visited);
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
         LDLfBoxFormula nestedLdlf = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
         LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
 
-        QuotedVar quotedFormula = new QuotedVar(outer);
-
-        return quotedFormula.delta(label);
+        return outer.delta(label, visited);
     }
 }

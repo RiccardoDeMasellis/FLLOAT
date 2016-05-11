@@ -13,13 +13,15 @@ import formula.Formula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
 
+import java.util.Set;
+
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
  */
 public interface RegExp extends Formula {
 
-    QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label);
+    QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited);
 
-    QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label);
+    QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited);
 }

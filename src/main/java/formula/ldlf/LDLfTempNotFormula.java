@@ -9,6 +9,7 @@
 package formula.ldlf;
 
 import automaton.TransitionLabel;
+import auxiliaries.DeltaCallContext;
 import formula.FormulaType;
 import formula.NotFormula;
 import formula.quotedFormula.QuotedFormula;
@@ -36,7 +37,7 @@ public class LDLfTempNotFormula extends LDLfUnaryFormula implements LDLfBoolOpTe
 
 
     @Override
-    public QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> visited) {
-        return ((LDLfFormula) this.nnf()).delta(label, visited);
+    public QuotedFormula delta(TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+        return ((LDLfFormula) this.nnf()).delta(label, previousCalls);
     }
 }

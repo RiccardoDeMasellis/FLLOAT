@@ -11,6 +11,7 @@ package formula.ldlf;
 import automaton.EmptyTrace;
 import automaton.PossibleWorldWrap;
 import automaton.TransitionLabel;
+import auxiliaries.DeltaCallContext;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
 import formula.quotedFormula.QuotedFalseFormula;
@@ -52,7 +53,7 @@ public interface LDLfLocalFormula extends LDLfFormula, LocalFormula {
 
     PropositionalFormula LDLfLocal2Prop();
 
-    default QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> visited) {
+    default QuotedFormula delta(TransitionLabel label, Set<DeltaCallContext> previousCalls) {
         if (label instanceof EmptyTrace)
             return new QuotedFalseFormula();
 

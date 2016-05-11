@@ -9,6 +9,7 @@
 package formula.regExp;
 
 import automaton.TransitionLabel;
+import auxiliaries.DeltaCallContext;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
@@ -50,18 +51,18 @@ public class RegExpConcat extends RegExpBinary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
         LDLfDiamondFormula nestedLdlf = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
         LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
 
-        return outer.delta(label, visited);
+        return outer.delta(label, previousCalls);
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
         LDLfBoxFormula nestedLdlf = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
         LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
 
-        return outer.delta(label, visited);
+        return outer.delta(label, previousCalls);
     }
 }

@@ -9,6 +9,7 @@
 package formula.regExp;
 
 import automaton.TransitionLabel;
+import auxiliaries.DeltaCallContext;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
@@ -51,18 +52,18 @@ public class RegExpAltern extends RegExpBinary implements RegExpTemp {
     }
 
 
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
         LDLfDiamondFormula ldlfLeft = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
         LDLfDiamondFormula ldlfRight = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
 
-        return new QuotedOrFormula(ldlfLeft.delta(label, visited), ldlfRight.delta(label, visited));
+        return new QuotedOrFormula(ldlfLeft.delta(label, previousCalls), ldlfRight.delta(label, previousCalls));
     }
 
 
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
         LDLfBoxFormula ldlfLeft = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
         LDLfBoxFormula ldlfRight = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
 
-        return new QuotedAndFormula(ldlfLeft.delta(label, visited), ldlfRight.delta(label, visited));
+        return new QuotedAndFormula(ldlfLeft.delta(label, previousCalls), ldlfRight.delta(label, previousCalls));
     }
 }

@@ -9,6 +9,7 @@
 package formula.ldlf;
 
 import automaton.TransitionLabel;
+import auxiliaries.DeltaCallContext;
 import formula.FormulaType;
 import formula.quotedFormula.QuotedFormula;
 import formula.regExp.RegExp;
@@ -57,7 +58,7 @@ public class LDLfBoxFormula extends LDLfTempOpTempFormula {
     }
 
     @Override
-    public QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> visited) {
-        return this.getRegExp().deltaBox(this.getGoalFormula(), label, visited);
+    public QuotedFormula delta(TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+        return this.getRegExp().deltaBox(this.getGoalFormula(), label, previousCalls);
     }
 }

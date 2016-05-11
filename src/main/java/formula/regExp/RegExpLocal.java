@@ -11,6 +11,7 @@ package formula.regExp;
 import automaton.EmptyTrace;
 import automaton.PossibleWorldWrap;
 import automaton.TransitionLabel;
+import auxiliaries.DeltaCallContext;
 import evaluations.PropositionLast;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
@@ -56,7 +57,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
     PropositionalFormula regExpLocal2Propositional();
 
 
-    default QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+    default QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
         if (label instanceof EmptyTrace)
             return new QuotedFalseFormula();
 
@@ -67,7 +68,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
 
             if (pwwLabel.satisfies(pf)) {
                 if (pwwLabel.contains(last)) {
-                    return ((LDLfFormula) goal.clone()).delta(new EmptyTrace(), visited);
+                    return ((LDLfFormula) goal.clone()).delta(new EmptyTrace(), previousCalls);
                 } else
                     return new QuotedVar((LDLfFormula) goal.clone());
             } else { // !world.satisfies(pf)
@@ -79,7 +80,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
     }
 
 
-    default QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> visited) {
+    default QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
         if (label instanceof EmptyTrace)
             return new QuotedTrueFormula();
 
@@ -90,7 +91,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
 
             if (pwwLabel.satisfies(pf)) {
                 if (pwwLabel.contains(last)) {
-                    return ((LDLfFormula) goal.clone()).delta(new EmptyTrace(), visited);
+                    return ((LDLfFormula) goal.clone()).delta(new EmptyTrace(), previousCalls);
                 } else
                     return new QuotedVar((LDLfFormula) goal.clone());
             } else { // !world.satisfies(pf)

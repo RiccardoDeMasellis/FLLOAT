@@ -9,7 +9,6 @@
 package formula.regExp;
 
 import automaton.TransitionLabel;
-import auxiliaries.DeltaCallContext;
 import formula.FormulaType;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedAndFormula;
@@ -51,7 +50,7 @@ public class RegExpTest extends RegExpUnary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
         LDLfFormula left = (LDLfFormula) this.getNestedFormula().clone();
         LDLfFormula right = (LDLfFormula) goal.clone();
 
@@ -59,7 +58,7 @@ public class RegExpTest extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
         LDLfFormula left = (LDLfFormula) this.getNestedFormula().negate().nnf();
         LDLfFormula right = (LDLfFormula) goal.clone();
 

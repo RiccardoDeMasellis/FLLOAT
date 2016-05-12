@@ -9,7 +9,6 @@
 package formula.ldlf;
 
 import automaton.TransitionLabel;
-import auxiliaries.DeltaCallContext;
 import formula.AtomicFormula;
 import formula.Formula;
 import formula.FormulaType;
@@ -75,7 +74,7 @@ public class LDLfffFormula implements AtomicFormula, LDLfTempFormula {
     }
 
     @Override
-    public QuotedFormula delta(TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+    public QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> previousCalls) {
         return new QuotedFalseFormula();
     }
 

@@ -9,7 +9,6 @@
 package formula.ldlf;
 
 import automaton.TransitionLabel;
-import auxiliaries.DeltaCallContext;
 import formula.Formula;
 import formula.quotedFormula.QuotedFormula;
 
@@ -21,6 +20,6 @@ import java.util.Set;
  */
 public interface LDLfFormula extends Formula {
 
-    QuotedFormula delta(TransitionLabel label, Set<DeltaCallContext> previousCalls);
+    QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> previousCalls);
 
 }

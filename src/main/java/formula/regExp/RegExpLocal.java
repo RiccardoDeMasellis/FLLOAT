@@ -11,7 +11,6 @@ package formula.regExp;
 import automaton.EmptyTrace;
 import automaton.PossibleWorldWrap;
 import automaton.TransitionLabel;
-import auxiliaries.DeltaCallContext;
 import evaluations.PropositionLast;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
@@ -57,7 +56,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
     PropositionalFormula regExpLocal2Propositional();
 
 
-    default QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+    default QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
         if (label instanceof EmptyTrace)
             return new QuotedFalseFormula();
 
@@ -80,7 +79,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
     }
 
 
-    default QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+    default QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
         if (label instanceof EmptyTrace)
             return new QuotedTrueFormula();
 

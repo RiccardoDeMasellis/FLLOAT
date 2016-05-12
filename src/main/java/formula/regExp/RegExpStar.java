@@ -10,7 +10,6 @@ package formula.regExp;
 
 import automaton.EmptyTrace;
 import automaton.TransitionLabel;
-import auxiliaries.DeltaCallContext;
 import formula.Formula;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
@@ -53,15 +52,14 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
         /*
            To see if I reached a fixpoint, I check if I already expanded the same formula IN THE SAME BRANCH
         */
         // First of all, I re-build the formula that caused this recursive call:
         LDLfDiamondFormula caller = new LDLfDiamondFormula(this, goal);
-        DeltaCallContext callContext = new DeltaCallContext(caller, label);
 
-        if (previousCalls.contains(callContext)) {
+        if (previousCalls.contains(caller)) {
             // I am expanding a diamond formula, so if I reached a fixpoint is bad!
             return new QuotedFalseFormula();
         }
@@ -72,17 +70,19 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
              Add the formula that caused this recursive call to the visited set but CLONE IT before! So not to
              side-effect the data structure on other branches of the recursive call tree.
              */
-            Set<DeltaCallContext> newCalls = new HashSet<>();
+            Set<LDLfFormula> newCalls = new HashSet<>();
             newCalls.addAll(previousCalls);
-            newCalls.add(callContext);
+            newCalls.add(caller);
 
             if (label instanceof EmptyTrace) {
                 return ((LDLfFormula) goal.clone()).delta(label, newCalls);
             }
 
+
             if (this.getNestedFormula() instanceof RegExpTest) {
                 return ((LDLfFormula) goal.clone()).delta(label, newCalls);
             }
+
 
             else {
                 LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
@@ -96,15 +96,14 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
         /*
            To see if I reached a fixpoint, I check if I already expanded the same formula IN THE SAME BRANCH
         */
         // First of all, I re-build the formula that caused this recursive call:
         LDLfBoxFormula caller = new LDLfBoxFormula(this, goal);
-        DeltaCallContext callContext = new DeltaCallContext(caller, label);
 
-        if (previousCalls.contains(callContext)) {
+        if (previousCalls.contains(caller)) {
             // I am expanding a box formula, so if I reached a fixpoint is good!
             return new QuotedTrueFormula();
         }
@@ -115,9 +114,9 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
              Add the formula that caused this recursive call to the visited set but CLONE IT before! So not to
              side-effect the data structure on other branches of the recursive call tree.
              */
-            Set<DeltaCallContext> newCalls = new HashSet<>();
+            Set<LDLfFormula> newCalls = new HashSet<>();
             newCalls.addAll(previousCalls);
-            newCalls.add(callContext);
+            newCalls.add(caller);
 
             if (label instanceof EmptyTrace) {
                 return ((LDLfFormula) goal.clone()).delta(label, newCalls);

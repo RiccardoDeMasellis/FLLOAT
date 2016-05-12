@@ -9,7 +9,6 @@
 package formula.regExp;
 
 import automaton.TransitionLabel;
-import auxiliaries.DeltaCallContext;
 import formula.Formula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
@@ -22,7 +21,7 @@ import java.util.Set;
  */
 public interface RegExp extends Formula {
 
-    QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls);
+    QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls);
 
-    QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<DeltaCallContext> previousCalls);
+    QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls);
 }

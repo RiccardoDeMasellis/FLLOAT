@@ -43,7 +43,7 @@ public class Main {
 
     public static void ldlf2Aut() {
         //String input = "[true*](([true]ff) || (<!a>tt) || (<true*>(<b>tt)))";
-        String input = "<(a + (true?))*>b";
+        String input = "<((a)*)*>b";
 
         /*
         Parsing

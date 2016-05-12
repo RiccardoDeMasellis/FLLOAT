@@ -78,10 +78,12 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
                 return ((LDLfFormula) goal.clone()).delta(label, newCalls);
             }
 
-
-            if (this.getNestedFormula() instanceof RegExpTest) {
-                return ((LDLfFormula) goal.clone()).delta(label, newCalls);
-            }
+            /*
+               (MAYBE) WE DO NOT NEED THIS ANYMORE. NOW WE CHECK IF THERE ARE OTHER CALLS ON THE SAME FORMULA!
+            */
+            //if (this.getNestedFormula() instanceof RegExpTest) {
+            //    return ((LDLfFormula) goal.clone()).delta(label, newCalls);
+            //}
 
 
             else {
@@ -122,11 +124,13 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
                 return ((LDLfFormula) goal.clone()).delta(label, newCalls);
             }
 
-            if (this.getNestedFormula() instanceof RegExpTest) {
-                return ((LDLfFormula) goal.clone()).delta(label, newCalls);
+            /*
+               (MAYBE) WE DO NOT NEED THIS ANYMORE. NOW WE CHECK IF THERE ARE OTHER CALLS ON THE SAME FORMULA!
+            */
+            //if (this.getNestedFormula() instanceof RegExpTest) {
+            //    return ((LDLfFormula) goal.clone()).delta(label, newCalls);
+            //}
 
-
-            }
             else {
                 LDLfBoxFormula inner = new LDLfBoxFormula(this.clone(), (LDLfFormula) goal.clone());
                 LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), inner);

@@ -22,8 +22,6 @@ import formula.quotedFormula.QuotedVar;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
-import java.util.Set;
-
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -56,7 +54,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
     PropositionalFormula regExpLocal2Propositional();
 
 
-    default QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    default QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, LDLfFormula lastCall) {
         if (label instanceof EmptyTrace)
             return new QuotedFalseFormula();
 
@@ -79,7 +77,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
     }
 
 
-    default QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    default QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, LDLfFormula lastCall) {
         if (label instanceof EmptyTrace)
             return new QuotedTrueFormula();
 

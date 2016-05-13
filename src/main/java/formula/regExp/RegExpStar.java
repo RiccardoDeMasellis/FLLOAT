@@ -17,9 +17,6 @@ import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -52,7 +49,7 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, LDLfFormula lastCall) {
 
         if (label instanceof EmptyTrace) {
             return ((LDLfFormula) goal.clone()).delta(label, null);
@@ -64,21 +61,12 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
         // First of all, I re-build the formula that caused this recursive call:
         LDLfDiamondFormula caller = new LDLfDiamondFormula(this, goal);
 
-        if (previousCalls.contains(caller)) {
+        if (caller.equals(lastCall)) {
             // I am expanding a diamond formula, so if I reached a fixpoint is bad!
             return new QuotedFalseFormula();
         }
 
         else {
-
-            /*
-             Add the formula that caused this recursive call to the visited set but CLONE IT before! So not to
-             side-effect the data structure on other branches of the recursive call tree.
-             */
-            Set<LDLfFormula> newCalls = new HashSet<>();
-            newCalls.addAll(previousCalls);
-            newCalls.add(caller);
-
             /*
                (MAYBE) WE DO NOT NEED THIS ANYMORE. NOW WE CHECK IF THERE ARE OTHER CALLS ON THE SAME FORMULA!
             */
@@ -86,18 +74,17 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
             //    return ((LDLfFormula) goal.clone()).delta(label, newCalls);
             //}
 
-
             LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
             LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), inner);
 
             LDLfFormula left = (LDLfFormula) goal.clone();
 
-            return new QuotedOrFormula(left.delta(label, previousCalls), outer.delta(label, newCalls));
+            return new QuotedOrFormula(left.delta(label, lastCall), outer.delta(label, caller));
         }
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, LDLfFormula lastCall) {
 
         if (label instanceof EmptyTrace) {
             return ((LDLfFormula) goal.clone()).delta(label, null);
@@ -109,21 +96,12 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
         // First of all, I re-build the formula that caused this recursive call:
         LDLfBoxFormula caller = new LDLfBoxFormula(this, goal);
 
-        if (previousCalls.contains(caller)) {
+        if (caller.equals(lastCall)) {
             // I am expanding a box formula, so if I reached a fixpoint is good!
             return new QuotedTrueFormula();
         }
 
         else {
-
-            /*
-             Add the formula that caused this recursive call to the visited set but CLONE IT before! So not to
-             side-effect the data structure on other branches of the recursive call tree.
-             */
-            Set<LDLfFormula> newCalls = new HashSet<>();
-            newCalls.addAll(previousCalls);
-            newCalls.add(caller);
-
             /*
                (MAYBE) WE DO NOT NEED THIS ANYMORE. NOW WE CHECK IF THERE ARE OTHER CALLS ON THE SAME FORMULA!
             */
@@ -136,7 +114,7 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
 
             LDLfFormula left = (LDLfFormula) goal.clone();
 
-            return new QuotedAndFormula(left.delta(label, previousCalls), outer.delta(label, newCalls));
+            return new QuotedAndFormula(left.delta(label, lastCall), outer.delta(label, caller));
         }
     }
 }

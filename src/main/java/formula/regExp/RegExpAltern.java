@@ -17,8 +17,6 @@ import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
 
-import java.util.Set;
-
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -51,18 +49,18 @@ public class RegExpAltern extends RegExpBinary implements RegExpTemp {
     }
 
 
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, LDLfFormula lastCall) {
         LDLfDiamondFormula ldlfLeft = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
         LDLfDiamondFormula ldlfRight = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
 
-        return new QuotedOrFormula(ldlfLeft.delta(label, previousCalls), ldlfRight.delta(label, previousCalls));
+        return new QuotedOrFormula(ldlfLeft.delta(label, lastCall), ldlfRight.delta(label, lastCall));
     }
 
 
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, LDLfFormula lastCall) {
         LDLfBoxFormula ldlfLeft = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
         LDLfBoxFormula ldlfRight = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
 
-        return new QuotedAndFormula(ldlfLeft.delta(label, previousCalls), ldlfRight.delta(label, previousCalls));
+        return new QuotedAndFormula(ldlfLeft.delta(label, lastCall), ldlfRight.delta(label, lastCall));
     }
 }

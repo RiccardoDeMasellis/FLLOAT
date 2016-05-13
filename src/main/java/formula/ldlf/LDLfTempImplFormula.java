@@ -13,8 +13,6 @@ import formula.FormulaType;
 import formula.ImplFormula;
 import formula.quotedFormula.QuotedFormula;
 
-import java.util.Set;
-
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -35,7 +33,7 @@ public class LDLfTempImplFormula extends LDLfBinaryFormula implements LDLfBoolOp
     }
 
     @Override
-    public QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> previousCalls) {
-        return ((LDLfFormula) this.nnf()).delta(label, previousCalls);
+    public QuotedFormula delta(TransitionLabel label, LDLfFormula lastCall) {
+        return ((LDLfFormula) this.nnf()).delta(label, lastCall);
     }
 }

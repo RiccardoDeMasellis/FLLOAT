@@ -67,7 +67,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
 
             if (pwwLabel.satisfies(pf)) {
                 if (pwwLabel.contains(last)) {
-                    return ((LDLfFormula) goal.clone()).delta(new EmptyTrace(), previousCalls);
+                    return ((LDLfFormula) goal.clone()).delta(new EmptyTrace(), null);
                 } else
                     return new QuotedVar((LDLfFormula) goal.clone());
             } else { // !world.satisfies(pf)
@@ -90,7 +90,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
 
             if (pwwLabel.satisfies(pf)) {
                 if (pwwLabel.contains(last)) {
-                    return ((LDLfFormula) goal.clone()).delta(new EmptyTrace(), previousCalls);
+                    return ((LDLfFormula) goal.clone()).delta(new EmptyTrace(), null);
                 } else
                     return new QuotedVar((LDLfFormula) goal.clone());
             } else { // !world.satisfies(pf)

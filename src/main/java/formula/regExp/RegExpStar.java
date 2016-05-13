@@ -53,6 +53,11 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
 
     @Override
     public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+
+        if (label instanceof EmptyTrace) {
+            return ((LDLfFormula) goal.clone()).delta(label, null);
+        }
+
         /*
            To see if I reached a fixpoint, I check if I already expanded the same formula IN THE SAME BRANCH
         */
@@ -74,10 +79,6 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
             newCalls.addAll(previousCalls);
             newCalls.add(caller);
 
-            if (label instanceof EmptyTrace) {
-                return ((LDLfFormula) goal.clone()).delta(label, newCalls);
-            }
-
             /*
                (MAYBE) WE DO NOT NEED THIS ANYMORE. NOW WE CHECK IF THERE ARE OTHER CALLS ON THE SAME FORMULA!
             */
@@ -86,19 +87,22 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
             //}
 
 
-            else {
-                LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
-                LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), inner);
+            LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
+            LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), inner);
 
-                LDLfFormula left = (LDLfFormula) goal.clone();
+            LDLfFormula left = (LDLfFormula) goal.clone();
 
-                return new QuotedOrFormula(left.delta(label, previousCalls), outer.delta(label, newCalls));
-            }
+            return new QuotedOrFormula(left.delta(label, previousCalls), outer.delta(label, newCalls));
         }
     }
 
     @Override
     public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+
+        if (label instanceof EmptyTrace) {
+            return ((LDLfFormula) goal.clone()).delta(label, null);
+        }
+
         /*
            To see if I reached a fixpoint, I check if I already expanded the same formula IN THE SAME BRANCH
         */
@@ -120,10 +124,6 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
             newCalls.addAll(previousCalls);
             newCalls.add(caller);
 
-            if (label instanceof EmptyTrace) {
-                return ((LDLfFormula) goal.clone()).delta(label, newCalls);
-            }
-
             /*
                (MAYBE) WE DO NOT NEED THIS ANYMORE. NOW WE CHECK IF THERE ARE OTHER CALLS ON THE SAME FORMULA!
             */
@@ -131,14 +131,12 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
             //    return ((LDLfFormula) goal.clone()).delta(label, newCalls);
             //}
 
-            else {
-                LDLfBoxFormula inner = new LDLfBoxFormula(this.clone(), (LDLfFormula) goal.clone());
-                LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), inner);
+            LDLfBoxFormula inner = new LDLfBoxFormula(this.clone(), (LDLfFormula) goal.clone());
+            LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), inner);
 
-                LDLfFormula left = (LDLfFormula) goal.clone();
+            LDLfFormula left = (LDLfFormula) goal.clone();
 
-                return new QuotedAndFormula(left.delta(label, previousCalls), outer.delta(label, newCalls));
-            }
+            return new QuotedAndFormula(left.delta(label, previousCalls), outer.delta(label, newCalls));
         }
     }
 }

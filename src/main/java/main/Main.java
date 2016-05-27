@@ -21,6 +21,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import rationals.Automaton;
+import rationals.transformations.Pruner;
 import rationals.transformations.Reducer;
 import utils.AutomatonUtils;
 import visitors.LDLfVisitors.LDLfVisitor;
@@ -44,6 +45,7 @@ public class Main {
     public static void ldlf2Aut() {
         //String input = "[true*](([true]ff) || (<!a>tt) || (<true*>(<b>tt)))";
         String input = "<((a)*)*>b";
+        //String input = "<(a + (true?))*>b";
 
         /*
         Parsing
@@ -83,6 +85,11 @@ public class Main {
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
         automaton = new Reducer<>().transform(automaton);
+
+        /*
+        PRUNING
+         */
+        automaton = new Pruner<>().transform(automaton);
 
         /*
         Printing

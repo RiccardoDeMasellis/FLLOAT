@@ -36,8 +36,8 @@ import java.io.PrintStream;
 public class Main {
 
     public static void main(String[] args) {
-        ldlf2Aut();
-        //ltlf2Aut();
+        //ldlf2Aut();
+        ltlf2Aut();
     }
 
 
@@ -79,6 +79,10 @@ public class Main {
          */
         //automaton = new ToDFA<>().transform(automaton);
 
+
+        automaton = AutomatonUtils.eliminateEmptyTrace(automaton);
+
+
         /*
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
@@ -111,11 +115,11 @@ public class Main {
         /*
         Input
          */
-        String input = "(a R b)";
+        //String input = "(a R b)";
         //String input = "G (a -> (F b))";
         //String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
         //String input = "(G(rl -> (F aa))) & (G(aa -> (F dl))) & (G(aa -> (X dl)))";
-        //String input = "(G(rl -> (F aa))) & (G(aa -> (X dl)))";
+        String input = "(G(rl -> (F aa))) & (G(aa -> (X dl)))";
 
         /*
         Parsing
@@ -152,6 +156,7 @@ public class Main {
          */
 
 
+        automaton = AutomatonUtils.eliminateEmptyTrace(automaton);
 
         automaton = new Reducer<>().transform(automaton);
 

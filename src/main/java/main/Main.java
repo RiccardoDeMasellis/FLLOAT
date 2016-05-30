@@ -116,10 +116,10 @@ public class Main {
         Input
          */
         //String input = "(a R b)";
-        //String input = "G (a -> (F b))";
+        String input = "G (a -> (F b))";
         //String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
         //String input = "(G(rl -> (F aa))) & (G(aa -> (F dl))) & (G(aa -> (X dl)))";
-        String input = "(G(rl -> (F aa))) & (G(aa -> (X dl)))";
+        //String input = "(G(rl -> (F aa))) & (G(aa -> (X dl)))";
 
         /*
         Parsing

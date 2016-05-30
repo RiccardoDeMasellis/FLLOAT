@@ -79,10 +79,6 @@ public class Main {
          */
         //automaton = new ToDFA<>().transform(automaton);
 
-
-        automaton = AutomatonUtils.eliminateEmptyTrace(automaton);
-
-
         /*
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
@@ -154,9 +150,6 @@ public class Main {
         /*
         Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
          */
-
-
-        automaton = AutomatonUtils.eliminateEmptyTrace(automaton);
 
         automaton = new Reducer<>().transform(automaton);
 

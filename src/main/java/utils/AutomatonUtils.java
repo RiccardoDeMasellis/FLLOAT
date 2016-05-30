@@ -217,50 +217,6 @@ public class AutomatonUtils {
     }
 
 
-    /*
-    To be called AFTER eliminateLastTransition!!!
-     */
-    public static Automaton eliminateEmptyTrace(Automaton oldAut) {
-        Set<State> oldStates = oldAut.states();
-        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
-
-        Automaton newAut = new Automaton();
-
-        Map<State, State> oldToNew = new HashMap<>();
-
-        //Add all states
-        for (State oldSt : oldStates) {
-            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
-            oldToNew.put(oldSt, newSt);
-        }
-
-        for (Transition<TransitionLabel> oldTran : oldTransitions) {
-            State oldStart = oldTran.start();
-            State oldEnd = oldTran.end();
-            TransitionLabel oldLabel = oldTran.label();
-
-            if (oldLabel instanceof EmptyTrace) {
-                if (oldEnd.isTerminal())
-                    oldToNew.get(oldStart).setTerminal(true);
-            }
-
-            else {
-                Transition newTran = new Transition<>(oldToNew.get(oldStart), oldLabel, oldToNew.get(oldEnd));
-                // Check if the transitions already exists in the new automaton
-                if(! newAut.delta().contains(newTran)) {
-                    try {
-                        newAut.addTransition(newTran);
-                    } catch (NoSuchStateException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return newAut;
-    }
-
-
-
     private static Automaton eliminateLastTransitionsDeclare(Automaton oldAut) {
         Set<State> oldStates = oldAut.states();
         Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();

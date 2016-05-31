@@ -41,7 +41,7 @@ public class Main {
     }
 
 
-    public static void ldlf2Aut() {
+    public static void ldlf2Aut(boolean ) {
         //String input = "[true*](([true]ff) || (<!a>tt) || (<true*>(<b>tt)))";
         //String input = "<((a)*)*>b";
         String input = "[true; true*; !((e -> (!l & !buy)) & (l -> (!e & !buy)) & (buy -> (!e & !l)))]ff";

@@ -36,14 +36,15 @@ import java.io.PrintStream;
 public class Main {
 
     public static void main(String[] args) {
-        //ldlf2Aut();
-        ltlf2Aut();
+        ldlf2Aut();
+        //ltlf2Aut();
     }
 
 
     public static void ldlf2Aut() {
         //String input = "[true*](([true]ff) || (<!a>tt) || (<true*>(<b>tt)))";
-        String input = "<((a)*)*>b";
+        //String input = "<((a)*)*>b";
+        String input = "[true; true*; !((e -> (!l & !buy)) & (l -> (!e & !buy)) & (buy -> (!e & !l)))]ff";
 
         /*
         Parsing

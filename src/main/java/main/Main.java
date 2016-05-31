@@ -81,13 +81,21 @@ public class Main {
         //automaton = new ToDFA<>().transform(automaton);
 
 
+        /*
+        ELIMINATE EMPTY TRACE
+         */
         automaton = AutomatonUtils.eliminateEmptyTrace(automaton);
 
-
         /*
-        Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
+        MINIMIZATION
          */
         automaton = new Reducer<>().transform(automaton);
+
+        /*
+        TRIMMING
+         */
+        //automaton = new Pruner<>().transform(automaton);
+
 
         /*
         Printing
@@ -157,11 +165,20 @@ public class Main {
          */
 
 
+        /*
+        ELIMINATE EMPTY TRACE
+         */
         automaton = AutomatonUtils.eliminateEmptyTrace(automaton);
 
+        /*
+        MINIMIZATION
+         */
         automaton = new Reducer<>().transform(automaton);
 
-
+        /*
+        TRIMMING
+         */
+        //automaton = new Pruner<>().transform(automaton);
 
 
         /*

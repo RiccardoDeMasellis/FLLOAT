@@ -9,26 +9,14 @@
 package main;
 
 import RuntimeVerification.ExecutableAutomaton;
-import antlr4_generated.LDLfFormulaParserLexer;
-import antlr4_generated.LDLfFormulaParserParser;
-import antlr4_generated.LTLfFormulaParserLexer;
-import antlr4_generated.LTLfFormulaParserParser;
 import formula.ldlf.LDLfFormula;
 import formula.ltlf.LTLfFormula;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import rationals.Automaton;
 import rationals.transformations.Pruner;
 import rationals.transformations.Reducer;
 import utils.AutomatonUtils;
-import visitors.LDLfVisitors.LDLfVisitor;
-import visitors.LTLfVisitors.LTLfVisitor;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import utils.ParserUtils;
 
 /**
  * Created by Riccardo De Masellis on 22/07/15.
@@ -36,35 +24,35 @@ import java.io.PrintStream;
 public class Main {
 
 
-    public static void ldlf2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
+    public static LDLfAutomatonResultWrapper ldlfString2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
 
         /*
         Parsing
          */
-        LDLfFormulaParserLexer lexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
-        LDLfFormulaParserParser parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
-        ParseTree tree = parser.expression();
-        System.out.println(tree.toStringTree(parser));
+        LDLfFormula formula = ParserUtils.parseLDLfFormula(input);
 
-        LDLfVisitor visitor = new LDLfVisitor();
+        return ldlfFormula2Aut(formula, signature, declare, minimize, trim, noEmptyTrace, printing);
+    }
 
-        LDLfFormula formula = visitor.visit(tree);
+    public static LDLfAutomatonResultWrapper ldlfFormula2Aut(LDLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
 
         Automaton automaton;
+
+        PropositionalSignature newSig = formula.getSignature();
 
         /*
         Check signature parameter
          */
-        if (signature==null)
-            signature = formula.getSignature();
+        if (signature!=null)
+            newSig.addAll(signature);
 
         /*
         Actual automaton construction
          */
         if(declare)
-            automaton = AutomatonUtils.ldlf2AutomatonDeclare(formula, signature);
+            automaton = AutomatonUtils.ldlf2AutomatonDeclare(formula, newSig);
         else
-            automaton = AutomatonUtils.ldlf2Automaton(formula, signature);
+            automaton = AutomatonUtils.ldlf2Automaton(formula, newSig);
 
         // TRANSFORMATION
         automaton = transformations(automaton, minimize, trim, noEmptyTrace);
@@ -73,22 +61,26 @@ public class Main {
         if(printing)
             System.out.println(automaton);
 
-
-        printAutomaton(automaton, true);
+        return new LDLfAutomatonResultWrapper(automaton, newSig, formula);
     }
 
 
-    public static void ltlf2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
-
+    public static LTLfAutomatonResultWrapper ltlfString2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
         /*
         Parsing
          */
-        LTLfFormulaParserLexer lexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
-        LTLfFormulaParserParser parser = new LTLfFormulaParserParser(new CommonTokenStream(lexer));
-        ParseTree tree = parser.expression();
-        LTLfVisitor visitor = new LTLfVisitor();
-        LTLfFormula formula = visitor.visit(tree);
+        LTLfFormula formula = ParserUtils.parseLTLfFormula(input);
 
+        /*
+        Translation to ldlf! Transform in ANTINNF before the actual translation!
+         */
+        LDLfFormula ldlff = formula.toLDLf();
+        System.out.println("To LDLF: " + ldlff);
+
+        return ltlfFormula2Aut(formula, signature, declare, minimize, trim, noEmptyTrace, printing);
+    }
+
+    public static LTLfAutomatonResultWrapper ltlfFormula2Aut(LTLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
         /*
         Translation to ldlf!
          */
@@ -100,19 +92,21 @@ public class Main {
 
         Automaton automaton;
 
+        PropositionalSignature newSig = formula.getSignature();
+
         /*
         Check signature parameter
          */
-        if (signature == null)
-            signature = formula.getSignature();
+        if (signature!=null)
+            newSig.addAll(signature);
 
         /*
         Actual automaton construction
          */
         if (declare)
-            automaton = AutomatonUtils.ldlf2AutomatonDeclare(ldlff, signature);
+            automaton = AutomatonUtils.ldlf2AutomatonDeclare(ldlff, newSig);
         else
-            automaton = AutomatonUtils.ldlf2Automaton(ldlff, signature);
+            automaton = AutomatonUtils.ldlf2Automaton(ldlff, newSig);
 
         // TRANSFORMATION
         automaton = transformations(automaton, minimize, trim, noEmptyTrace);
@@ -121,30 +115,9 @@ public class Main {
         if (printing)
             System.out.println(automaton);
 
-        printAutomaton(automaton, false);
+        return new LTLfAutomatonResultWrapper(automaton, newSig, ldlff, formula);
     }
 
-
-
-    private static void printAutomaton(Automaton automaton, boolean ldl) {
-        /*
-        Printing to .gv (graphviz) file
-         */
-        FileOutputStream fos = null;
-        try {
-            if(ldl)
-                fos = new FileOutputStream("ldlfAutomaton.gv");
-            else
-                fos = new FileOutputStream("ltlfAutomaton.gv");
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        PrintStream ps = new PrintStream(fos);
-        ps.println(AutomatonUtils.toDot(automaton));
-        ps.flush();
-        ps.close();
-    }
 
 
     private static Automaton transformations(Automaton automaton, boolean minimize, boolean trim, boolean noEmptyTrace) {
@@ -158,6 +131,9 @@ public class Main {
 
         if(trim)
             automaton = new Pruner<>().transform(automaton);
+
+        //Always eliminate unreachable states from the initial one.
+        automaton = AutomatonUtils.removeUnreachableStates(automaton);
 
         return automaton;
     }

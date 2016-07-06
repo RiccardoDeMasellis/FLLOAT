@@ -19,8 +19,6 @@ import formula.quotedFormula.QuotedTrueFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
-import java.util.Set;
-
 /**
  * Created by Riccardo De Masellis on 14/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -52,7 +50,7 @@ public interface LDLfLocalFormula extends LDLfFormula, LocalFormula {
 
     PropositionalFormula LDLfLocal2Prop();
 
-    default QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    default QuotedFormula delta(TransitionLabel label) {
         if (label instanceof EmptyTrace)
             return new QuotedFalseFormula();
 

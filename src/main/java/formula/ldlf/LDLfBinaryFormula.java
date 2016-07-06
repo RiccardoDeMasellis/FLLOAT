@@ -57,4 +57,8 @@ public abstract class LDLfBinaryFormula implements BinaryFormula, LDLfFormula {
     public String toString() {
         return "(" + this.getLeftFormula() + ") " + this.stringOperator() + " (" + this.getRightFormula() + ")";
     }
+
+    public LDLfFormula replaceStarFormulas() {
+        return (LDLfBinaryFormula) this.formulaFactory(this.getFormulaType(), this.getLeftFormula().replaceStarFormulas(), this.getRightFormula().replaceStarFormulas(), null);
+    }
 }

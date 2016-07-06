@@ -57,7 +57,7 @@ public class LDLfDiamondFormula extends LDLfTempOpTempFormula {
     }
 
     @Override
-    public QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> previousCalls) {
-        return this.getRegExp().deltaDiamond(this.getGoalFormula(), label, previousCalls);
+    public QuotedFormula delta(TransitionLabel label) {
+        return this.getRegExp().deltaDiamond(this.getGoalFormula(), label);
     }
 }

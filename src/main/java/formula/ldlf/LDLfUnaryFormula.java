@@ -48,4 +48,8 @@ public abstract class LDLfUnaryFormula implements UnaryFormula, LDLfFormula {
     public String toString() {
         return this.stringOperator() + "(" + getNestedFormula() + ")";
     }
+
+    public LDLfFormula replaceStarFormulas() {
+        return (LDLfUnaryFormula) this.formulaFactory(this.getFormulaType(), this.getNestedFormula().replaceStarFormulas(), null, null);
+    }
 }

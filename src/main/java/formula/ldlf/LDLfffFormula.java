@@ -16,8 +16,6 @@ import formula.quotedFormula.QuotedFalseFormula;
 import formula.quotedFormula.QuotedFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
-import java.util.Set;
-
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -74,8 +72,13 @@ public class LDLfffFormula implements AtomicFormula, LDLfTempFormula {
     }
 
     @Override
-    public QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula delta(TransitionLabel label) {
         return new QuotedFalseFormula();
     }
 
+
+    @Override
+    public LDLfFormula replaceStarFormulas() {
+        return new LDLfffFormula();
+    }
 }

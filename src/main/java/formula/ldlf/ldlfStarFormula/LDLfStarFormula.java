@@ -8,13 +8,18 @@
 
 package formula.ldlf.ldlfStarFormula;
 
+import formula.FormulaType;
 import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfTempNotFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * Created by Riccardo De Masellis on 04/07/16.
  */
 public abstract class LDLfStarFormula implements LDLfFormula {
     LDLfFormula starFormula;
+
+    public abstract LDLfFormula clone();
 
     public LDLfFormula getStarFormula() {
         return starFormula;
@@ -37,5 +42,32 @@ public abstract class LDLfStarFormula implements LDLfFormula {
 
     public LDLfFormula replaceStarFormulas() {
         return (LDLfFormula) this.getStarFormula().clone();
+    }
+
+
+    @Override
+    public LDLfFormula negate() {
+        return new LDLfTempNotFormula((LDLfStarFormula) this.clone());
+    }
+
+    @Override
+    public LDLfFormula nnf() {
+        return (LDLfStarFormula) this.clone();
+    }
+
+
+    /*
+        Inherited method that does not make sense for LDLfStarFormulas!
+     */
+    public PropositionalSignature getSignature() {
+        throw new RuntimeException("getSignature should not be called on LDLfStarFormulas!");
+    }
+
+    public void getSignatureRic(PropositionalSignature sig) {
+        throw new RuntimeException("getSignature should not be called on LDLfStarFormulas!");
+    }
+
+    public FormulaType getFormulaType() {
+        throw new RuntimeException("getFormulaType should not be called on LDLfStarFormulas!");
     }
 }

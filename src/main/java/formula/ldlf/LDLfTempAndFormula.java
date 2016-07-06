@@ -14,8 +14,6 @@ import formula.FormulaType;
 import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 
-import java.util.Set;
-
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -46,7 +44,7 @@ public class LDLfTempAndFormula extends LDLfBinaryFormula implements LDLfBoolOpT
     }
 
     @Override
-    public QuotedFormula delta(TransitionLabel label, Set<LDLfFormula> previousCalls) {
-        return new QuotedAndFormula(this.getLeftFormula().delta(label, previousCalls), this.getRightFormula().delta(label, previousCalls));
+    public QuotedFormula delta(TransitionLabel label) {
+        return new QuotedAndFormula(this.getLeftFormula().delta(label), this.getRightFormula().delta(label));
     }
 }

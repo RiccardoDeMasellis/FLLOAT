@@ -15,8 +15,6 @@ import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
 
-import java.util.Set;
-
 /**
  * Created by Riccardo De Masellis on 15/05/15.
  * For any issue please write to r.demasellis@trentorise.eu.
@@ -50,18 +48,18 @@ public class RegExpTest extends RegExpUnary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
         LDLfFormula left = (LDLfFormula) this.getNestedFormula().clone();
         LDLfFormula right = (LDLfFormula) goal.clone();
 
-        return new QuotedAndFormula(left.delta(label, previousCalls), right.delta(label, previousCalls));
+        return new QuotedAndFormula(left.delta(label), right.delta(label));
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
         LDLfFormula left = (LDLfFormula) this.getNestedFormula().negate().nnf();
         LDLfFormula right = (LDLfFormula) goal.clone();
 
-        return new QuotedOrFormula(left.delta(label, previousCalls), right.delta(label, previousCalls));
+        return new QuotedOrFormula(left.delta(label), right.delta(label));
     }
 }

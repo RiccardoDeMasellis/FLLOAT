@@ -25,6 +25,15 @@ public class LDLfFStarFormula extends LDLfStarFormula {
         this.starFormula = diamondStarFormula;
     }
 
+    public LDLfFStarFormula clone() {
+        return new LDLfFStarFormula((LDLfDiamondFormula) this.getStarFormula().clone());
+    }
+
+    @Override
+    public String toString() {
+        return "F_{" + this.getStarFormula().toString() +"}";
+    }
+
     public QuotedFormula delta(TransitionLabel label) {
         return new QuotedFalseFormula();
     }

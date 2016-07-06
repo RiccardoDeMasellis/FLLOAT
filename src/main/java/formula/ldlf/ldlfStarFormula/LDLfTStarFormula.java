@@ -10,7 +10,6 @@ package formula.ldlf.ldlfStarFormula;
 
 import automaton.TransitionLabel;
 import formula.ldlf.LDLfBoxFormula;
-import formula.quotedFormula.QuotedAtomicFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedTrueFormula;
 import formula.regExp.RegExpStar;
@@ -24,6 +23,15 @@ public class LDLfTStarFormula extends LDLfStarFormula {
         if (boxStarFormula==null || !(boxStarFormula.getRegExp() instanceof RegExpStar))
             throw new RuntimeException("LDLfTStarFormula must have a box star formula as instance!");
         this.starFormula = boxStarFormula;
+    }
+
+    public LDLfTStarFormula clone() {
+        return new LDLfTStarFormula((LDLfBoxFormula) this.getStarFormula().clone());
+    }
+
+    @Override
+    public String toString() {
+        return "T_{" + this.getStarFormula().toString() +"}";
     }
 
     public QuotedFormula delta(TransitionLabel label) {

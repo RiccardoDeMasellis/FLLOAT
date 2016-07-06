@@ -15,10 +15,11 @@ import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
-import formula.quotedFormula.*;
-
-import java.util.HashSet;
-import java.util.Set;
+import formula.ldlf.ldlfStarFormula.LDLfFStarFormula;
+import formula.ldlf.ldlfStarFormula.LDLfTStarFormula;
+import formula.quotedFormula.QuotedAndFormula;
+import formula.quotedFormula.QuotedFormula;
+import formula.quotedFormula.QuotedOrFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -52,91 +53,32 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
 
         if (label instanceof EmptyTrace) {
-            return ((LDLfFormula) goal.clone()).delta(label, null);
+            return ((LDLfFormula) goal.clone()).delta(label);
         }
 
-        /*
-           To see if I reached a fixpoint, I check if I already expanded the same formula IN THE SAME BRANCH
-        */
-        // First of all, I re-build the formula that caused this recursive call:
         LDLfDiamondFormula caller = new LDLfDiamondFormula(this, goal);
+        LDLfFStarFormula starFFormula = new LDLfFStarFormula((LDLfDiamondFormula) caller.clone());
 
-        if (previousCalls.contains(caller)) {
-            // I am expanding a diamond formula, so if I reached a fixpoint is bad!
-            return new QuotedFalseFormula();
-        }
+        LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), starFFormula);
 
-        else {
-
-            /*
-             Add the formula that caused this recursive call to the visited set but CLONE IT before! So not to
-             side-effect the data structure on other branches of the recursive call tree.
-             */
-            Set<LDLfFormula> newCalls = new HashSet<>();
-            newCalls.addAll(previousCalls);
-            newCalls.add(caller);
-
-            /*
-               (MAYBE) WE DO NOT NEED THIS ANYMORE. NOW WE CHECK IF THERE ARE OTHER CALLS ON THE SAME FORMULA!
-            */
-            //if (this.getNestedFormula() instanceof RegExpTest) {
-            //    return ((LDLfFormula) goal.clone()).delta(label, newCalls);
-            //}
-
-
-            LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
-            LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), inner);
-
-            LDLfFormula left = (LDLfFormula) goal.clone();
-
-            return new QuotedOrFormula(left.delta(label, previousCalls), outer.delta(label, newCalls));
-        }
+        return new QuotedOrFormula(((LDLfFormula) goal.clone()).delta(label), outer.delta(label));
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label, Set<LDLfFormula> previousCalls) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
 
         if (label instanceof EmptyTrace) {
-            return ((LDLfFormula) goal.clone()).delta(label, null);
+            return ((LDLfFormula) goal.clone()).delta(label);
         }
 
-        /*
-           To see if I reached a fixpoint, I check if I already expanded the same formula IN THE SAME BRANCH
-        */
-        // First of all, I re-build the formula that caused this recursive call:
         LDLfBoxFormula caller = new LDLfBoxFormula(this, goal);
+        LDLfTStarFormula starTFormula = new LDLfTStarFormula((LDLfBoxFormula) caller.clone());
 
-        if (previousCalls.contains(caller)) {
-            // I am expanding a box formula, so if I reached a fixpoint is good!
-            return new QuotedTrueFormula();
-        }
+        LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), starTFormula);
 
-        else {
-
-            /*
-             Add the formula that caused this recursive call to the visited set but CLONE IT before! So not to
-             side-effect the data structure on other branches of the recursive call tree.
-             */
-            Set<LDLfFormula> newCalls = new HashSet<>();
-            newCalls.addAll(previousCalls);
-            newCalls.add(caller);
-
-            /*
-               (MAYBE) WE DO NOT NEED THIS ANYMORE. NOW WE CHECK IF THERE ARE OTHER CALLS ON THE SAME FORMULA!
-            */
-            //if (this.getNestedFormula() instanceof RegExpTest) {
-            //    return ((LDLfFormula) goal.clone()).delta(label, newCalls);
-            //}
-
-            LDLfBoxFormula inner = new LDLfBoxFormula(this.clone(), (LDLfFormula) goal.clone());
-            LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), inner);
-
-            LDLfFormula left = (LDLfFormula) goal.clone();
-
-            return new QuotedAndFormula(left.delta(label, previousCalls), outer.delta(label, newCalls));
-        }
+        return new QuotedAndFormula(((LDLfFormula) goal.clone()).delta(label), outer.delta(label));
     }
 }

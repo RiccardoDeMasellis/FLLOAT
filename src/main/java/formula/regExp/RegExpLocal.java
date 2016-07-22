@@ -59,15 +59,21 @@ public interface RegExpLocal extends RegExp, LocalFormula {
             return new QuotedFalseFormula();
 
         if (label instanceof PossibleWorldWrap) {
-            PossibleWorldWrap pwwLabel = (PossibleWorldWrap)label;
+            PossibleWorldWrap pwwLabel = (PossibleWorldWrap) label;
             PropositionLast last = new PropositionLast();
             PropositionalFormula pf = this.regExpLocal2Propositional();
 
-            if(pwwLabel.contains(last) || !(pwwLabel.satisfies(pf)))
+            if (pwwLabel.satisfies(pf)) {
+                if (pwwLabel.contains(last)) {
+                    //QuotedVar varphi = new QuotedVar((LDLfFormula) goal.clone());
+                    QuotedVar varphi = new QuotedVar(goal.replaceStarFormulas());
+                    return varphi.delta(new EmptyTrace());
+                } else
+                    return new QuotedVar(goal.replaceStarFormulas());
+            } else
                 return new QuotedFalseFormula();
-            else
-                return new QuotedVar(goal.replaceStarFormulas());
         }
+
         else
             throw new RuntimeException("The label is neither EmptyTrace nor PossibleWorldWrap");
     }
@@ -78,14 +84,20 @@ public interface RegExpLocal extends RegExp, LocalFormula {
             return new QuotedTrueFormula();
 
         if (label instanceof PossibleWorldWrap) {
-            PossibleWorldWrap pwwLabel = (PossibleWorldWrap)label;
+            PossibleWorldWrap pwwLabel = (PossibleWorldWrap) label;
             PropositionLast last = new PropositionLast();
             PropositionalFormula pf = this.regExpLocal2Propositional();
 
-            if(pwwLabel.contains(last) || !(pwwLabel.satisfies(pf)))
+            if (pwwLabel.satisfies(pf)) {
+                if (pwwLabel.contains(last)) {
+                    //QuotedVar varphi = new QuotedVar((LDLfFormula) goal.clone());
+                    QuotedVar varphi = new QuotedVar(goal.replaceStarFormulas());
+                    return varphi.delta(new EmptyTrace());
+                } else
+                    return new QuotedVar(goal.replaceStarFormulas());
+
+            } else
                 return new QuotedTrueFormula();
-            else
-                return new QuotedVar(goal.replaceStarFormulas());
         }
         else
             throw new RuntimeException("The label is neither EmptyTrace nor PossibleWorldWrap");

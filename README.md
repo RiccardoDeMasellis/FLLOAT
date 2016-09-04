@@ -1,5 +1,5 @@
 # FLLOAT
-A library for generating automata from LTL and LDL formulas on finite traces.
+A library for generating automata from LTL and LDL formulas with finite-trace semantics.
 
 
 #LICENSE

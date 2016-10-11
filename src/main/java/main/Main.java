@@ -81,13 +81,8 @@ public class Main {
     }
 
     public static LTLfAutomatonResultWrapper ltlfFormula2Aut(LTLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
-        /*
-        Translation to ldlf!
-         */
-        LTLfFormula antinnfFormula = formula.antinnf();
-        System.out.println("Antinnf: " + antinnfFormula);
 
-        LDLfFormula ldlff = antinnfFormula.toLDLf();
+        LDLfFormula ldlff = formula.toLDLf();
         System.out.println("To LDLF: " + ldlff);
 
         Automaton automaton;

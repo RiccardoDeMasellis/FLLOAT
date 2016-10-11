@@ -82,7 +82,7 @@ public class PerformanceTests {
             /*
             Translation to ldlf!
             */
-            LDLfFormula ldlff = formula.antinnf().toLDLf();
+            LDLfFormula ldlff = formula.toLDLf();
             //System.out.println(ldlff.nnf());
 
             /*

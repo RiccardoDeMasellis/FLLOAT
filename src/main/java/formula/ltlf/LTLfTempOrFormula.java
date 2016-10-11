@@ -36,8 +36,4 @@ public class LTLfTempOrFormula extends LTLfBinaryFormula implements OrFormula, L
         return new LDLfTempOrFormula(this.getLeftFormula().toLDLfRec(), this.getRightFormula().toLDLfRec());
     }
 
-    @Override
-    public LTLfFormula antinnf() {
-        return new LTLfTempOrFormula(this.getLeftFormula().antinnf(), this.getRightFormula().antinnf());
-    }
 }

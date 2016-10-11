@@ -206,6 +206,7 @@ public class FormulaOperationsTest {
     }
 
 
+    /* Now the LTLf2LDLf procedure has changed, so this test is not meaningful anymore!*/
     @Ignore
     @Test
     public void testLTLf2LDLf() {

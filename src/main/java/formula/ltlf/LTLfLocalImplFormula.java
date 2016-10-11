@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ImplFormula;
+import formula.ldlf.LDLfLocalFormula;
 import formula.regExp.RegExpLocal;
 
 /**
@@ -29,5 +30,10 @@ public class LTLfLocalImplFormula extends LTLfBinaryFormula implements LTLfBoolO
     @Override
     public RegExpLocal toRegExpLocal() {
         return ((LTLfLocalFormula) this.nnf()).toRegExpLocal();
+    }
+
+    @Override
+    public LDLfLocalFormula toLDLfLocal() {
+        throw new RuntimeException("The LTLf formula should be in nnf!");
     }
 }

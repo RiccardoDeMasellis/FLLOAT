@@ -10,11 +10,7 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.NotFormula;
-import formula.TemporalFormula;
 import formula.ldlf.LDLfFormula;
-import formula.ldlf.LDLfTempAndFormula;
-import formula.ldlf.LDLfTempNotFormula;
-import formula.ldlf.LDLfTempOrFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -38,60 +34,7 @@ public class LTLfTempNotFormula extends LTLfUnaryFormula implements NotFormula, 
 
     @Override
     public LDLfFormula toLDLfRec() {
-        if(this.getNestedFormula() instanceof LTLfNextFormula)
-            return new LDLfTempNotFormula(this.getNestedFormula().toLDLfRec());
-
-        if(this.getNestedFormula() instanceof LTLfEventuallyFormula)
-            return new LDLfTempNotFormula(this.getNestedFormula().toLDLfRec());
-
-        if(this.getNestedFormula() instanceof LTLfUntilFormula)
-            return new LDLfTempNotFormula(this.getNestedFormula().toLDLfRec());
-
-        if(this.getNestedFormula() instanceof LTLfTempAndFormula) {
-            LTLfFormula left = ((LTLfTempAndFormula) this.getNestedFormula()).getLeftFormula();
-            LTLfFormula right = ((LTLfTempAndFormula) this.getNestedFormula()).getRightFormula();
-            LTLfFormula leftNot, rightNot;
-
-            if(left instanceof TemporalFormula)
-                leftNot = new LTLfTempNotFormula((LTLfFormula) left.clone());
-            else
-                leftNot = new LTLfLocalNotFormula((LTLfFormula) left.clone());
-
-            if(right instanceof TemporalFormula)
-                rightNot = new LTLfTempNotFormula((LTLfFormula) right.clone());
-            else
-                rightNot = new LTLfLocalNotFormula((LTLfFormula) right.clone());
-
-            return new LDLfTempOrFormula(leftNot.toLDLfRec(), rightNot.toLDLfRec());
-        }
-
-        if(this.getNestedFormula() instanceof LTLfTempOrFormula) {
-            LTLfFormula left = ((LTLfTempOrFormula) this.getNestedFormula()).getLeftFormula();
-            LTLfFormula right = ((LTLfTempOrFormula) this.getNestedFormula()).getRightFormula();
-            LTLfFormula leftNot, rightNot;
-
-            if(left instanceof TemporalFormula)
-                leftNot = new LTLfTempNotFormula((LTLfFormula) left.clone());
-            else
-                leftNot = new LTLfLocalNotFormula((LTLfFormula) left.clone());
-
-            if(right instanceof TemporalFormula)
-                rightNot = new LTLfTempNotFormula((LTLfFormula) right.clone());
-            else
-                rightNot = new LTLfLocalNotFormula((LTLfFormula) right.clone());
-
-            return new LDLfTempAndFormula(leftNot.toLDLfRec(), rightNot.toLDLfRec());
-        }
-
-        if (this.getNestedFormula() instanceof LTLfTempNotFormula)
-            return ((LTLfTempNotFormula) this.getNestedFormula()).getNestedFormula().toLDLfRec();
-
-        System.out.println(this.getNestedFormula().getClass());
         throw new RuntimeException();
     }
 
-    @Override
-    public LTLfFormula antinnf() {
-        return new LTLfTempNotFormula(this.getNestedFormula().antinnf());
-    }
 }

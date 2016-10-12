@@ -11,10 +11,7 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.TemporalFormula;
 import formula.ldlf.*;
-import formula.regExp.RegExpConcat;
-import formula.regExp.RegExpLocalTrue;
-import formula.regExp.RegExpStar;
-import formula.regExp.RegExpTest;
+import formula.regExp.*;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -52,7 +49,7 @@ public class LTLfReleaseFormula extends LTLfBinaryFormula implements LTLfTempOpT
 
     @Override
     public LDLfTempOrFormula toLDLfRec() {
-        // phi R psi --> <(toLDLfRec(psi)? ; true)*> (toLDLfRec(phi & psi)) || [true* ; nnf(! toLDLfRec(psi))?]ff
+        // phi R psi --> <(toLDLfRec(psi)? ; true)*> (toLDLfRec(phi & psi)) || [true* ; tr(nnf(!psi))?]ff
         RegExpTest test = new RegExpTest(this.getRightFormula().toLDLfRec());
         RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
         RegExpStar star = new RegExpStar(concat);
@@ -64,16 +61,18 @@ public class LTLfReleaseFormula extends LTLfBinaryFormula implements LTLfTempOpT
             ltlfAnd = new LTLfLocalAndFormula(this.getLeftFormula(), this.getRightFormula());
         LDLfDiamondFormula leftOr = new LDLfDiamondFormula(star, ltlfAnd.toLDLfRec());
 
+        // Second part
         RegExpStar trueStar = new RegExpStar(new RegExpLocalTrue());
-        LDLfFormula ldlfPsi = this.getRightFormula().toLDLfRec();
-        /*Necessary check to understand if building an LTLfTemporalNotFormula or LTLfLocalNotFormula*/
-        LDLfFormula notLDLfPsi;
-        if (ldlfPsi instanceof TemporalFormula)
-            notLDLfPsi = new LDLfTempNotFormula(ldlfPsi);
+        LTLfFormula notPsi;
+        if (this.getRightFormula() instanceof TemporalFormula)
+            notPsi = new LTLfTempNotFormula(this.getRightFormula());
         else
-            notLDLfPsi = new LDLfLocalNotFormula(ldlfPsi);
-        RegExpTest testNotLDLfPsi = new RegExpTest(notLDLfPsi);
-        RegExpConcat reconc = new RegExpConcat(trueStar, testNotLDLfPsi);
+            notPsi = new LTLfLocalNotFormula(this.getRightFormula());
+
+        LDLfFormula ldlfNotPsi = ((LTLfFormula)notPsi.nnf()).toLDLfRec();
+
+        RegExpTest ldlfNotPsiTest = new RegExpTest(ldlfNotPsi);
+        RegExpConcat reconc = new RegExpConcat(trueStar, ldlfNotPsiTest);
 
         LDLfBoxFormula rightOr = new LDLfBoxFormula(reconc, new LDLfffFormula());
 

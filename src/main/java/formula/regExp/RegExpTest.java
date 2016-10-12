@@ -10,7 +10,10 @@ package formula.regExp;
 
 import automaton.TransitionLabel;
 import formula.FormulaType;
+import formula.TemporalFormula;
 import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfLocalNotFormula;
+import formula.ldlf.LDLfTempNotFormula;
 import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
@@ -57,7 +60,13 @@ public class RegExpTest extends RegExpUnary implements RegExpTemp {
 
     @Override
     public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
-        LDLfFormula left = (LDLfFormula) this.getNestedFormula().negate().nnf();
+        LDLfFormula negatedNested;
+        if (this.getNestedFormula() instanceof TemporalFormula)
+            negatedNested = new LDLfTempNotFormula((LDLfFormula) this.getNestedFormula().clone());
+        else
+            negatedNested = new LDLfLocalNotFormula((LDLfFormula)this.getNestedFormula().clone());
+
+        LDLfFormula left = (LDLfFormula) negatedNested.nnf();
         LDLfFormula right = (LDLfFormula) goal.clone();
 
         return new QuotedOrFormula(left.delta(label), right.delta(label));

@@ -71,19 +71,16 @@ public class Main {
          */
         LTLfFormula formula = ParserUtils.parseLTLfFormula(input);
 
-        /*
-        Translation to ldlf! Transform in ANTINNF before the actual translation!
-         */
-        LDLfFormula ldlff = formula.toLDLf();
-        System.out.println("To LDLF: " + ldlff);
-
         return ltlfFormula2Aut(formula, signature, declare, minimize, trim, noEmptyTrace, printing);
     }
 
     public static LTLfAutomatonResultWrapper ltlfFormula2Aut(LTLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
 
         LDLfFormula ldlff = formula.toLDLf();
-        System.out.println("To LDLF: " + ldlff);
+        System.out.println("Original LTLf input formula:");
+        System.out.println(formula);
+        System.out.println("Translated in LDLf becomes:");
+        System.out.println(ldlff);
 
         Automaton automaton;
 

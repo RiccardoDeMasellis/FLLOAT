@@ -64,7 +64,7 @@ public class LTLfReleaseFormula extends LTLfBinaryFormula implements LTLfTempOpT
             ltlfAnd = new LTLfLocalAndFormula(this.getLeftFormula(), this.getRightFormula());
         LDLfDiamondFormula leftOr = new LDLfDiamondFormula(star, ltlfAnd.toLDLfRec());
 
-        RegExpTest trueStar = new RegExpTest(new LDLfLocalTrueFormula());
+        RegExpStar trueStar = new RegExpStar(new RegExpLocalTrue());
         LDLfFormula ldlfPsi = this.getRightFormula().toLDLfRec();
         /*Necessary check to understand if building an LTLfTemporalNotFormula or LTLfLocalNotFormula*/
         LDLfFormula notLDLfPsi;

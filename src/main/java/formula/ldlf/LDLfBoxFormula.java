@@ -8,13 +8,14 @@
 
 package formula.ldlf;
 
+import automaton.EmptyTrace;
+import automaton.PossibleWorldWrap;
 import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.quotedFormula.QuotedFormula;
+import formula.quotedFormula.QuotedTrueFormula;
 import formula.regExp.RegExp;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-
-import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -58,6 +59,10 @@ public class LDLfBoxFormula extends LDLfTempOpTempFormula {
 
     @Override
     public QuotedFormula delta(TransitionLabel label) {
-        return this.getRegExp().deltaBox(this.getGoalFormula(), label);
+        if (label instanceof EmptyTrace)
+            return new QuotedTrueFormula();
+        if (label instanceof PossibleWorldWrap)
+            return this.getRegExp().deltaBox(this.getGoalFormula(), (PossibleWorldWrap) label);
+        throw new RuntimeException("label should be PossibleWorldWrap or EmptyTrace!");
     }
 }

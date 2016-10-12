@@ -30,6 +30,7 @@ public interface Formula extends Cloneable {
 
     Formula nnf();
 
+    // to be used only by nnf()!!!
     Formula negate();
 
     FormulaType getFormulaType();

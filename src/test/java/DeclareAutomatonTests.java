@@ -51,10 +51,7 @@ public class DeclareAutomatonTests {
         /*
         Translation to ldlf!
          */
-        LTLfFormula antinnfFormula = formula.antinnf();
-        System.out.println("Antinnf: " + antinnfFormula);
-
-        LDLfFormula ldlff = antinnfFormula.toLDLf();
+        LDLfFormula ldlff = formula.toLDLf();
         System.out.println("To LDLF: " + ldlff);
 
         /*

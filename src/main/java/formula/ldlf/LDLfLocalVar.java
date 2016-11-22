@@ -42,4 +42,8 @@ public class LDLfLocalVar extends LocalVar implements LDLfLocalFormula {
     public PropositionalFormula LDLfLocal2Prop() {
         return this.getProp().clone();
     }
+
+    public LDLfFormula replaceStarFormulas() {
+        return (LDLfLocalVar) this.clone();
+    }
 }

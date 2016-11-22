@@ -76,4 +76,9 @@ public class LDLfffFormula implements AtomicFormula, LDLfTempFormula {
         return new QuotedFalseFormula();
     }
 
+
+    @Override
+    public LDLfFormula replaceStarFormulas() {
+        return new LDLfffFormula();
+    }
 }

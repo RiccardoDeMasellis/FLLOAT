@@ -42,4 +42,9 @@ public class LDLfLocalFalseFormula extends FalseLocalFormula implements LDLfLoca
     public PropositionalFormula LDLfLocal2Prop() {
         return new Contradiction();
     }
+
+    @Override
+    public LDLfFormula replaceStarFormulas() {
+        return new LDLfLocalFalseFormula();
+    }
 }

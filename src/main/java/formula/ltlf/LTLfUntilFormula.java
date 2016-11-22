@@ -10,8 +10,6 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfDiamondFormula;
-import formula.ldlf.LDLfTempAndFormula;
-import formula.ldlf.LDLfttFormula;
 import formula.regExp.RegExpConcat;
 import formula.regExp.RegExpLocalTrue;
 import formula.regExp.RegExpStar;
@@ -54,18 +52,11 @@ public class LTLfUntilFormula extends LTLfBinaryFormula implements LTLfTempOpTem
 
     @Override
     public LDLfDiamondFormula toLDLfRec() {
-        // phi U psi --> <(phi? ; true)*> (<true>tt && psi)
+        // phi U psi --> <(toLDLfRec(phi)? ; true)*> (toLDLfRec(psi))
         RegExpTest test = new RegExpTest(this.getLeftFormula().toLDLfRec());
         RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
         RegExpStar star = new RegExpStar(concat);
-        LDLfDiamondFormula doAStep = new LDLfDiamondFormula(new RegExpLocalTrue(), new LDLfttFormula());
-        LDLfTempAndFormula tempAndFormula = new LDLfTempAndFormula(doAStep, this.getRightFormula().toLDLfRec());
-        return new LDLfDiamondFormula(star, tempAndFormula);
-    }
-
-    @Override
-    public LTLfFormula antinnf() {
-        return new LTLfUntilFormula(this.getLeftFormula().antinnf(), this.getRightFormula().antinnf());
+        return new LDLfDiamondFormula(star, this.getRightFormula().toLDLfRec());
     }
 
 }

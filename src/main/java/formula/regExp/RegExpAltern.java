@@ -8,7 +8,7 @@
 
 package formula.regExp;
 
-import automaton.TransitionLabel;
+import automaton.PossibleWorldWrap;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
@@ -16,7 +16,6 @@ import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
-import formula.quotedFormula.QuotedVar;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -50,24 +49,18 @@ public class RegExpAltern extends RegExpBinary implements RegExpTemp {
     }
 
 
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorldWrap label) {
         LDLfDiamondFormula ldlfLeft = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
         LDLfDiamondFormula ldlfRight = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
 
-        QuotedVar quotedLeft = new QuotedVar(ldlfLeft);
-        QuotedFormula quotedRight = new QuotedVar(ldlfRight);
-
-        return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
+        return new QuotedOrFormula(ldlfLeft.delta(label), ldlfRight.delta(label));
     }
 
 
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
+    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorldWrap label) {
         LDLfBoxFormula ldlfLeft = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), (LDLfFormula) goal.clone());
         LDLfBoxFormula ldlfRight = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
 
-        QuotedVar quotedLeft = new QuotedVar(ldlfLeft);
-        QuotedFormula quotedRight = new QuotedVar(ldlfRight);
-
-        return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
+        return new QuotedAndFormula(ldlfLeft.delta(label), ldlfRight.delta(label));
     }
 }

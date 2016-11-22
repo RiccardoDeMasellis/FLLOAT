@@ -32,11 +32,6 @@ public class LTLfTempAndFormula extends LTLfBinaryFormula implements AndFormula,
     }
 
     @Override
-    public LTLfFormula antinnf() {
-        return new LTLfTempAndFormula(this.getLeftFormula().antinnf(), this.getRightFormula().antinnf());
-    }
-
-    @Override
     public LDLfTempAndFormula toLDLfRec() {
         return new LDLfTempAndFormula(this.getLeftFormula().toLDLfRec(), this.getRightFormula().toLDLfRec());
     }

@@ -75,4 +75,9 @@ public class LDLfttFormula implements AtomicFormula, LDLfTempFormula {
     public QuotedFormula delta(TransitionLabel label) {
         return new QuotedTrueFormula();
     }
+
+    @Override
+    public LDLfFormula replaceStarFormulas() {
+        return new LDLfttFormula();
+    }
 }

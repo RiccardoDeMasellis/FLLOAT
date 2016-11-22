@@ -9,180 +9,125 @@
 package main;
 
 import RuntimeVerification.ExecutableAutomaton;
-import antlr4_generated.LDLfFormulaParserLexer;
-import antlr4_generated.LDLfFormulaParserParser;
-import antlr4_generated.LTLfFormulaParserLexer;
-import antlr4_generated.LTLfFormulaParserParser;
 import formula.ldlf.LDLfFormula;
 import formula.ltlf.LTLfFormula;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import rationals.Automaton;
+import rationals.transformations.Pruner;
 import rationals.transformations.Reducer;
 import utils.AutomatonUtils;
-import visitors.LDLfVisitors.LDLfVisitor;
-import visitors.LTLfVisitors.LTLfVisitor;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import utils.ParserUtils;
 
 /**
  * Created by Riccardo De Masellis on 22/07/15.
  */
 public class Main {
 
-    public static void main(String[] args) {
-        //ldlf2Aut();
-        ltlf2Aut();
-    }
 
-
-    public static void ldlf2Aut() {
-        //String input = "[true*](([true]ff) || (<!a>tt) || (<true*>(<b>tt)))";
-        String input = "[((a)*)*]b";
+    public static LDLfAutomatonResultWrapper ldlfString2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
 
         /*
         Parsing
          */
-        LDLfFormulaParserLexer lexer = new LDLfFormulaParserLexer(new ANTLRInputStream(input));
-        LDLfFormulaParserParser parser = new LDLfFormulaParserParser(new CommonTokenStream(lexer));
-        ParseTree tree = parser.expression();
-        System.out.println(tree.toStringTree(parser));
+        LDLfFormula formula = ParserUtils.parseLDLfFormula(input);
 
-        LDLfVisitor visitor = new LDLfVisitor();
+        return ldlfFormula2Aut(formula, signature, declare, minimize, trim, noEmptyTrace, printing);
+    }
 
-        LDLfFormula formula = visitor.visit(tree);
+    public static LDLfAutomatonResultWrapper ldlfFormula2Aut(LDLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
 
-        /*
-        Automaton construction method invocation
-         */
-        PropositionalSignature signature = formula.getSignature();
-        Proposition w = new Proposition("w");
-        Proposition x = new Proposition("x");
-        Proposition y = new Proposition("y");
-        Proposition z = new Proposition("z");
-        signature.add(w);
-        signature.add(x);
-        signature.add(y);
-        signature.add(z);
+        Automaton automaton;
 
-        //System.out.println(formula);
-
-        Automaton automaton = AutomatonUtils.ldlf2Automaton(formula, formula.getSignature());
+        PropositionalSignature newSig = formula.getSignature();
 
         /*
-        Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
+        Check signature parameter
          */
-        //automaton = new ToDFA<>().transform(automaton);
+        if (signature!=null)
+            newSig.addAll(signature);
 
         /*
-        Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
+        Actual automaton construction
          */
-        automaton = new Reducer<>().transform(automaton);
+        if(declare)
+            automaton = AutomatonUtils.ldlf2AutomatonDeclare(formula, newSig);
+        else
+            automaton = AutomatonUtils.ldlf2Automaton(formula, newSig);
 
-        /*
-        Printing
-         */
-        //System.out.println(automaton);
+        // TRANSFORMATION
+        automaton = transformations(automaton, minimize, trim, noEmptyTrace);
 
 
-        /*
-        Printing to .gv (graphviz) file
-         */
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream("ldlfAutomaton.gv");
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        PrintStream ps = new PrintStream(fos);
-        ps.println(AutomatonUtils.toDot(automaton));
-        ps.flush();
-        ps.close();
+        if(printing)
+            System.out.println(automaton);
+
+        return new LDLfAutomatonResultWrapper(automaton, newSig, formula);
     }
 
 
-    public static void ltlf2Aut() {
-        /*
-        Input
-         */
-        String input = "(a R b)";
-        //String input = "G (a -> (F b))";
-        //String input = "(F((a U (b|c)) R ((X e) || ((WX f) && (G h) ) ) )) -> ((F d) R (((g)||(i)) U (l)))";
-        //String input = "(G(rl -> (F aa))) & (G(aa -> (F dl))) & (G(aa -> (X dl)))";
-        //String input = "(G(rl -> (F aa))) & (G(aa -> (X dl)))";
-
+    public static LTLfAutomatonResultWrapper ltlfString2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
         /*
         Parsing
          */
-        LTLfFormulaParserLexer lexer = new LTLfFormulaParserLexer(new ANTLRInputStream(input));
-        LTLfFormulaParserParser parser = new LTLfFormulaParserParser(new CommonTokenStream(lexer));
-        ParseTree tree = parser.expression();
-        LTLfVisitor visitor = new LTLfVisitor();
-        LTLfFormula formula = visitor.visit(tree);
+        LTLfFormula formula = ParserUtils.parseLTLfFormula(input);
+
+        return ltlfFormula2Aut(formula, signature, declare, minimize, trim, noEmptyTrace, printing);
+    }
+
+    public static LTLfAutomatonResultWrapper ltlfFormula2Aut(LTLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
+
+        LDLfFormula ldlff = formula.toLDLf();
+        System.out.println("Original LTLf input formula:");
+        System.out.println(formula);
+        System.out.println("Translated in LDLf becomes:");
+        System.out.println(ldlff);
+
+        Automaton automaton;
+
+        PropositionalSignature newSig = formula.getSignature();
 
         /*
-        Translation to ldlf!
+        Check signature parameter
          */
-        LTLfFormula antinnfFormula = formula.antinnf();
-        System.out.println("Antinnf: " + antinnfFormula);
-
-        LDLfFormula ldlff = antinnfFormula.toLDLf();
-        System.out.println("To LDLF: " + ldlff);
+        if (signature!=null)
+            newSig.addAll(signature);
 
         /*
-        Automaton construction method invocation
+        Actual automaton construction
          */
-        //Automaton automaton = AutomatonUtils.ldlf2AutomatonDeclare(ldlff, ldlff.getSignature());
-        Automaton automaton = AutomatonUtils.ldlf2Automaton(ldlff, ldlff.getSignature());
-        //System.out.println(automaton);
+        if (declare)
+            automaton = AutomatonUtils.ldlf2AutomatonDeclare(ldlff, newSig);
+        else
+            automaton = AutomatonUtils.ldlf2Automaton(ldlff, newSig);
 
-        /*
-        Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
-         */
-        //automaton = new ToDFA<>().transform(automaton);
-        //automaton = AutomatonUtils.declareAssumption(automaton);
-        /*
-        Minimization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!
-         */
+        // TRANSFORMATION
+        automaton = transformations(automaton, minimize, trim, noEmptyTrace);
 
 
+        if (printing)
+            System.out.println(automaton);
 
-        automaton = new Reducer<>().transform(automaton);
+        return new LTLfAutomatonResultWrapper(automaton, newSig, ldlff, formula);
+    }
 
 
 
+    private static Automaton transformations(Automaton automaton, boolean minimize, boolean trim, boolean noEmptyTrace) {
 
-        /*
-        Printing
-         */
-        //System.out.println(automaton);
-        System.out.println("Number of states: " + automaton.states().size());
-        System.out.println("Number of transitions: " + automaton.delta().size());
+        // WARNING! This must be called BEFORE the minimization!
+        if(noEmptyTrace)
+            automaton = AutomatonUtils.eliminateEmptyTrace(automaton);
 
+        if (minimize)
+            automaton = new Reducer<>().transform(automaton);
 
-        /*
-        Printing to .gv (graphviz) file
-         */
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream("ltlfAutomaton.gv");
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        PrintStream ps = new PrintStream(fos);
-        ps.println(AutomatonUtils.toDot(automaton));
-        ps.flush();
-        ps.close();
+        if(trim)
+            automaton = new Pruner<>().transform(automaton);
 
-        //provaExecutableAutomaton(automaton);
+        //Always eliminate unreachable states from the initial one.
+        automaton = AutomatonUtils.removeUnreachableStates(automaton);
 
+        return automaton;
     }
 
 

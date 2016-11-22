@@ -10,6 +10,8 @@ package formula.ltlf;
 
 import formula.FalseLocalFormula;
 import formula.FormulaType;
+import formula.ldlf.LDLfLocalFalseFormula;
+import formula.ldlf.LDLfLocalFormula;
 import formula.regExp.RegExpLocal;
 import formula.regExp.RegExpLocalFalse;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
@@ -45,7 +47,12 @@ public class LTLfLocalFalseFormula extends FalseLocalFormula implements LTLfLoca
         return new RegExpLocalFalse();
     }
 
-	@Override
+    @Override
+    public LDLfLocalFormula toLDLfLocal() {
+        return new LDLfLocalFalseFormula();
+    }
+
+    @Override
 	public PropositionalFormula toTweetyProp(){
 		return new Contradiction();
 	}

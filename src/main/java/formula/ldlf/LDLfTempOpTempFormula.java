@@ -54,4 +54,9 @@ public abstract class LDLfTempOpTempFormula implements LDLfTempFormula {
     public LDLfFormula getGoalFormula() {
         return goalFormula;
     }
+
+    public LDLfFormula replaceStarFormulas() {
+        return (LDLfTempOpTempFormula) this.formulaFactory(this.getFormulaType(), regExp.clone(), goalFormula.replaceStarFormulas(), null);
+    }
+
 }

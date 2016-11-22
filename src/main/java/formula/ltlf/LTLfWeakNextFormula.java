@@ -10,6 +10,7 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
+import formula.regExp.RegExpLocalTrue;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -54,20 +55,7 @@ public class LTLfWeakNextFormula extends LTLfUnaryFormula implements LTLfTempOpT
 
     @Override
     public LDLfBoxFormula toLDLfRec() {
-        throw new RuntimeException();
+        return new LDLfBoxFormula(new RegExpLocalTrue(), this.getNestedFormula().toLDLfRec());
     }
 
-    @Override
-    public LTLfFormula antinnf() {
-        LTLfFormula nested, nestedNot;
-        nested = this.getNestedFormula().antinnf();
-
-        if (this.getNestedFormula() instanceof LTLfTempFormula)
-            nestedNot = new LTLfTempNotFormula(nested);
-        else
-            nestedNot = new LTLfLocalNotFormula(nested);
-
-        LTLfNextFormula next = new LTLfNextFormula(nestedNot);
-        return new LTLfTempNotFormula(next);
-    }
 }

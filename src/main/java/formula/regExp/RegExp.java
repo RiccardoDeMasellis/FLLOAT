@@ -8,7 +8,7 @@
 
 package formula.regExp;
 
-import automaton.TransitionLabel;
+import automaton.PossibleWorldWrap;
 import formula.Formula;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
@@ -19,7 +19,7 @@ import formula.quotedFormula.QuotedFormula;
  */
 public interface RegExp extends Formula {
 
-    QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label);
+    QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorldWrap label);
 
-    QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label);
+    QuotedFormula deltaBox(LDLfFormula goal, PossibleWorldWrap label);
 }

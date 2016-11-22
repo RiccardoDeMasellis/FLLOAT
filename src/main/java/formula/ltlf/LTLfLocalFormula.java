@@ -12,8 +12,10 @@ import formula.LocalFormula;
 import formula.LocalFormulaType;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfLocalFormula;
 import formula.ldlf.LDLfttFormula;
 import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpTest;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -26,6 +28,8 @@ public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
 	PropositionalFormula toTweetyProp();
 
     RegExpLocal toRegExpLocal();
+
+    LDLfLocalFormula toLDLfLocal();
 
     // Used with reflection in LocalVisitor, do not erase.
     static LTLfLocalFormula localFormulaFactory(LocalFormulaType formulaType, LTLfLocalFormula left, LTLfLocalFormula right, Proposition prop) {
@@ -52,12 +56,8 @@ public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
     }
 
     @Override
-    default LTLfFormula antinnf() {
-        return (LTLfLocalFormula) this.clone();
-    }
-
-    @Override
     default LDLfFormula toLDLfRec() {
-        return new LDLfDiamondFormula(this.toRegExpLocal(), new LDLfttFormula());
+        RegExpTest retest = new RegExpTest(this.toLDLfLocal());
+        return new LDLfDiamondFormula(retest, new LDLfttFormula());
     }
 }

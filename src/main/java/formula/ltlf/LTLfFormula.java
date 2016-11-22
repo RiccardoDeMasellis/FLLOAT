@@ -26,8 +26,7 @@ public interface LTLfFormula extends Formula {
     To be used publicly
     */
     default LDLfFormula toLDLf() {
-        return this.antinnf().toLDLfRec();
+        return ((LTLfFormula)this.nnf()).toLDLfRec();
     }
 
-    LTLfFormula antinnf();
 }

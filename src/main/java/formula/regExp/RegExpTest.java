@@ -8,13 +8,15 @@
 
 package formula.regExp;
 
-import automaton.TransitionLabel;
+import automaton.PossibleWorldWrap;
 import formula.FormulaType;
+import formula.TemporalFormula;
 import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfLocalNotFormula;
+import formula.ldlf.LDLfTempNotFormula;
 import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
 import formula.quotedFormula.QuotedOrFormula;
-import formula.quotedFormula.QuotedVar;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -49,20 +51,24 @@ public class RegExpTest extends RegExpUnary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
-        QuotedVar quotedLeft = new QuotedVar((LDLfFormula) this.getNestedFormula().clone());
-        QuotedVar quotedRight = new QuotedVar((LDLfFormula) goal.clone());
+    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorldWrap label) {
+        LDLfFormula left = (LDLfFormula) this.getNestedFormula().clone();
+        LDLfFormula right = (LDLfFormula) goal.clone();
 
-        return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
+        return new QuotedAndFormula(left.delta(label), right.delta(label));
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
-        LDLfFormula left = (LDLfFormula) this.getNestedFormula().negate().nnf();
+    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorldWrap label) {
+        LDLfFormula negatedNested;
+        if (this.getNestedFormula() instanceof TemporalFormula)
+            negatedNested = new LDLfTempNotFormula((LDLfFormula) this.getNestedFormula().clone());
+        else
+            negatedNested = new LDLfLocalNotFormula((LDLfFormula)this.getNestedFormula().clone());
 
-        QuotedVar quotedLeft = new QuotedVar(left);
-        QuotedVar quotedRight = new QuotedVar((LDLfFormula) goal.clone());
+        LDLfFormula left = (LDLfFormula) negatedNested.nnf();
+        LDLfFormula right = (LDLfFormula) goal.clone();
 
-        return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
+        return new QuotedOrFormula(left.delta(label), right.delta(label));
     }
 }

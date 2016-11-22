@@ -8,14 +8,17 @@
 
 package formula.regExp;
 
-import automaton.EmptyTrace;
-import automaton.TransitionLabel;
+import automaton.PossibleWorldWrap;
 import formula.Formula;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
-import formula.quotedFormula.*;
+import formula.ldlf.ldlfStarFormula.LDLfFStarFormula;
+import formula.ldlf.ldlfStarFormula.LDLfTStarFormula;
+import formula.quotedFormula.QuotedAndFormula;
+import formula.quotedFormula.QuotedFormula;
+import formula.quotedFormula.QuotedOrFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -49,44 +52,22 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
-        if (label instanceof EmptyTrace) {
-            QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(label);
-        }
+    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorldWrap label) {
+        LDLfDiamondFormula caller = new LDLfDiamondFormula(this, goal);
+        LDLfFStarFormula starFFormula = new LDLfFStarFormula((LDLfDiamondFormula) caller.clone());
 
-        if (this.getNestedFormula() instanceof RegExpTest) {
-            QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(label);
-        } else {
-            LDLfDiamondFormula inner = new LDLfDiamondFormula(this.clone(), (LDLfFormula) goal.clone());
-            LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), inner);
+        LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getNestedFormula().clone(), starFFormula);
 
-            QuotedFormula quotedLeft = new QuotedVar((LDLfFormula) goal.clone());
-            QuotedFormula quotedRight = new QuotedVar(outer);
-
-            return new QuotedOrFormula(quotedLeft.delta(label), quotedRight.delta(label));
-        }
+        return new QuotedOrFormula(((LDLfFormula) goal.clone()).delta(label), outer.delta(label));
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
-        if (label instanceof EmptyTrace) {
-            QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(label);
-        }
+    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorldWrap label) {
+        LDLfBoxFormula caller = new LDLfBoxFormula(this, goal);
+        LDLfTStarFormula starTFormula = new LDLfTStarFormula((LDLfBoxFormula) caller.clone());
 
-        if (this.getNestedFormula() instanceof RegExpTest) {
-            QuotedVar quoted = new QuotedVar((LDLfFormula) goal.clone());
-            return quoted.delta(label);
-        } else {
-            LDLfBoxFormula inner = new LDLfBoxFormula(this.clone(), (LDLfFormula) goal.clone());
-            LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), inner);
+        LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getNestedFormula().clone(), starTFormula);
 
-            QuotedFormula quotedLeft = new QuotedVar((LDLfFormula) goal.clone());
-            QuotedFormula quotedRight = new QuotedVar(outer);
-
-            return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
-        }
+        return new QuotedAndFormula(((LDLfFormula) goal.clone()).delta(label), outer.delta(label));
     }
 }

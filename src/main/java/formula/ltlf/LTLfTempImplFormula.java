@@ -10,7 +10,6 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ImplFormula;
-import formula.TemporalFormula;
 import formula.ldlf.LDLfFormula;
 
 /**
@@ -38,15 +37,4 @@ public class LTLfTempImplFormula extends LTLfBinaryFormula implements ImplFormul
         throw new RuntimeException();
     }
 
-    @Override
-    public LTLfFormula antinnf() {
-        LTLfFormula left = this.getLeftFormula();
-        LTLfFormula not;
-        if (left instanceof TemporalFormula)
-            not = new LTLfTempNotFormula(left);
-        else
-            not = new LTLfLocalNotFormula(left);
-        LTLfTempOrFormula or = new LTLfTempOrFormula(not, this.getRightFormula());
-        return or.antinnf();
-    }
 }

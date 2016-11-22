@@ -13,7 +13,6 @@ import formula.AndFormula;
 import formula.FormulaType;
 import formula.quotedFormula.QuotedAndFormula;
 import formula.quotedFormula.QuotedFormula;
-import formula.quotedFormula.QuotedVar;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -46,9 +45,6 @@ public class LDLfTempAndFormula extends LDLfBinaryFormula implements LDLfBoolOpT
 
     @Override
     public QuotedFormula delta(TransitionLabel label) {
-        QuotedVar quotedLeft = new QuotedVar(this.getLeftFormula());
-        QuotedVar quotedRight = new QuotedVar(this.getRightFormula());
-
-        return new QuotedAndFormula(quotedLeft.delta(label), quotedRight.delta(label));
+        return new QuotedAndFormula(this.getLeftFormula().delta(label), this.getRightFormula().delta(label));
     }
 }

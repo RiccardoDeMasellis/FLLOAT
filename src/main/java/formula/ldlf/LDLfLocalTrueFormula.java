@@ -42,4 +42,9 @@ public class LDLfLocalTrueFormula extends TrueLocalFormula implements LDLfLocalF
     public PropositionalFormula LDLfLocal2Prop() {
         return new Tautology();
     }
+
+    @Override
+    public LDLfFormula replaceStarFormulas() {
+        return new LDLfLocalTrueFormula();
+    }
 }

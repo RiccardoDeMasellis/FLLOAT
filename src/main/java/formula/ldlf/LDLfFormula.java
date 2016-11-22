@@ -20,4 +20,5 @@ public interface LDLfFormula extends Formula {
 
     QuotedFormula delta(TransitionLabel label);
 
+    LDLfFormula replaceStarFormulas();
 }

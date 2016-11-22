@@ -26,6 +26,9 @@ import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 /**
@@ -215,6 +218,50 @@ public class AutomatonUtils {
         }
         return newAut;
     }
+
+
+    /*
+    To be called AFTER eliminateLastTransition!!!
+     */
+    public static Automaton eliminateEmptyTrace(Automaton oldAut) {
+        Set<State> oldStates = oldAut.states();
+        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
+
+        Automaton newAut = new Automaton();
+
+        Map<State, State> oldToNew = new HashMap<>();
+
+        //Add all states
+        for (State oldSt : oldStates) {
+            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
+            oldToNew.put(oldSt, newSt);
+        }
+
+        for (Transition<TransitionLabel> oldTran : oldTransitions) {
+            State oldStart = oldTran.start();
+            State oldEnd = oldTran.end();
+            TransitionLabel oldLabel = oldTran.label();
+
+            if (oldLabel instanceof EmptyTrace) {
+                if (oldEnd.isTerminal())
+                    oldToNew.get(oldStart).setTerminal(true);
+            }
+
+            else {
+                Transition newTran = new Transition<>(oldToNew.get(oldStart), oldLabel, oldToNew.get(oldEnd));
+                // Check if the transitions already exists in the new automaton
+                if(! newAut.delta().contains(newTran)) {
+                    try {
+                        newAut.addTransition(newTran);
+                    } catch (NoSuchStateException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return newAut;
+    }
+
 
 
     private static Automaton eliminateLastTransitionsDeclare(Automaton oldAut) {
@@ -531,6 +578,73 @@ public class AutomatonUtils {
         }
         //return automaton;
         return eliminateLastTransitionsDeclare(automaton);
+    }
+
+
+    public static Automaton removeUnreachableStates(Automaton original){
+        Automaton res = new Automaton();
+
+        Set<State> initials = original.initials();
+        HashMap<State, State> oldToNewStates = new HashMap<>();
+
+        for (State i : initials){
+            State newI = res.addState(i.isInitial(), i.isTerminal());
+            oldToNewStates.put(i, newI);
+        }
+
+        Set<State> toBeVisited = new HashSet<>();
+        toBeVisited.addAll(initials);
+
+        while (!toBeVisited.isEmpty()){
+            State oldStart = toBeVisited.iterator().next();
+            toBeVisited.remove(oldStart);
+
+            HashSet<State> newTBV = new HashSet<>();
+
+            Set<Transition> oldTransitions = original.delta(oldStart);
+
+            for (Transition oldT : oldTransitions){
+                State oldEnd = oldT.end();
+                State newEnd = oldToNewStates.get(oldEnd);
+
+                if (newEnd == null){
+                    newEnd = res.addState(oldEnd.isInitial(), oldEnd.isTerminal());
+                    oldToNewStates.put(oldEnd, newEnd);
+                    newTBV.add(oldEnd);
+                }
+
+                Transition newT = new Transition(oldToNewStates.get(oldStart), oldT.label(), newEnd);
+
+                try {
+                    res.addTransition(newT);
+                } catch (NoSuchStateException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            toBeVisited.addAll(newTBV);
+        }
+
+        return res;
+    }
+
+    public static void printAutomaton(Automaton automaton, String fileName) {
+        /*
+        Printing to .gv (graphviz) file
+         */
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(fileName);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        PrintStream ps = new PrintStream(fos);
+        ps.println(utils.AutomatonUtils.toDot(automaton));
+        ps.flush();
+        ps.close();
     }
 
 }

@@ -10,7 +10,8 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.TemporalFormula;
-import formula.ldlf.LDLfBoxFormula;
+import formula.ldlf.*;
+import formula.regExp.*;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -47,28 +48,35 @@ public class LTLfReleaseFormula extends LTLfBinaryFormula implements LTLfTempOpT
 
 
     @Override
-    public LDLfBoxFormula toLDLfRec() {
-        throw new RuntimeException();
+    public LDLfTempOrFormula toLDLfRec() {
+        // phi R psi --> <(toLDLfRec(psi)? ; true)*> (toLDLfRec(phi & psi)) || [true* ; tr(nnf(!psi))?]ff
+        RegExpTest test = new RegExpTest(this.getRightFormula().toLDLfRec());
+        RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
+        RegExpStar star = new RegExpStar(concat);
+        LTLfFormula ltlfAnd;
+        /*Necessary check to understand if building an LTLfTemporalAndFormula or LTLfLocalAndFormula*/
+        if (this.getLeftFormula() instanceof TemporalFormula || this.getRightFormula() instanceof TemporalFormula)
+            ltlfAnd = new LTLfTempAndFormula(this.getLeftFormula(), this.getRightFormula());
+        else
+            ltlfAnd = new LTLfLocalAndFormula(this.getLeftFormula(), this.getRightFormula());
+        LDLfDiamondFormula leftOr = new LDLfDiamondFormula(star, ltlfAnd.toLDLfRec());
+
+        // Second part
+        RegExpStar trueStar = new RegExpStar(new RegExpLocalTrue());
+        LTLfFormula notPsi;
+        if (this.getRightFormula() instanceof TemporalFormula)
+            notPsi = new LTLfTempNotFormula(this.getRightFormula());
+        else
+            notPsi = new LTLfLocalNotFormula(this.getRightFormula());
+
+        LDLfFormula ldlfNotPsi = ((LTLfFormula)notPsi.nnf()).toLDLfRec();
+
+        RegExpTest ldlfNotPsiTest = new RegExpTest(ldlfNotPsi);
+        RegExpConcat reconc = new RegExpConcat(trueStar, ldlfNotPsiTest);
+
+        LDLfBoxFormula rightOr = new LDLfBoxFormula(reconc, new LDLfffFormula());
+
+        return new LDLfTempOrFormula(leftOr, rightOr);
     }
 
-    @Override
-    public LTLfFormula antinnf() {
-        LTLfFormula leftNot, rightNot, left, right;
-        left = this.getLeftFormula().antinnf();
-        right = this.getRightFormula().antinnf();
-
-        if (left instanceof TemporalFormula)
-            leftNot = new LTLfTempNotFormula(left);
-        else
-            leftNot = new LTLfLocalNotFormula(left);
-
-
-        if (right instanceof TemporalFormula)
-            rightNot = new LTLfTempNotFormula(right);
-        else
-            rightNot = new LTLfLocalNotFormula(right);
-
-        LTLfUntilFormula until = new LTLfUntilFormula(leftNot, rightNot);
-        return new LTLfTempNotFormula(until);
-    }
 }

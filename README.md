@@ -1,5 +1,5 @@
 # FLLOAT
-A library for generating automata from LTL and LDL formulas with finite-trace semantics.
+FLLOAT (From LTLf and LDLf tO Automata) is a Java library for translating Linear-time Temporal Logic (LTL) and Linear Dynamic Logic (LDL) formulas with finite-trace semantics to automata, so as to perform satisfiability and validity reasoning tasks in the finite-trace setting. The tool also allows for exporting automata in the graphviz format as well as providing the traditional automata operations through the jautomata library (determinization, intersection, negation, trimming and so on).
 
 
 #LICENSE

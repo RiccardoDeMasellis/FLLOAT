@@ -10,8 +10,10 @@ package formula.ltlf;
 
 import formula.LocalFormula;
 import formula.LocalFormulaType;
+import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalFormula;
+import formula.ldlf.LDLfttFormula;
 import formula.regExp.RegExpLocal;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -59,7 +61,7 @@ public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
 //    }
 
     default LDLfFormula toLDLf() {
-        return ((LTLfLocalFormula)this.nnf()).toLDLfLocal();
+        return new LDLfDiamondFormula(((LTLfLocalFormula)this.nnf()).toRegExpLocal(), new LDLfttFormula());
     }
 
 }

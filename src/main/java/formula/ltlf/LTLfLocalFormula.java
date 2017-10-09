@@ -10,12 +10,9 @@ package formula.ltlf;
 
 import formula.LocalFormula;
 import formula.LocalFormulaType;
-import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
 import formula.ldlf.LDLfLocalFormula;
-import formula.ldlf.LDLfttFormula;
 import formula.regExp.RegExpLocal;
-import formula.regExp.RegExpTest;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -55,9 +52,14 @@ public interface LTLfLocalFormula extends LocalFormula, LTLfFormula {
         }
     }
 
-    @Override
-    default LDLfFormula toLDLfRec() {
-        RegExpTest retest = new RegExpTest(this.toLDLfLocal());
-        return new LDLfDiamondFormula(retest, new LDLfttFormula());
+//    @Override
+//    default LDLfFormula toLDLf() {
+//        RegExpTest retest = new RegExpTest(this.toLDLfLocal());
+//        return new LDLfDiamondFormula(retest, new LDLfttFormula());
+//    }
+
+    default LDLfFormula toLDLf() {
+        return ((LTLfLocalFormula)this.nnf()).toLDLfLocal();
     }
+
 }

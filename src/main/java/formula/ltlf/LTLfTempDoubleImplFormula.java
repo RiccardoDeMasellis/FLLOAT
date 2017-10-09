@@ -32,8 +32,11 @@ public class LTLfTempDoubleImplFormula extends LTLfBinaryFormula implements Doub
     }
 
     @Override
-    public LDLfFormula toLDLfRec() {
-        throw new RuntimeException();
+    public LDLfFormula toLDLf() {
+        LTLfFormula leftImpl = new LTLfTempImplFormula(this.getLeftFormula(), this.getRightFormula());
+        LTLfFormula rightImpl = new LTLfTempImplFormula(this.getRightFormula(), this.getLeftFormula());
+        LTLfFormula and = new LTLfTempAndFormula(leftImpl, rightImpl);
+        return and.toLDLf();
     }
 
 }

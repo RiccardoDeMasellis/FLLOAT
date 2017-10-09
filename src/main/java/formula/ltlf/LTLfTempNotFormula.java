@@ -11,6 +11,7 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.NotFormula;
 import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfTempNotFormula;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -33,8 +34,8 @@ public class LTLfTempNotFormula extends LTLfUnaryFormula implements NotFormula, 
 
 
     @Override
-    public LDLfFormula toLDLfRec() {
-        throw new RuntimeException();
+    public LDLfFormula toLDLf() {
+        return new LDLfTempNotFormula(this.getNestedFormula().toLDLf());
     }
 
 }

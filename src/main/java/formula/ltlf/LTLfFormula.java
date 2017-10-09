@@ -18,15 +18,8 @@ import formula.ldlf.LDLfFormula;
 public interface LTLfFormula extends Formula {
 
     /*
-    To be used only inside this package!
+    To be used publicly!
     */
-    LDLfFormula toLDLfRec();
-
-    /*
-    To be used publicly
-    */
-    default LDLfFormula toLDLf() {
-        return ((LTLfFormula)this.nnf()).toLDLfRec();
-    }
+    LDLfFormula toLDLf();
 
 }

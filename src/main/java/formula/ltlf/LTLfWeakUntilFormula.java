@@ -54,7 +54,11 @@ public class LTLfWeakUntilFormula extends LTLfBinaryFormula implements LTLfTempO
 
 
     @Override
-    public LDLfFormula toLDLfRec() {
-        throw new RuntimeException();
+    public LDLfFormula toLDLf() {
+        // phi WU psi = (phi U psi) | G phi
+        LTLfFormula until = new LTLfUntilFormula(this.getLeftFormula(), this.getRightFormula());
+        LTLfFormula globally = new LTLfGloballyFormula(this.getLeftFormula());
+        LTLfFormula and = new LTLfTempOrFormula(until, globally);
+        return and.toLDLf();
     }
 }

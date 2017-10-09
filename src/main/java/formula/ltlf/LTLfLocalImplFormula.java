@@ -34,6 +34,6 @@ public class LTLfLocalImplFormula extends LTLfBinaryFormula implements LTLfBoolO
 
     @Override
     public LDLfLocalFormula toLDLfLocal() {
-        throw new RuntimeException("The LTLf formula should be in nnf!");
+        throw new RuntimeException("The LTLfLocalFormula should be in nnf!");
     }
 }

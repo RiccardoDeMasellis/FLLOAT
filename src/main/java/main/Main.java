@@ -24,17 +24,17 @@ import utils.ParserUtils;
 public class Main {
 
 
-    public static LDLfAutomatonResultWrapper ldlfString2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
+    public static LDLfAutomatonResultWrapper ldlfString2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean printing) {
 
         /*
         Parsing
          */
         LDLfFormula formula = ParserUtils.parseLDLfFormula(input);
 
-        return ldlfFormula2Aut(formula, signature, declare, minimize, trim, noEmptyTrace, printing);
+        return ldlfFormula2Aut(formula, signature, declare, minimize, trim, printing);
     }
 
-    public static LDLfAutomatonResultWrapper ldlfFormula2Aut(LDLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
+    public static LDLfAutomatonResultWrapper ldlfFormula2Aut(LDLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean printing) {
 
         Automaton automaton;
 
@@ -49,13 +49,10 @@ public class Main {
         /*
         Actual automaton construction
          */
-        if(declare)
-            automaton = AutomatonUtils.ldlf2AutomatonDeclare(formula, newSig);
-        else
-            automaton = AutomatonUtils.ldlf2Automaton(formula, newSig);
+        automaton = AutomatonUtils.ldlf2Automaton(declare, formula, newSig);
 
-        // TRANSFORMATION
-        automaton = transformations(automaton, minimize, trim, noEmptyTrace);
+        // TRANSFORMATIONS
+        automaton = transformations(automaton, minimize, trim);
 
 
         if(printing)
@@ -65,16 +62,16 @@ public class Main {
     }
 
 
-    public static LTLfAutomatonResultWrapper ltlfString2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
+    public static LTLfAutomatonResultWrapper ltlfString2Aut(String input, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean printing) {
         /*
         Parsing
          */
         LTLfFormula formula = ParserUtils.parseLTLfFormula(input);
 
-        return ltlfFormula2Aut(formula, signature, declare, minimize, trim, noEmptyTrace, printing);
+        return ltlfFormula2Aut(formula, signature, declare, minimize, trim, printing);
     }
 
-    public static LTLfAutomatonResultWrapper ltlfFormula2Aut(LTLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean noEmptyTrace, boolean printing) {
+    public static LTLfAutomatonResultWrapper ltlfFormula2Aut(LTLfFormula formula, PropositionalSignature signature, boolean declare, boolean minimize, boolean trim, boolean printing) {
 
         LDLfFormula ldlff = formula.toLDLf();
         System.out.println("Original LTLf input formula:");
@@ -95,13 +92,10 @@ public class Main {
         /*
         Actual automaton construction
          */
-        if (declare)
-            automaton = AutomatonUtils.ldlf2AutomatonDeclare(ldlff, newSig);
-        else
-            automaton = AutomatonUtils.ldlf2Automaton(ldlff, newSig);
+        automaton = AutomatonUtils.ldlf2Automaton(declare, ldlff, newSig);
 
-        // TRANSFORMATION
-        automaton = transformations(automaton, minimize, trim, noEmptyTrace);
+        // TRANSFORMATIONS
+        automaton = transformations(automaton, minimize, trim);
 
 
         if (printing)
@@ -112,11 +106,7 @@ public class Main {
 
 
 
-    private static Automaton transformations(Automaton automaton, boolean minimize, boolean trim, boolean noEmptyTrace) {
-
-        // WARNING! This must be called BEFORE the minimization!
-        if(noEmptyTrace)
-            automaton = AutomatonUtils.eliminateEmptyTrace(automaton);
+    private static Automaton transformations(Automaton automaton, boolean minimize, boolean trim) {
 
         if (minimize)
             automaton = new Reducer<>().transform(automaton);

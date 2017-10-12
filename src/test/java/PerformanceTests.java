@@ -89,7 +89,7 @@ public class PerformanceTests {
             Automaton construction method invocation
             */
             System.out.print("Automaton for " + c + "... ");
-            newAutomaton = AutomatonUtils.ldlf2AutomatonDeclare(ldlff, ldlff.getSignature());
+            newAutomaton = AutomatonUtils.ldlf2Automaton(true, ldlff, ldlff.getSignature());
 
 
             // Determinization! WARNING! IT USE THE JAUTOMATA LIBRARY (not tested if works properly)!

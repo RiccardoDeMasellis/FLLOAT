@@ -8,7 +8,6 @@
 
 package formula.regExp;
 
-import automaton.EmptyTrace;
 import automaton.PossibleWorldWrap;
 import evaluations.PropositionLast;
 import formula.LocalFormula;
@@ -59,12 +58,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
         PropositionalFormula pf = this.regExpLocal2Propositional();
 
         if (pwwLabel.satisfies(pf)) {
-            if (pwwLabel.contains(last)) {
-                //QuotedVar varphi = new QuotedVar((LDLfFormula) goal.clone());
-                QuotedVar varphi = new QuotedVar(goal.replaceStarFormulas());
-                return varphi.delta(new EmptyTrace());
-            } else
-                return new QuotedVar(goal.replaceStarFormulas());
+            return new QuotedVar(goal.replaceStarFormulas());
         } else
             return new QuotedFalseFormula();
     }
@@ -76,12 +70,7 @@ public interface RegExpLocal extends RegExp, LocalFormula {
         PropositionalFormula pf = this.regExpLocal2Propositional();
 
         if (pwwLabel.satisfies(pf)) {
-            if (pwwLabel.contains(last)) {
-                //QuotedVar varphi = new QuotedVar((LDLfFormula) goal.clone());
-                QuotedVar varphi = new QuotedVar(goal.replaceStarFormulas());
-                return varphi.delta(new EmptyTrace());
-            } else
-                return new QuotedVar(goal.replaceStarFormulas());
+            return new QuotedVar(goal.replaceStarFormulas());
 
         } else
             return new QuotedTrueFormula();

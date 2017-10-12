@@ -13,9 +13,9 @@ import automaton.PossibleWorldWrap;
 import automaton.QuotedFormulaStateFactory;
 import automaton.QuotedFormulaStateFactory.QuotedFormulaState;
 import automaton.TransitionLabel;
-import evaluations.PropositionLast;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
+import formula.quotedFormula.QuotedTrueFormula;
 import formula.quotedFormula.QuotedVar;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -29,17 +29,18 @@ import rationals.Transition;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Created by Riccardo De Masellis on 15/07/15.
  */
 public class AutomatonUtils {
 
-    public static Automaton ldlf2Automaton(LDLfFormula initialFormula, PropositionalSignature ps) {
 
-        //Add last to the signature
-        ps.add(new PropositionLast());
+    public static Automaton ldlf2Automaton(boolean declare, LDLfFormula initialFormula, PropositionalSignature ps) {
 
         // Automaton initialization: empty automaton
         QuotedFormulaStateFactory stateFactory = new QuotedFormulaStateFactory();
@@ -61,44 +62,27 @@ public class AutomatonUtils {
         initialFormula = (LDLfFormula) initialFormula.nnf();
         Set<QuotedVar> initialStateFormulas = new HashSet<>();
         initialStateFormulas.add(new QuotedVar(initialFormula));
+
         /*
         Creation of the initial state.
          */
         QuotedFormulaState initialState = (QuotedFormulaState) stateFactory.create(true, false, initialStateFormulas);
+        // Check if initialState is final by calling delta(emptyTrace) on its initialStateFormulas!
+        initialState.setTerminal(initialStateFormulas.isEmpty() || checkIfFinal(initialState));
         // Add the initial state to the set of state to be analyzed
         toAnalyze.add(initialState);
 
         /*
-        Analogously for the initial state, I initialize data structure for the final state
-        which contains the empty set of quoted formulas (empty conjunction stands for true).
-        */
-        QuotedFormulaState finalState = (QuotedFormulaState) stateFactory.create(false, true, new HashSet<>());
-        /*
-        All transitions loop in the final state. Hence I get all possible models for the signature
-        and then add a transition for each one of them.
+        Get all possible models for the signature and depending on the declare assumption.
          */
-        Set<TransitionLabel> allLabels = new HashSet<>();
-        Set<PossibleWorld> allModels = new Tautology().getModels(ps);
-
-        // Translates PossibleWorlds in PossibleWorldsWrap
-        for (PossibleWorld p : allModels) {
-            // The magic of inheritance!!!
-            allLabels.add(new PossibleWorldWrap(p));
-        }
+        Set<TransitionLabel> allLabels = buildAllLables(declare, ps);
 
         /*
-        Add the emptyTrace to the set of possible labels!
-         */
-        allLabels.add(new EmptyTrace());
-
-        /*
-        All transition loops in the final state AND in the false state
+        All transition loops in the false state
          */
         for (TransitionLabel w : allLabels) {
-            Transition<TransitionLabel> t1 = new Transition(finalState, w, finalState);
             Transition<TransitionLabel> t2 = new Transition(falseState, w, falseState);
             try {
-                automaton.addTransition(t1);
                 automaton.addTransition(t2);
             } catch (NoSuchStateException e) {
                 e.printStackTrace();
@@ -135,7 +119,25 @@ public class AutomatonUtils {
                         QuotedFormulaState destinationState = getStateIfExists(automaton, newStateFormulas);
                         if (destinationState == null) {
                             destinationState = (QuotedFormulaState) stateFactory.create(false, false, newStateFormulas);
-                            toAnalyze.addLast(destinationState);
+                            // Check if destinationState is final by calling delta(emptyTrace) on its newStateFormulas!
+                            if (newStateFormulas.isEmpty()) {
+                                destinationState.setTerminal(true);
+                            /*
+                            If is the final state where state formulas are empty, then add all looping transition.
+                             */
+                                for (TransitionLabel tl: allLabels) {
+                                    Transition<TransitionLabel> tr = new Transition(destinationState, tl, destinationState);
+                                    try {
+                                        automaton.addTransition(tr);
+                                    } catch (NoSuchStateException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            else {
+                                destinationState.setTerminal(checkIfFinal(destinationState));
+                                toAnalyze.addLast(destinationState);
+                            }
                         }
 
                         // Add the transition (currentState, world, destinationState)
@@ -152,241 +154,43 @@ public class AutomatonUtils {
             }
             toAnalyze.remove(currentState);
         }
-        //return automaton;
-        return eliminateLastTransitions(automaton);
+        return automaton;
     }
 
 
-    private static Automaton eliminateLastTransitions(Automaton oldAut) {
-        Set<State> oldStates = oldAut.states();
-        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
+    private static Set<TransitionLabel> buildAllLables(boolean declare, PropositionalSignature ps) {
+        Set<TransitionLabel> allLabels = new HashSet<>();
 
-        Automaton newAut = new Automaton();
-
-        Map<State, State> oldToNew = new HashMap<>();
-
-        //Add all states
-        for (State oldSt : oldStates) {
-            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
-            oldToNew.put(oldSt, newSt);
-        }
-
-        // Add the new "ended" state
-        State ended = newAut.addState(false, true);
-
-        //Add the *right* transitions according to the transformations
-        for (Transition<TransitionLabel> oldTran : oldTransitions) {
-            State oldStart = oldTran.start();
-            State oldEnd = oldTran.end();
-            TransitionLabel oldLabel = oldTran.label();
-            TransitionLabel newLabel;
-            Transition<TransitionLabel> newTran;
-
-            if (oldLabel instanceof EmptyTrace) {
-                newLabel = new EmptyTrace();
-                newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
-                if(! newAut.delta().contains(newTran)) {
-                    try {
-                        newAut.addTransition(newTran);
-                    } catch (NoSuchStateException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            else {
-                newLabel = new PossibleWorldWrap((PossibleWorldWrap) oldLabel);
-                // Remove proposition last from the label!
-                ((PossibleWorldWrap) newLabel).remove(new PropositionLast());
-
-
-                //Check if the transition must lead to "ended" state
-                if (((PossibleWorldWrap)oldLabel).contains(new PropositionLast()) && oldEnd.isTerminal())
-                    newTran = new Transition<>(oldToNew.get(oldStart), newLabel, ended);
-                else
-                    newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
-
-                // Check if the transitions already exists in the new automaton
-                if(! newAut.delta().contains(newTran)) {
-                    try {
-                        newAut.addTransition(newTran);
-                    } catch (NoSuchStateException e) {
-                        e.printStackTrace();
-                    }
-                }
+        if(declare) {
+            for (Proposition prop : ps) {
+                HashSet<Proposition> singlePropSet = new HashSet<>();
+                singlePropSet.add(prop);
+                PossibleWorld p = new PossibleWorld(singlePropSet);
+                allLabels.add(new PossibleWorldWrap(p));
             }
         }
-        return newAut;
-    }
+        else {
+            Set<PossibleWorld> allModels = new Tautology().getModels(ps);
 
-
-    /*
-    To be called AFTER eliminateLastTransition!!!
-     */
-    public static Automaton eliminateEmptyTrace(Automaton oldAut) {
-        Set<State> oldStates = oldAut.states();
-        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
-
-        Automaton newAut = new Automaton();
-
-        Map<State, State> oldToNew = new HashMap<>();
-
-        //Add all states
-        for (State oldSt : oldStates) {
-            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
-            oldToNew.put(oldSt, newSt);
-        }
-
-        for (Transition<TransitionLabel> oldTran : oldTransitions) {
-            State oldStart = oldTran.start();
-            State oldEnd = oldTran.end();
-            TransitionLabel oldLabel = oldTran.label();
-
-            if (oldLabel instanceof EmptyTrace) {
-                if (oldEnd.isTerminal())
-                    oldToNew.get(oldStart).setTerminal(true);
-            }
-
-            else {
-                Transition newTran = new Transition<>(oldToNew.get(oldStart), oldLabel, oldToNew.get(oldEnd));
-                // Check if the transitions already exists in the new automaton
-                if(! newAut.delta().contains(newTran)) {
-                    try {
-                        newAut.addTransition(newTran);
-                    } catch (NoSuchStateException e) {
-                        e.printStackTrace();
-                    }
-                }
+            // Translates PossibleWorlds in PossibleWorldsWrap
+            for (PossibleWorld p : allModels) {
+                // The magic of inheritance!!!
+                allLabels.add(new PossibleWorldWrap(p));
             }
         }
-        return newAut;
+        return allLabels;
     }
 
 
 
-    private static Automaton eliminateLastTransitionsDeclare(Automaton oldAut) {
-        Set<State> oldStates = oldAut.states();
-        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
-
-        Automaton newAut = new Automaton();
-
-        Map<State, State> oldToNew = new HashMap<>();
-
-        //Add all states
-        for (State oldSt : oldStates) {
-            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
-            oldToNew.put(oldSt, newSt);
-        }
-
-        // Add the new "ended" state
-        State ended = newAut.addState(false, true);
-
-        //Add the *right* transitions according to the transformations
-        for (Transition<TransitionLabel> oldTran : oldTransitions) {
-            State oldStart = oldTran.start();
-            State oldEnd = oldTran.end();
-            TransitionLabel oldLabel = oldTran.label();
-            TransitionLabel newLabel;
-            Transition<TransitionLabel> newTran;
-
-            if (oldLabel instanceof EmptyTrace) {
-                newLabel = new EmptyTrace();
-                newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
-                if(! newAut.delta().contains(newTran)) {
-                    try {
-                        newAut.addTransition(newTran);
-                    } catch (NoSuchStateException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            else {
-                newLabel = new PossibleWorldWrap((PossibleWorldWrap) oldLabel);
-                // Remove proposition last from the label!
-                ((PossibleWorldWrap) newLabel).remove(new PropositionLast());
-
-
-                // WARNING! For Declare only!
-                if (!((PossibleWorldWrap) newLabel).isEmpty()) {
-                    //Check if the transition must lead to "ended" state
-                    if (((PossibleWorldWrap) oldLabel).contains(new PropositionLast()) && oldEnd.isTerminal())
-                        newTran = new Transition<>(oldToNew.get(oldStart), newLabel, ended);
-                    else
-                        newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
-
-                    // Check if the transitions already exists in the new automaton
-                    if (!newAut.delta().contains(newTran)) {
-                        try {
-                            newAut.addTransition(newTran);
-                        } catch (NoSuchStateException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-        return newAut;
-    }
-
-
-    /**
-     * Only to be used with ProM. Returns the automaton which transitions contain ONE event only.
-     * @param oldAut
-     * @return
-     */
-    public static Automaton declareAssumption(Automaton oldAut) {
-        Set<State> oldStates = oldAut.states();
-        Set<Transition<TransitionLabel>> oldTransitions = oldAut.delta();
-
-        Automaton newAut = new Automaton();
-
-        Map<State, State> oldToNew = new HashMap<>();
-
-        //Add all states
-        for (State oldSt : oldStates) {
-            State newSt = newAut.addState(oldSt.isInitial(), oldSt.isTerminal());
-            oldToNew.put(oldSt, newSt);
-        }
-
-        for (Transition<TransitionLabel> oldTran : oldTransitions) {
-            State oldStart = oldTran.start();
-            State oldEnd = oldTran.end();
-            TransitionLabel oldLabel = oldTran.label();
-            TransitionLabel newLabel;
-            Transition<TransitionLabel> newTran;
-
-            if (oldLabel instanceof EmptyTrace) {
-                newLabel = new EmptyTrace();
-                newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
-                if(! newAut.delta().contains(newTran)) {
-                    try {
-                        newAut.addTransition(newTran);
-                    } catch (NoSuchStateException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            else {
-                //Check if the transitions contains an event only.
-                if (((PossibleWorldWrap) oldLabel).size() == 1) {
-                    newLabel = new PossibleWorldWrap((PossibleWorldWrap) oldLabel);
-                    newTran = new Transition<>(oldToNew.get(oldStart), newLabel, oldToNew.get(oldEnd));
-
-                    // Check if the transitions already exists in the new automaton
-                    if(! newAut.delta().contains(newTran)) {
-                        try {
-                            newAut.addTransition(newTran);
-                        } catch (NoSuchStateException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-            }
-        }
-        return newAut;
+    private static boolean checkIfFinal(QuotedFormulaState destinationState) {
+        /*
+        Create the emptyTrace special label!
+         */
+        TransitionLabel emptyTrace = new EmptyTrace();
+        QuotedFormula currentFormula = destinationState.getQuotedConjunction();
+        QuotedFormula deltaResult = currentFormula.delta(emptyTrace);
+        return deltaResult instanceof QuotedTrueFormula;
     }
 
 
@@ -444,140 +248,6 @@ public class AutomatonUtils {
         b.append(t.label().toString());
 
         b.append("\"]\n");
-    }
-
-
-    /*
-    It builds the automaton considering only interpretation with a single variable true (declare assumption).
-     */
-    public static Automaton ldlf2AutomatonDeclare(LDLfFormula initialFormula, PropositionalSignature ps) {
-
-        //Add last to the signature
-        ps.add(new PropositionLast());
-
-        // Automaton initialization: empty automaton
-        QuotedFormulaStateFactory stateFactory = new QuotedFormulaStateFactory();
-        Automaton automaton = new Automaton(stateFactory);
-        stateFactory.setAutomaton(automaton);
-
-        /*
-        Algorithm data structures
-         */
-        LinkedList<QuotedFormulaState> toAnalyze = new LinkedList<>();
-
-        /*
-        Initialize the data structure for the "false" state.
-         */
-        QuotedFormulaState falseState = (QuotedFormulaState) stateFactory.create(false, false, null);
-
-
-        // Initialize the data structure for the initial state;
-        initialFormula = (LDLfFormula) initialFormula.nnf();
-        Set<QuotedVar> initialStateFormulas = new HashSet<>();
-        initialStateFormulas.add(new QuotedVar(initialFormula));
-        /*
-        Creation of the initial state.
-         */
-        QuotedFormulaState initialState = (QuotedFormulaState) stateFactory.create(true, false, initialStateFormulas);
-        // Add the initial state to the set of state to be analyzed
-        toAnalyze.add(initialState);
-
-        /*
-        Analogously for the initial state, I initialize data structure for the final state
-        which contains the empty set of quoted formulas (empty conjunction stands for true).
-        */
-        QuotedFormulaState finalState = (QuotedFormulaState) stateFactory.create(false, true, new HashSet<>());
-        /*
-        All transitions loop in the final state. Hence I get all possible models for the signature
-        and then add a transition for each one of them.
-         */
-
-
-        Set<TransitionLabel> allLabels = new HashSet<>();
-
-        /*
-        Declare just needs interpretation with a single variable set to true.
-         */
-        for (Proposition prop : ps) {
-            HashSet<Proposition> singlePropSet = new HashSet<>();
-            HashSet<Proposition> singlePropSetLast = new HashSet<>();
-            singlePropSet.add(prop);
-            singlePropSetLast.add(prop);
-            singlePropSetLast.add(new PropositionLast());
-            PossibleWorld p = new PossibleWorld(singlePropSet);
-            PossibleWorld pl = new PossibleWorld(singlePropSetLast);
-            allLabels.add(new PossibleWorldWrap(p));
-            allLabels.add(new PossibleWorldWrap(pl));
-        }
-
-        /*
-        Add the emptyTrace to the set of possible labels!
-         */
-        allLabels.add(new EmptyTrace());
-
-        /*
-        All transition loops in the final state AND in the false state
-         */
-        for (TransitionLabel w : allLabels) {
-            Transition<TransitionLabel> t1 = new Transition(finalState, w, finalState);
-            Transition<TransitionLabel> t2 = new Transition(falseState, w, falseState);
-            try {
-                automaton.addTransition(t1);
-                automaton.addTransition(t2);
-            } catch (NoSuchStateException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Cycle on states yet to be analyzed
-        while (!toAnalyze.isEmpty()) {
-            QuotedFormulaState currentState = toAnalyze.getFirst();
-            // Conjunction of the QuotedVar belonging to the current state
-            QuotedFormula currentFormula = currentState.getQuotedConjunction();
-
-            // For each possible label, call the delta function on currentFormula
-            for (TransitionLabel label : allLabels) {
-                QuotedFormula deltaResult = currentFormula.delta(label);
-                // Compute the minimal interpretations satisfying deltaResult, that is, all the q'
-                Set<Set<QuotedVar>> newStateSetFormulas = deltaResult.getMinimalModels();
-
-                // newStateFormulas empty means that the current interpretation lead to the "false" state.
-                if (newStateSetFormulas.isEmpty()) {
-                    // Add the transition (currentState, world, falseState)
-                    Transition<TransitionLabel> t = new Transition<>(currentState, label, falseState);
-                    try {
-                        automaton.addTransition(t);
-                    } catch (NoSuchStateException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // Otherwise the transition DOES NOT lead to the false state.
-                else {
-                    for (Set<QuotedVar> newStateFormulas : newStateSetFormulas) {
-                        //Add the new state if new, or give me the already existing one with the same Set<QuotedVar>
-                        QuotedFormulaState destinationState = getStateIfExists(automaton, newStateFormulas);
-                        if (destinationState == null) {
-                            destinationState = (QuotedFormulaState) stateFactory.create(false, false, newStateFormulas);
-                            toAnalyze.addLast(destinationState);
-                        }
-
-                        // Add the transition (currentState, world, destinationState)
-                        Transition<TransitionLabel> t = new Transition<>(currentState, label, destinationState);
-                        try {
-                            automaton.addTransition(t);
-                        } catch (NoSuchStateException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-
-            }
-            toAnalyze.remove(currentState);
-        }
-        //return automaton;
-        return eliminateLastTransitionsDeclare(automaton);
     }
 
 

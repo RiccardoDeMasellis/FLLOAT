@@ -8,8 +8,9 @@
 
 package formula.regExp;
 
+import automaton.EmptyTrace;
 import automaton.PossibleWorldWrap;
-import evaluations.PropositionLast;
+import automaton.TransitionLabel;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
 import formula.ldlf.LDLfFormula;
@@ -52,28 +53,36 @@ public interface RegExpLocal extends RegExp, LocalFormula {
     PropositionalFormula regExpLocal2Propositional();
 
 
-    default QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorldWrap label) {
-        PossibleWorldWrap pwwLabel = (PossibleWorldWrap) label;
-        PropositionLast last = new PropositionLast();
-        PropositionalFormula pf = this.regExpLocal2Propositional();
-
-        if (pwwLabel.satisfies(pf)) {
-            return new QuotedVar(goal.replaceStarFormulas());
-        } else
+    default QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
+        if (label instanceof EmptyTrace)
             return new QuotedFalseFormula();
+
+        else {
+            PossibleWorldWrap pwwLabel = (PossibleWorldWrap) label;
+
+            PropositionalFormula pf = this.regExpLocal2Propositional();
+
+            if (pwwLabel.satisfies(pf)) {
+                return new QuotedVar(goal.replaceStarFormulas());
+            } else
+                return new QuotedFalseFormula();
+        }
     }
 
 
-    default QuotedFormula deltaBox(LDLfFormula goal, PossibleWorldWrap label) {
-        PossibleWorldWrap pwwLabel = (PossibleWorldWrap) label;
-        PropositionLast last = new PropositionLast();
-        PropositionalFormula pf = this.regExpLocal2Propositional();
-
-        if (pwwLabel.satisfies(pf)) {
-            return new QuotedVar(goal.replaceStarFormulas());
-
-        } else
+    default QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
+        if (label instanceof EmptyTrace)
             return new QuotedTrueFormula();
-    }
 
+        else {
+            PossibleWorldWrap pwwLabel = (PossibleWorldWrap) label;
+            PropositionalFormula pf = this.regExpLocal2Propositional();
+
+            if (pwwLabel.satisfies(pf)) {
+                return new QuotedVar(goal.replaceStarFormulas());
+
+            } else
+                return new QuotedTrueFormula();
+        }
+    }
 }

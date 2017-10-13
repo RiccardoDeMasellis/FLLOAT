@@ -8,7 +8,7 @@
 
 package formula.regExp;
 
-import automaton.PossibleWorldWrap;
+import automaton.TransitionLabel;
 import formula.Formula;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
@@ -52,7 +52,7 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorldWrap label) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
         LDLfDiamondFormula caller = new LDLfDiamondFormula(this, goal);
         LDLfFStarFormula starFFormula = new LDLfFStarFormula((LDLfDiamondFormula) caller.clone());
 
@@ -62,7 +62,7 @@ public class RegExpStar extends RegExpUnary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorldWrap label) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
         LDLfBoxFormula caller = new LDLfBoxFormula(this, goal);
         LDLfTStarFormula starTFormula = new LDLfTStarFormula((LDLfBoxFormula) caller.clone());
 

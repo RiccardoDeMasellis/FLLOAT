@@ -8,7 +8,7 @@
 
 package formula.regExp;
 
-import automaton.PossibleWorldWrap;
+import automaton.TransitionLabel;
 import formula.FormulaType;
 import formula.ldlf.LDLfBoxFormula;
 import formula.ldlf.LDLfDiamondFormula;
@@ -48,7 +48,7 @@ public class RegExpConcat extends RegExpBinary implements RegExpTemp {
 
 
     @Override
-    public QuotedFormula deltaDiamond(LDLfFormula goal, PossibleWorldWrap label) {
+    public QuotedFormula deltaDiamond(LDLfFormula goal, TransitionLabel label) {
         LDLfDiamondFormula nestedLdlf = new LDLfDiamondFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
         LDLfDiamondFormula outer = new LDLfDiamondFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
 
@@ -56,7 +56,7 @@ public class RegExpConcat extends RegExpBinary implements RegExpTemp {
     }
 
     @Override
-    public QuotedFormula deltaBox(LDLfFormula goal, PossibleWorldWrap label) {
+    public QuotedFormula deltaBox(LDLfFormula goal, TransitionLabel label) {
         LDLfBoxFormula nestedLdlf = new LDLfBoxFormula((RegExp) this.getRightFormula().clone(), (LDLfFormula) goal.clone());
         LDLfBoxFormula outer = new LDLfBoxFormula((RegExp) this.getLeftFormula().clone(), nestedLdlf);
 

@@ -52,6 +52,11 @@ public class AutomatonUtils {
         LinkedList<QuotedFormulaState> toAnalyze = new LinkedList<>();
 
         /*
+        Get all possible models for the signature and depending on the declare assumption.
+         */
+        Set<TransitionLabel> allLabels = buildAllLables(declare, ps);
+
+        /*
         Initialize the data structure for the "false" state.
          */
         QuotedFormulaState falseState = (QuotedFormulaState) stateFactory.create(false, false, null);
@@ -66,15 +71,12 @@ public class AutomatonUtils {
         Creation of the initial state.
          */
         QuotedFormulaState initialState = (QuotedFormulaState) stateFactory.create(true, false, initialStateFormulas);
-        // Check if initialState is final by calling delta(emptyTrace) on its initialStateFormulas!
-        initialState.setTerminal(checkIfFinal(initialState));
+
+        // Check if final and perform operations accordingly
+        handleIfFinal(automaton, initialState, allLabels);
+
         // Add the initial state to the set of state to be analyzed
         toAnalyze.add(initialState);
-
-        /*
-        Get all possible models for the signature and depending on the declare assumption.
-         */
-        Set<TransitionLabel> allLabels = buildAllLables(declare, ps);
 
         /*
         All transition loops in the false state
@@ -116,27 +118,14 @@ public class AutomatonUtils {
                     for (Set<QuotedVar> newStateFormulas : newStateSetFormulas) {
                         //Add the new state if new, or give me the already existing one with the same Set<QuotedVar>
                         QuotedFormulaState destinationState = getStateIfExists(automaton, newStateFormulas);
+
                         if (destinationState == null) {
                             destinationState = (QuotedFormulaState) stateFactory.create(false, false, newStateFormulas);
-                            // Check if destinationState is final by calling delta(emptyTrace) on its newStateFormulas!
-                            if (newStateFormulas.isEmpty()) {
-                                destinationState.setTerminal(true);
-                            /*
-                            If is the final state where state formulas are empty, then add all looping transition.
-                             */
-                                for (TransitionLabel tl: allLabels) {
-                                    Transition<TransitionLabel> tr = new Transition(destinationState, tl, destinationState);
-                                    try {
-                                        automaton.addTransition(tr);
-                                    } catch (NoSuchStateException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                            else {
-                                destinationState.setTerminal(checkIfFinal(destinationState));
+                            handleIfFinal(automaton, destinationState, allLabels);
+
+                            // Add to the set of states to be analyzed only if it is not the true state!
+                            if (! destinationState.getFormulaSet().isEmpty())
                                 toAnalyze.addLast(destinationState);
-                            }
                         }
 
                         // Add the transition (currentState, world, destinationState)
@@ -182,9 +171,23 @@ public class AutomatonUtils {
 
 
 
-    private static boolean checkIfFinal(QuotedFormulaState destinationState) {
-        if (destinationState.getFormulaSet().isEmpty())
-            return true;
+    private static void handleIfFinal(Automaton automaton, QuotedFormulaState destinationState, Set<TransitionLabel> allLabels) {
+        /*
+        If state is the sink final state (true state), i.e., the state with the empty set of quoted formulas,
+        then set as final and add all looping transitions.
+         */
+        if (destinationState.getFormulaSet().isEmpty()) {
+            destinationState.setTerminal(true);
+            for (TransitionLabel w : allLabels) {
+                Transition<TransitionLabel> t2 = new Transition(destinationState, w, destinationState);
+                try {
+                    automaton.addTransition(t2);
+                } catch (NoSuchStateException e) {
+                    e.printStackTrace();
+                }
+            }
+            return;
+        }
 
         /*
         Create the emptyTrace special label!
@@ -192,20 +195,24 @@ public class AutomatonUtils {
         TransitionLabel emptyTrace = new EmptyTrace();
         QuotedFormula currentFormula = destinationState.getQuotedConjunction();
         QuotedFormula deltaResult = currentFormula.delta(emptyTrace);
-
         Set<Set<QuotedVar>> allMinimalModels = deltaResult.getMinimalModels();
 
+        /*
+        If the set of possible models is empty, then it is the false state. So return
+         */
         if (allMinimalModels.isEmpty())
-            return false;
+            return;
 
-        else {
-            for (Set<QuotedVar> model : allMinimalModels) {
-                if (model.isEmpty())
-                    return true;
+        /*
+        Otherwise, it has some model. Check if there is the empty one (i.e., true) among those.
+        If this is the case, then set it as final.
+         */
+        for (Set<QuotedVar> model : allMinimalModels) {
+            if (model.isEmpty()) {
+                destinationState.setTerminal(true);
+                return;
             }
         }
-
-        return false;
     }
 
 

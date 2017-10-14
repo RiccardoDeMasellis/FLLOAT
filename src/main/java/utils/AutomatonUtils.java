@@ -15,7 +15,6 @@ import automaton.QuotedFormulaStateFactory.QuotedFormulaState;
 import automaton.TransitionLabel;
 import formula.ldlf.LDLfFormula;
 import formula.quotedFormula.QuotedFormula;
-import formula.quotedFormula.QuotedTrueFormula;
 import formula.quotedFormula.QuotedVar;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -68,7 +67,7 @@ public class AutomatonUtils {
          */
         QuotedFormulaState initialState = (QuotedFormulaState) stateFactory.create(true, false, initialStateFormulas);
         // Check if initialState is final by calling delta(emptyTrace) on its initialStateFormulas!
-        initialState.setTerminal(initialStateFormulas.isEmpty() || checkIfFinal(initialState));
+        initialState.setTerminal(checkIfFinal(initialState));
         // Add the initial state to the set of state to be analyzed
         toAnalyze.add(initialState);
 
@@ -184,13 +183,29 @@ public class AutomatonUtils {
 
 
     private static boolean checkIfFinal(QuotedFormulaState destinationState) {
+        if (destinationState.getFormulaSet().isEmpty())
+            return true;
+
         /*
         Create the emptyTrace special label!
          */
         TransitionLabel emptyTrace = new EmptyTrace();
         QuotedFormula currentFormula = destinationState.getQuotedConjunction();
         QuotedFormula deltaResult = currentFormula.delta(emptyTrace);
-        return deltaResult instanceof QuotedTrueFormula;
+
+        Set<Set<QuotedVar>> allMinimalModels = deltaResult.getMinimalModels();
+
+        if (allMinimalModels.isEmpty())
+            return false;
+
+        else {
+            for (Set<QuotedVar> model : allMinimalModels) {
+                if (model.isEmpty())
+                    return true;
+            }
+        }
+
+        return false;
     }
 
 

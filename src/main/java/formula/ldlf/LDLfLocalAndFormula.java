@@ -10,6 +10,8 @@ package formula.ldlf;
 
 import formula.AndFormula;
 import formula.FormulaType;
+import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpLocalAnd;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -44,5 +46,12 @@ public class LDLfLocalAndFormula extends LDLfBinaryFormula implements LDLfBoolOp
         PropositionalFormula left = ((LDLfLocalFormula) this.getLeftFormula()).LDLfLocal2Prop();
         PropositionalFormula right = ((LDLfLocalFormula) this.getRightFormula()).LDLfLocal2Prop();
         return new Conjunction(left, right);
+    }
+
+    @Override
+    public RegExpLocal LDLfLocal2RegExp() {
+        RegExpLocal left = ((LDLfLocalFormula)this.getLeftFormula()).LDLfLocal2RegExp();
+        RegExpLocal right = ((LDLfLocalFormula)this.getRightFormula()).LDLfLocal2RegExp();
+        return new RegExpLocalAnd(left, right);
     }
 }

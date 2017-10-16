@@ -8,14 +8,11 @@
 
 package formula.ldlf;
 
-import automaton.EmptyTrace;
-import automaton.PossibleWorldWrap;
 import automaton.TransitionLabel;
 import formula.LocalFormula;
 import formula.LocalFormulaType;
-import formula.quotedFormula.QuotedFalseFormula;
 import formula.quotedFormula.QuotedFormula;
-import formula.quotedFormula.QuotedTrueFormula;
+import formula.regExp.RegExpLocal;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -50,19 +47,13 @@ public interface LDLfLocalFormula extends LDLfFormula, LocalFormula {
 
     PropositionalFormula LDLfLocal2Prop();
 
-    default QuotedFormula delta(TransitionLabel label) {
-        if (label instanceof EmptyTrace)
-            return new QuotedFalseFormula();
+    RegExpLocal LDLfLocal2RegExp();
 
-        if (label instanceof PossibleWorldWrap) {
-            PossibleWorldWrap pwwLabel = (PossibleWorldWrap)label;
-            PropositionalFormula pf = this.LDLfLocal2Prop();
-            if (pwwLabel.satisfies(pf))
-                return new QuotedTrueFormula();
-            else
-                return new QuotedFalseFormula();
-        }
-        else
-            throw new RuntimeException("The label is neither EmptyTrace nor PossibleWorldWrap");
+    default QuotedFormula delta(TransitionLabel label) {
+        /*
+        We translate phi prop with <phi>tt
+         */
+        LDLfFormula translated = new LDLfDiamondFormula(this.LDLfLocal2RegExp(), new LDLfttFormula());
+        return translated.delta(label);
     }
 }

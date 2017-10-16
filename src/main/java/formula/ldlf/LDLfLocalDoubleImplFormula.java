@@ -10,6 +10,7 @@ package formula.ldlf;
 
 import formula.DoubleImplFormula;
 import formula.FormulaType;
+import formula.regExp.RegExpLocal;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -40,5 +41,10 @@ public class LDLfLocalDoubleImplFormula extends LDLfBinaryFormula implements LDL
     @Override
     public PropositionalFormula LDLfLocal2Prop() {
         return ((LDLfLocalFormula) this.nnf()).LDLfLocal2Prop();
+    }
+
+    @Override
+    public RegExpLocal LDLfLocal2RegExp() {
+        return ((LDLfLocalFormula) this.nnf()).LDLfLocal2RegExp();
     }
 }

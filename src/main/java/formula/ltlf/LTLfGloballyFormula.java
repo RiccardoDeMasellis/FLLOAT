@@ -60,6 +60,7 @@ public class LTLfGloballyFormula extends LTLfUnaryFormula implements LTLfTempOpT
             negatedNested = new LTLfLocalNotFormula(this.getNestedFormula());
         LTLfFormula eventually = new LTLfEventuallyFormula(negatedNested);
         LTLfFormula negatedEventually = new LTLfTempNotFormula(eventually);
+
         return negatedEventually.toLDLf();
     }
 

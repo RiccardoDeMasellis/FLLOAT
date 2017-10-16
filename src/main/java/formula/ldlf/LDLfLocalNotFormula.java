@@ -10,6 +10,8 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.NotFormula;
+import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpLocalNot;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -31,5 +33,11 @@ public class LDLfLocalNotFormula extends LDLfUnaryFormula implements LDLfBoolOpL
     public PropositionalFormula LDLfLocal2Prop() {
         PropositionalFormula nested = ((LDLfLocalFormula) this.getNestedFormula()).LDLfLocal2Prop();
         return new Negation(nested);
+    }
+
+    @Override
+    public RegExpLocal LDLfLocal2RegExp() {
+        RegExpLocal nested = ((LDLfLocalFormula) this.getNestedFormula()).LDLfLocal2RegExp();
+        return new RegExpLocalNot(nested);
     }
 }

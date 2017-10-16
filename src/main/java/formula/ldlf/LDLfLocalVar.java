@@ -10,6 +10,8 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.LocalVar;
+import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpLocalVar;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -41,6 +43,11 @@ public class LDLfLocalVar extends LocalVar implements LDLfLocalFormula {
     @Override
     public PropositionalFormula LDLfLocal2Prop() {
         return this.getProp().clone();
+    }
+
+    @Override
+    public RegExpLocal LDLfLocal2RegExp() {
+        return new RegExpLocalVar(this.getProp().clone());
     }
 
     public LDLfFormula replaceStarFormulas() {

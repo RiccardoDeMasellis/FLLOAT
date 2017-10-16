@@ -10,6 +10,8 @@ package formula.ldlf;
 
 import formula.FormulaType;
 import formula.TrueLocalFormula;
+import formula.regExp.RegExpLocal;
+import formula.regExp.RegExpLocalTrue;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
@@ -41,6 +43,11 @@ public class LDLfLocalTrueFormula extends TrueLocalFormula implements LDLfLocalF
     @Override
     public PropositionalFormula LDLfLocal2Prop() {
         return new Tautology();
+    }
+
+    @Override
+    public RegExpLocal LDLfLocal2RegExp() {
+        return new RegExpLocalTrue();
     }
 
     @Override

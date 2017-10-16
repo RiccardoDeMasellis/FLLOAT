@@ -10,10 +10,14 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfDiamondFormula;
+import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfTempAndFormula;
+import formula.ldlf.LDLfTempNotFormula;
 import formula.regExp.RegExpConcat;
 import formula.regExp.RegExpLocalTrue;
 import formula.regExp.RegExpStar;
 import formula.regExp.RegExpTest;
+import utils.FormulaUtils;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -52,11 +56,15 @@ public class LTLfUntilFormula extends LTLfBinaryFormula implements LTLfTempOpTem
 
     @Override
     public LDLfDiamondFormula toLDLf() {
-        // phi U psi --> <(toLDLf(phi)? ; true)*> (toLDLf(psi))
         RegExpTest test = new RegExpTest(this.getLeftFormula().toLDLf());
         RegExpConcat concat = new RegExpConcat(test, new RegExpLocalTrue());
         RegExpStar star = new RegExpStar(concat);
-        return new LDLfDiamondFormula(star, this.getRightFormula().toLDLf());
+
+        LDLfFormula ended = FormulaUtils.generateLDLfEndedFormula();
+        LDLfFormula notEnded = new LDLfTempNotFormula(ended);
+        LDLfFormula and = new LDLfTempAndFormula(this.getRightFormula().toLDLf(), notEnded);
+
+        return new LDLfDiamondFormula(star, and);
     }
 
 }

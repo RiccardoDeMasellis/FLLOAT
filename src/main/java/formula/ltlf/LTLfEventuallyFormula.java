@@ -11,9 +11,12 @@ package formula.ltlf;
 import formula.FormulaType;
 import formula.ldlf.LDLfDiamondFormula;
 import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfTempAndFormula;
+import formula.ldlf.LDLfTempNotFormula;
 import formula.regExp.RegExp;
 import formula.regExp.RegExpLocalTrue;
 import formula.regExp.RegExpStar;
+import utils.FormulaUtils;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -54,8 +57,12 @@ public class LTLfEventuallyFormula extends LTLfUnaryFormula implements LTLfTempO
 
     @Override
     public LDLfFormula toLDLf() {
+        LDLfFormula ended = FormulaUtils.generateLDLfEndedFormula();
+        LDLfFormula notEnded = new LDLfTempNotFormula(ended);
+        LDLfFormula and = new LDLfTempAndFormula(this.getNestedFormula().toLDLf(), notEnded);
+
         RegExp trueStar = new RegExpStar(new RegExpLocalTrue());
-        return new LDLfDiamondFormula(trueStar, this.getNestedFormula().toLDLf());
+        return new LDLfDiamondFormula(trueStar, and);
     }
 
 }

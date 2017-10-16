@@ -10,7 +10,11 @@ package formula.ltlf;
 
 import formula.FormulaType;
 import formula.ldlf.LDLfDiamondFormula;
+import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfTempAndFormula;
+import formula.ldlf.LDLfTempNotFormula;
 import formula.regExp.RegExpLocalTrue;
+import utils.FormulaUtils;
 
 /**
  * Created by Riccardo De Masellis on 15/05/15.
@@ -48,7 +52,10 @@ public class LTLfNextFormula extends LTLfUnaryFormula implements LTLfTempOpTempF
 
     @Override
     public LDLfDiamondFormula toLDLf() {
-            return new LDLfDiamondFormula(new RegExpLocalTrue(), this.getNestedFormula().toLDLf());
+        LDLfFormula ended = FormulaUtils.generateLDLfEndedFormula();
+        LDLfFormula notEnded = new LDLfTempNotFormula(ended);
+        LDLfFormula and = new LDLfTempAndFormula(this.getNestedFormula().toLDLf(), notEnded);
+        return new LDLfDiamondFormula(new RegExpLocalTrue(), and);
     }
 
 }

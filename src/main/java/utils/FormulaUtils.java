@@ -8,7 +8,11 @@
 
 package utils;
 
+import formula.ldlf.LDLfBoxFormula;
+import formula.ldlf.LDLfFormula;
+import formula.ldlf.LDLfffFormula;
 import formula.quotedFormula.QuotedVar;
+import formula.regExp.RegExpLocalTrue;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
@@ -20,6 +24,10 @@ import java.util.Set;
  * Created by Riccardo De Masellis on 13/07/15.
  */
 public class FormulaUtils {
+
+    public static LDLfFormula generateLDLfEndedFormula() {
+        return new LDLfBoxFormula(new RegExpLocalTrue(), new LDLfffFormula());
+    }
 
     public static Set<Set<QuotedVar>> propModelsToMinModels(Set<PossibleWorld> propModels, HashMap<Proposition, QuotedVar> prop2QuotedVar) {
         Set<PossibleWorld> minimalPropModels = minimizeModels(propModels);

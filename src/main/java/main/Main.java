@@ -11,6 +11,7 @@ package main;
 import RuntimeVerification.ExecutableAutomaton;
 import formula.ldlf.LDLfFormula;
 import formula.ltlf.LTLfFormula;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import rationals.Automaton;
 import rationals.transformations.Pruner;
@@ -45,6 +46,12 @@ public class Main {
          */
         if (signature!=null)
             newSig.addAll(signature);
+
+        if (newSig.isEmpty()) {
+            Proposition other = new Proposition("oth");
+            newSig.add(other);
+        }
+
 
         /*
         Actual automaton construction

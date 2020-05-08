@@ -1,6 +1,12 @@
 # FLLOAT
 FLLOAT (From LTLf and LDLf tO Automata) is a Java library for translating Linear-time Temporal Logic (LTL) and Linear Dynamic Logic (LDL) formulas with finite-trace semantics to automata, so as to perform satisfiability and validity reasoning tasks in the finite-trace setting. The tool also allows for exporting automata in the graphviz format as well as providing the traditional automata operations through the jautomata library (determinization, intersection, negation, trimming and so on).
 
+# Installing instructions
+- Download the main branch of the repository;
+- Download "MainInterface.java" from here: https://www.dropbox.com/s/pffn9tl53rd8dzx/MainInterface.java?dl=0 and move it inside the folder src/main/java/main ;
+- Run the compile task of Maven (we suggest to use IntelliJ IDE);
+- Run main() in MainInterface.java, which generates the automaton for a LTL or LDL formula. Follow the formula examples for the syntax to use for the input formula or have a look at the grammar definitions in /grammars. A few boolean flags can be set. "declare" forces interpretations to set to true only one propositional symbol at a time (for specifying declarative business process models inspired by the Declare language); "minimize" minimizes the automaton; "trim" trims the automata, i.e., deletes states from which no path to a final state exists; and "printing" prints the automaton in the standard output.
+
 
 #LICENSE
 GNU GENERAL PUBLIC LICENSE

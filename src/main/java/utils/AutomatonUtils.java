@@ -24,7 +24,6 @@ import rationals.Automaton;
 import rationals.NoSuchStateException;
 import rationals.State;
 import rationals.Transition;
-import rationals.transformations.*;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -338,22 +337,6 @@ public class AutomatonUtils {
         ps.println(utils.AutomatonUtils.toDot(automaton));
         ps.flush();
         ps.close();
-    }
-
-
-    public static Automaton automataIntersection(Automaton a1, Automaton a2) {
-        Automaton copya1 = new Identity<>().transform(a1);
-        Automaton copya2 = new Identity<>().transform(a2);
-
-        Automaton notCopya1 = new Complement<>().transform(copya1);
-        Automaton notCopya2 = new Complement<>().transform(copya2);
-
-        Automaton or = new Union<>().transform(notCopya1, notCopya2);
-
-        Automaton result = new Complement<>().transform(or);
-        result = new Reducer<>().transform(result);
-
-        return result;
     }
 
 }

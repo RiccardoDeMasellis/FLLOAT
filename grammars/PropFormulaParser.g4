@@ -30,13 +30,15 @@ notProp
     ;
 
 atom
-	:   ID*
+	:   ID+
 	|	TRUE
 	|	FALSE
     ;
 
 
-    ID : ('a'..'z');
+    ALPHA : ('a'..'z');
+    DIGIT : ('0'..'9');
+    ID : (ALPHA | DIGIT);
     TRUE : ('True')|('TRUE')|('true');
     FALSE : ('False')|('FALSE')|('false');
 

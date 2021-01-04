@@ -13,7 +13,7 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import rationals.Automaton;
 import rationals.transformations.Mix;
-import utils.AutomatonUtils;
+import rationals.transformations.Reducer;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,11 +22,7 @@ import java.util.List;
 public class MainHospitalExample {
 
     public static void main(String[] args) {
-        Automaton optimized = hospitalExampleOptimized();
-        System.out.println("Running compliant trace");
-        runTrace(optimized, generateCompliantLog());
-        System.out.println("Running uncompliant trace");
-        runTrace(optimized, generateUncompliantLog());
+        Automaton result = hospitalExampleOptimized(1);
 
 //        Automaton naive = hospitalExampleNaive();
 //
@@ -51,73 +47,37 @@ public class MainHospitalExample {
 
     }
 
-    public static Automaton hospitalExampleNaive() {
+
+    public static Automaton hospitalExampleOptimized(int numIter) {
         long startTime = System.currentTimeMillis();
 
-        boolean declare = true;
-        boolean minimize = true;
-        boolean trim = false;
-        boolean printing = false;
-
-        String constraint0 = "( (!fha) U re) || G(!fha)";
-        String constraint1 = "( (!fha) U lt) || G(!fha)";
-        String constraint2 = "( (!ps) U fha) || G(!ps)";
-        String constraint3 = "( (!os) U ps) || G(!os)";
-        String constraint4 = "( (!o) U ps) || G(!o)";
-        String constraint5 = "( (!iht) U ps) || G(!iht)";
-
-        String constraint6 = "((F os) || (F o)) && (!( (F os) && (F o) ))";
-
-        String constraint7 = "(F iht) -> (F o)";
-        String constraint8 = "(F he) -> (F o)";
-
-        String constraint9 = "G(os -> (X (F n) ) )";
-        String constraint10 = "G(o -> (X (F n) ) )";
-        String constraint11 = "G(iht -> (X (F n) ) )";
-
-        String constraint12 = "( G(n -> (X (F fu))) ) && ( ( (!fu) U n) || (G (!fu)))";
-
-        /*
-            In the trace there is activity lt which does not appearing in any constraint,
-            therefore, I have to manually add it.
-         */
-        PropositionalSignature signature = new PropositionalSignature();
-        Proposition lt = new Proposition("lt");
-        signature.add(lt);
-
-        List<String> constraintList = new LinkedList<>();
-        //constraintList.add(constraint0);
-        constraintList.add(constraint1);
-        constraintList.add(constraint2);
-        constraintList.add(constraint3);
-        constraintList.add(constraint4);
-        constraintList.add(constraint5);
-        constraintList.add(constraint6);
-        constraintList.add(constraint7);
-        constraintList.add(constraint8);
-        constraintList.add(constraint9);
-        constraintList.add(constraint10);
-        constraintList.add(constraint11);
-        constraintList.add(constraint12);
-
-        Iterator it = constraintList.listIterator();
-
-        String mainConstraint = "(" + constraint0 + ")";
-        while (it.hasNext()) {
-            mainConstraint = mainConstraint + " && " + "(" + it.next() + ")";
+        Automaton result = hospitalExampleOptimizedAux(0);
+        for (int i = 1; i < numIter; i++) {
+            Automaton currAutomaton = hospitalExampleOptimizedAux(i);
+            Automaton newAutomaton = new Mix<>().transform(result, currAutomaton);
+            newAutomaton = new Reducer<>().transform(newAutomaton);
+            result = newAutomaton;
         }
 
-        LTLfAutomatonResultWrapper mainAutomatonWrapper = Main.ltlfString2Aut(mainConstraint, signature, declare, minimize, trim, printing);
         long elapsedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Elapsed time for naive is: " + elapsedTime + " ms");
-        AutomatonUtils.printAutomaton(mainAutomatonWrapper.getAutomaton(), "hospitalExampleNaive.gv");
-        return mainAutomatonWrapper.getAutomaton();
+        System.out.println("Time for bulding the optimized automaton for "+ numIter +" processes is: " + elapsedTime + " ms");
+
+        System.out.println("Running compliant trace...");
+        List<String> complLog = generateCompliantLog(numIter);
+        System.out.println(complLog);
+        runTrace(result, complLog);
+        System.out.println();
+        System.out.println("Running uncompliant trace...");
+        List<String> uncomplLog = generateUncompliantLog(numIter);
+        System.out.println(uncomplLog);
+        runTrace(result, uncomplLog);
+
+        return result;
     }
 
+    public static Automaton hospitalExampleOptimizedAux(int currIter) {
 
-    public static Automaton hospitalExampleOptimized() {
-
-        long startTime = System.currentTimeMillis();
+        //long startTime = System.currentTimeMillis();
 
         boolean declare = true;
         boolean minimize = true;
@@ -144,40 +104,51 @@ public class MainHospitalExample {
         12- succession (N,FU) = ([](N -> X<>(FU))) /\  ( (!FU U N) \/ [](!FU) )
         */
 
-        String constraint0 = "( (!fha) U re ) || ( G(!fha) )";
-        String constraint1 = "( (!fha) U lt ) || ( G(!fha) )";
-        String constraint2 = "( (!ps) U fha ) || ( G(!ps) )";
-        String constraint3 = "( (!os) U ps ) || ( G(!os) )";
-        String constraint4 = "( (!o) U ps ) || ( G(!o) )";
-        String constraint5 = "( (!iht) U ps ) || ( G(!iht) )";
+        String firstConstraint;
 
-        String constraint6 = "((F os) || (F o)) && (!( (F os) && (F o) ))";
+        String constraint0 = "( (!fha"+currIter+" ) U re"+currIter+" ) || ( G(!fha"+currIter+") )";
+        String constraint1 = "( (!fha"+currIter+") U lt"+currIter+" ) || ( G(!fha"+currIter+") )";
+        String constraint2 = "( (!ps"+currIter+") U fha"+currIter+" ) || ( G(!ps"+currIter+") )";
+        String constraint3 = "( (!os"+currIter+") U ps"+currIter+" ) || ( G(!os"+currIter+") )";
+        String constraint4 = "( (!o"+currIter+") U ps"+currIter+" ) || ( G(!o"+currIter+") )";
+        String constraint5 = "( (!iht"+currIter+") U ps"+currIter+" ) || ( G(!iht"+currIter+") )";
 
-        String constraint7 = "(F iht) -> (F o)";
-        String constraint8 = "(F he) -> (F o)";
+        String constraint6 = "((F os"+currIter+") || (F o"+currIter+")) && (!( (F os"+currIter+") && (F o"+currIter+") ))";
 
-        String constraint9 = "G(os -> (X (F n) ) )";
-        String constraint10 = "G(o -> (X (F n) ) )";
-        String constraint11 = "G(iht -> (X (F n) ) )";
+        String constraint7 = "(F iht"+currIter+") -> (F o"+currIter+")";
+        String constraint8 = "(F he"+currIter+") -> (F o"+currIter+")";
 
-        String constraint12 = "( G(n -> (X (F fu))) ) && ( ( (!fu) U n) || (G (!fu)))";
+        String constraint9 = "G(os"+currIter+" -> (X (F n"+currIter+") ) )";
+        String constraint10 = "G(o"+currIter+" -> (X (F n"+currIter+") ) )";
+        String constraint11 = "G(iht"+currIter+" -> (X (F n"+currIter+") ) )";
+
+        String constraint12 = "( G(n"+currIter+" -> (X (F fu"+currIter+"))) ) && ( ( (!fu"+currIter+") U n"+currIter+") || (G (!fu"+currIter+")))";
+
+        if (currIter==0)
+            firstConstraint = constraint0;
+        else
+            firstConstraint = "( ( (!fha"+currIter+") U fu"+(currIter-1)+" ) || (G (!fha"+currIter+" )))";
 
         /*
             In the trace there is activity lt which does not appearing in any constraint,
             therefore, I have to manually add it.
          */
         PropositionalSignature signature = new PropositionalSignature();
-        Proposition lt = new Proposition("lt");
-        Proposition re = new Proposition("re");
-        Proposition fha = new Proposition("fha");
-        Proposition ps = new Proposition("ps");
-        Proposition os = new Proposition("os");
-        Proposition o = new Proposition("o");
-        Proposition iht = new Proposition("iht");
-        Proposition he = new Proposition("he");
-        Proposition n = new Proposition("n");
-        Proposition fu = new Proposition("fu");
+        Proposition lt = new Proposition("lt"+currIter);
+        Proposition re = new Proposition("re"+currIter);
+        Proposition fha = new Proposition("fha"+currIter);
+        Proposition ps = new Proposition("ps"+currIter);
+        Proposition os = new Proposition("os"+currIter);
+        Proposition o = new Proposition("o"+currIter);
+        Proposition iht = new Proposition("iht"+currIter);
+        Proposition he = new Proposition("he"+currIter);
+        Proposition n = new Proposition("n"+currIter);
+        Proposition fu = new Proposition("fu"+currIter);
 
+        if (currIter!=0) {
+            Proposition fuPrevious = new Proposition("fu"+(currIter-1));
+            signature.add(fuPrevious);
+        }
         signature.add(lt);
         signature.add(re);
         signature.add(fha);
@@ -190,7 +161,8 @@ public class MainHospitalExample {
         signature.add(fu);
 
         List<String> constraintList = new LinkedList<>();
-        //constraintList.add(constraint0);
+        if (currIter!=0)
+            constraintList.add(constraint0);
         constraintList.add(constraint1);
         constraintList.add(constraint2);
         constraintList.add(constraint3);
@@ -204,7 +176,7 @@ public class MainHospitalExample {
         constraintList.add(constraint11);
         constraintList.add(constraint12);
 
-        LTLfAutomatonResultWrapper mainAutomatonWrapper = Main.ltlfString2Aut(constraint0, signature, declare, minimize, trim, printing);
+        LTLfAutomatonResultWrapper mainAutomatonWrapper = Main.ltlfString2Aut(firstConstraint, signature, declare, minimize, trim, printing);
         Automaton mainAutomaton = mainAutomatonWrapper.getAutomaton();
         //AutomatonUtils.printAutomaton(mainAutomaton, "hospitalExampleMain0.gv");
 
@@ -219,62 +191,67 @@ public class MainHospitalExample {
 
             // WARNING!!! This might not work if the alphabet of the two automata is not the same!
             mainAutomaton = new Mix<>().transform(mainAutomaton, currentAutomaton);
+            mainAutomaton = new Reducer<>().transform(mainAutomaton);
 
             //AutomatonUtils.printAutomaton(mainAutomaton, "hospitalExampleMain" + i +".gv");
             //i++;
         }
 
-        long elapsedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Elapsed time for optimized is: " + elapsedTime + " ms");
-        AutomatonUtils.printAutomaton(mainAutomaton, "hospitalExampleOptimized.gv");
+        //long elapsedTime = System.currentTimeMillis() - startTime;
+        //System.out.println("Time for bulding the optimized automaton is: " + elapsedTime + " ms");
+        //AutomatonUtils.printAutomaton(mainAutomaton, "hospitalExampleOptimized.gv");
         return mainAutomaton;
     }
 
-    public static List<String> generateCompliantLog() {
+    public static List<String> generateCompliantLog(int numIter) {
         // From Fab:
         // RE - LT - FHA - PS - IHT - HE - O - N - FU - RE - LT - PS - O - N – FU
 
         List<String> result = new LinkedList<>();
-        result.add("re");
-        result.add("lt");
-        result.add("fha");
-        result.add("ps");
-        result.add("iht");
-        result.add("he");
-        result.add("o");
-        result.add("n");
-        result.add("fu");
-        result.add("re");
-        result.add("lt");
-        result.add("ps");
-        result.add("o");
-        result.add("n");
-        result.add("fu");
 
+        for (int i=0; i<numIter; i++) {
+            result.add("re"+i);
+            result.add("lt"+i);
+            result.add("fha"+i);
+            result.add("ps"+i);
+            result.add("iht"+i);
+            result.add("he"+i);
+            result.add("o"+i);
+            result.add("n"+i);
+            result.add("fu"+i);
+            result.add("re"+i);
+            result.add("lt"+i);
+            result.add("ps"+i);
+            result.add("o"+i);
+            result.add("n"+i);
+            result.add("fu"+i);
+        }
         return result;
     }
 
-    public static List<String> generateUncompliantLog() {
+    public static List<String> generateUncompliantLog(int numIter) {
         // From Fab:
         // RE - LT - FHA - PS - IHT - HE - O - N - FU - RE - LT - PS - OS - N – FU
 
         List<String> result = new LinkedList<>();
-        result.add("re");
-        result.add("lt");
-        result.add("fha");
-        result.add("ps");
-        result.add("iht");
-        result.add("he");
-        result.add("o");
-        result.add("n");
-        result.add("fu");
-        result.add("re");
-        result.add("lt");
-        result.add("ps");
-        result.add("os");
-        result.add("n");
-        result.add("fu");
 
+        for (int i=0; i<numIter; i++) {
+            result.add("re"+i);
+            result.add("lt"+i);
+            result.add("fha"+i);
+            result.add("ps"+i);
+            result.add("iht"+i);
+            result.add("he"+i);
+            result.add("o"+i);
+            result.add("n"+i);
+            result.add("fu"+i);
+            result.add("re"+i);
+            result.add("lt"+i);
+            result.add("ps"+i);
+            result.add("os"+i);
+            result.add("n"+i);
+            result.add("fu"+i);
+        }
         return result;
     }
 
@@ -288,9 +265,10 @@ public class MainHospitalExample {
 
             exAut.step(currentEvent);
 
-            System.out.println("After event "+currentEvent+" the RV state is "+exAut.currentRVTruthValue());
+            if (!it.hasNext())
+             System.out.println("After last event "+currentEvent+" the RV state is "+exAut.currentRVTruthValue());
         }
         long elapsedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Elapsed time for running the log is: " + elapsedTime + " ms");
+        System.out.println("Time for running the log is: " + elapsedTime + " ms");
     }
 }

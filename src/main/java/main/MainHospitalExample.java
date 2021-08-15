@@ -22,29 +22,175 @@ import java.util.List;
 public class MainHospitalExample {
 
     public static void main(String[] args) {
-        Automaton result = hospitalExampleOptimized(1);
+        for(int num=1; num<100; num++) {
+            hospitalExampleIncremental(num);
+            System.out.println();
+        }
+    }
 
-//        Automaton naive = hospitalExampleNaive();
-//
-//        Automaton naiveCopy = new Identity<>().transform(naive);
-//        Automaton optimizedCopy = new Identity<>().transform(optimized);
-//
-//        /*
-//        Are the two the same automaton?
-//         */
-//        // Test 1: naive AND (NOT optimized) = empty?
-//
-//        Automaton notOptimized = new Complement<>().transform(optimizedCopy);
-//        // WARNING: Mix might not work if the languages of the two automata is different!
-//        Automaton test1 = new Mix<>().transform(naive, notOptimized);
-//        AutomatonUtils.printAutomaton(test1, "test1.gv");
-//
-//        // Test 2: (NOT naive) AND optimized = empty?
-//        Automaton notNaive = new Complement<>().transform(naive);
-//        // WARNING! Mix might not work if the langugages of the two automata is different!
-//        Automaton test2 = new Mix<>().transform(notNaive, optimized);
-//        AutomatonUtils.printAutomaton(test2, "test2.gv");
+    public static Automaton hospitalExampleIncremental(int num) {
 
+        long startTime = System.currentTimeMillis();
+
+        boolean declare = true;
+        boolean minimize = true;
+        boolean trim = false;
+        boolean printing = false;
+
+        PropositionalSignature signature = generateSignatureInc(num);
+
+        LTLfAutomatonResultWrapper mainAutomatonWrapper = Main.ltlfString2Aut("true", signature, declare, minimize, trim, printing);
+        Automaton mainAutomaton = mainAutomatonWrapper.getAutomaton();
+        //AutomatonUtils.printAutomaton(mainAutomaton, "hospitalExampleMain0.gv");
+
+        for (int i=0; i<num; i++) {
+            String currentConstraint = getConstraint(i);
+            LTLfAutomatonResultWrapper currentAutomatonWrapper = Main.ltlfString2Aut(currentConstraint, signature, declare, minimize, trim, printing);
+            Automaton currentAutomaton = currentAutomatonWrapper.getAutomaton();
+
+            // WARNING!!! This might not work if the alphabet of the two automata is not the same!
+            mainAutomaton = new Mix<>().transform(mainAutomaton, currentAutomaton);
+            mainAutomaton = new Reducer<>().transform(mainAutomaton);
+        }
+
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        System.out.println("Time for bulding the optimized automaton for "+ num +" activities is: " + elapsedTime + " ms");
+        System.out.println("Automaton size = " + mainAutomaton.states().size() + " #states and " + mainAutomaton.delta().size() + " #transitions");
+
+        System.out.print("Running compliant trace... ");
+        List<String> complLog = generateCompliantLogInc(num);
+        //System.out.println(complLog);
+        runTrace(mainAutomaton, complLog);
+        //System.out.println();
+        System.out.print("Running uncompliant trace... ");
+        List<String> uncomplLog = generateUncompliantLogInc(num);
+        //System.out.println(uncomplLog);
+        runTrace(mainAutomaton, uncomplLog);
+
+        return mainAutomaton;
+    }
+
+    public static PropositionalSignature generateSignatureInc(int num) {
+        int currIter = Math.floorDiv(num, 11);
+
+        PropositionalSignature signature = new PropositionalSignature();
+        int i=0;
+        do {
+            Proposition lt = new Proposition("lt" + i); //0
+            Proposition re = new Proposition("re" + i); //1
+            Proposition fha = new Proposition("fha" + i); //2
+            Proposition ps = new Proposition("ps" + i); //3
+            Proposition os = new Proposition("os" + i); //4
+            Proposition o = new Proposition("o" + i); //5
+            Proposition iht = new Proposition("iht" + i); //6
+            Proposition he = new Proposition("he" + i); //7
+            Proposition n = new Proposition("n" + i); //8
+            Proposition fu = new Proposition("fu" + i); //9
+            Proposition fhaNext = new Proposition("fha" + (i + 1)); //10
+
+            signature.add(lt);
+            signature.add(re);
+            signature.add(fha);
+            signature.add(ps);
+            signature.add(os);
+            signature.add(o);
+            signature.add(iht);
+            signature.add(he);
+            signature.add(n);
+            signature.add(fu);
+            signature.add(fhaNext);
+
+            i++;
+        } while(i<=currIter);
+
+        return signature;
+    }
+
+    public static String getConstraint(int num) {
+        String[] constraints = new String[14];
+
+        int currIter = Math.floorDiv(num, 14);
+        int currConstraint = num % 14;
+
+        constraints[0] = "( (!fha"+currIter+" ) U re"+currIter+" ) || ( G(!fha"+currIter+") )";
+        constraints[1] = "( (!fha"+currIter+") U lt"+currIter+" ) || ( G(!fha"+currIter+") )";
+        constraints[2] = "( (!ps"+currIter+") U fha"+currIter+" ) || ( G(!ps"+currIter+") )";
+        constraints[3] = "( (!os"+currIter+") U ps"+currIter+" ) || ( G(!os"+currIter+") )";
+        constraints[4] = "( (!o"+currIter+") U ps"+currIter+" ) || ( G(!o"+currIter+") )";
+        constraints[5] = "( (!iht"+currIter+") U ps"+currIter+" ) || ( G(!iht"+currIter+") )";
+
+        constraints[6] = "((F os"+currIter+") || (F o"+currIter+")) && (!( (F os"+currIter+") && (F o"+currIter+") ))";
+
+        constraints[7] = "(F iht"+currIter+") -> (F o"+currIter+")";
+        constraints[8] = "(F he"+currIter+") -> (F o"+currIter+")";
+
+        constraints[9] = "G(os"+currIter+" -> (X (F n"+currIter+") ) )";
+        constraints[10] = "G(o"+currIter+" -> (X (F n"+currIter+") ) )";
+        constraints[11] = "G(iht"+currIter+" -> (X (F n"+currIter+") ) )";
+
+        constraints[12] = "( G(n"+currIter+" -> (X (F fu"+currIter+"))) ) && ( ( (!fu"+currIter+") U n"+currIter+") || (G (!fu"+currIter+")))";
+
+        constraints[13] = "( ( (!fha"+(currIter+1)+") U fu"+(currIter)+" ) || (G (!fha"+(currIter+1)+" )))";
+
+        //System.out.println(constraints[currConstraint]);
+        return constraints[currConstraint];
+    }
+
+    public static List<String> generateCompliantLogInc(int num) {
+        // From Fab:
+        // RE - LT - FHA - PS - IHT - HE - O - N - FU - RE - LT - PS - O - N – FU
+
+        List<String> result = new LinkedList<>();
+
+        int currIter = Math.floorDiv(num, 14);
+        int i=0;
+        do {
+            result.add("re" + i); //0
+            result.add("lt" + i); //1
+            result.add("fha" + i); //2
+            result.add("ps" + i);  //3
+            result.add("iht" + i); //4
+            result.add("he" + i);  //5
+            result.add("o" + i);  //6
+            result.add("n" + i);  //7
+            result.add("fu" + i); //8
+            result.add("re" + i); //9
+            result.add("lt" + i); //10
+            result.add("ps" + i); //11
+            result.add("o" + i); //12
+            result.add("n" + i); //13
+            result.add("fu" + i); //14
+            i++;
+        } while (i<=currIter);
+        return result.subList(0, num);
+    }
+
+    public static List<String> generateUncompliantLogInc(int num) {
+        // From Fab:
+        // RE - LT - FHA - PS - IHT - HE - O - N - FU - RE - LT - PS - OS - N – FU
+
+        List<String> result = new LinkedList<>();
+        int currIter = Math.floorDiv(num, 15);
+        int i=0;
+        do {
+            result.add("re"+i); //0
+            result.add("lt"+i); //1
+            result.add("fha"+i); //2
+            result.add("ps"+i);  //3
+            result.add("iht"+i); //4
+            result.add("he"+i); //5
+            result.add("o"+i); //6
+            result.add("n"+i); //7
+            result.add("fu"+i); //8
+            result.add("re"+i); //9
+            result.add("lt"+i); //10
+            result.add("ps"+i); //11
+            result.add("os"+i); //12
+            result.add("n"+i); //13
+            result.add("fu"+i); //14
+            i++;
+        } while (i<=currIter);
+        return result.subList(0, num);
     }
 
 
@@ -60,7 +206,7 @@ public class MainHospitalExample {
         }
 
         long elapsedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time for bulding the optimized automaton for "+ numIter +" processes is: " + elapsedTime + " ms");
+        System.out.println("Time for bulding the optimized automaton for "+ numIter +" constraints is: " + elapsedTime + " ms");
 
         System.out.println("Running compliant trace...");
         List<String> complLog = generateCompliantLog(numIter);
@@ -229,13 +375,13 @@ public class MainHospitalExample {
         return result;
     }
 
-    public static List<String> generateUncompliantLog(int numIter) {
+    public static List<String> generateUncompliantLog(int num) {
         // From Fab:
         // RE - LT - FHA - PS - IHT - HE - O - N - FU - RE - LT - PS - OS - N – FU
 
         List<String> result = new LinkedList<>();
 
-        for (int i=0; i<numIter; i++) {
+        for (int i=0; i<num; i++) {
             result.add("re"+i);
             result.add("lt"+i);
             result.add("fha"+i);
@@ -265,10 +411,10 @@ public class MainHospitalExample {
 
             exAut.step(currentEvent);
 
-            if (!it.hasNext())
-             System.out.println("After last event "+currentEvent+" the RV state is "+exAut.currentRVTruthValue());
+           //if (!it.hasNext())
+                //System.out.println("After last event "+currentEvent+" the RV state is "+exAut.currentRVTruthValue());
         }
         long elapsedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time for running the log is: " + elapsedTime + " ms");
+        System.out.println(elapsedTime + " ms");
     }
 }

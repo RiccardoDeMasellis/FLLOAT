@@ -22,9 +22,15 @@ import java.util.List;
 public class MainHospitalExample {
 
     public static void main(String[] args) {
-        for(int num=1; num<100; num++) {
-            hospitalExampleIncremental(num);
-            System.out.println();
+        try {
+            int input = Integer.parseInt(args[0]);
+            for(int num=1; num<input; num++) {
+                hospitalExampleIncremental(num);
+                System.out.println();
+            }
+        }
+        catch (NumberFormatException exception) {
+            System.out.println("Invalid input format. Please insert an integer representing the maximum number of constraints to be generated. Thirty is the bound in the paper.");
         }
     }
 

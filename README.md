@@ -3,9 +3,8 @@ FLLOAT (From LTLf and LDLf tO Automata) is a Java library for translating Linear
 
 # Installation instructions
 - Download the main branch of the repository;
-- Download "MainInterface.java" from here: https://www.dropbox.com/s/44dn8fpo7zeisuy/MainInterface.java?dl=0 and move it to folder src/main/java/main ;
 - Run the compile task of Maven (we suggest to use IntelliJ IDE);
-- Run main(...) in MainInterface.java, which generates the automaton for a LTL or LDL formula. Follow the formula examples for the syntax to use for the input formula or have a look at the grammar definitions in /grammars. A few boolean flags can be set: "declare" forces interpretations to set to true only one propositional symbol at a time (for specifying declarative business process models inspired by the Declare language); "minimize" minimizes the automaton; "trim" trims the automata, i.e., deletes states from which no path to a final state exists and "printing" prints the automaton in the standard output.
+- To build an automaton from a LTLf/LDLf formula, use the file MainInterface.java, which provides example of usage. Follow the examples to understand the input syntax or have a look at the grammar definitions in /grammars. A few boolean flags can be set: declare forces interpretations to set to true only one propositional symbol at a time (for specifying declarative business process models inspired by the Declare language); minimize minimizes the automaton; trim trims the automata, i.e., deletes states from which no path to a final state exists and printing prints the automaton in the standard output. You can also generate a graphviz file of the generated automaton with AutomatonUtils.printAutomaton method.
 
 
 #LICENSE

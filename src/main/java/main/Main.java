@@ -8,7 +8,6 @@
 
 package main;
 
-import RuntimeVerification.ExecutableAutomaton;
 import formula.ldlf.LDLfFormula;
 import formula.ltlf.LTLfFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -130,62 +129,5 @@ public class Main {
         automaton = AutomatonUtils.removeUnreachableStates(automaton);
 
         return automaton;
-    }
-
-
-    public static void provaExecutableAutomaton(Automaton a) {
-        ExecutableAutomaton ea = new ExecutableAutomaton(a);
-        System.out.println("Current state: " + ea.getCurrentState());
-        System.out.println("Current state value: " + ea.currentRVTruthValue());
-        System.out.println("outgoing good transition: ");
-        System.out.println(ea.notFailingOutgoingTransitions(ea.getCurrentState()));
-        //System.out.println(ea.declareNotFailingEvents());
-
-        System.out.println("Performing transition begin");
-        ea.step("begin");
-        System.out.println("Current state: " + ea.getCurrentState());
-        System.out.println("Current state value: " + ea.currentRVTruthValue());
-        System.out.println("outgoing good transition: ");
-        System.out.println(ea.notFailingOutgoingTransitions(ea.getCurrentState()));
-        //System.out.println(ea.declareNotFailingEvents());
-
-        System.out.println("Performing transition pay");
-        ea.step("pay");
-        System.out.println("Current state: " + ea.getCurrentState());
-        System.out.println("Current state value: " + ea.currentRVTruthValue());
-        System.out.println("outgoing good transition: ");
-        System.out.println(ea.notFailingOutgoingTransitions(ea.getCurrentState()));
-        //System.out.println(ea.declareNotFailingEvents());
-
-        System.out.println("Performing transition acc");
-        ea.step("acc");
-        System.out.println("Current state: " + ea.getCurrentState());
-        System.out.println("Current state value: " + ea.currentRVTruthValue());
-        System.out.println("outgoing good transition: ");
-        System.out.println(ea.notFailingOutgoingTransitions(ea.getCurrentState()));
-        //System.out.println(ea.declareNotFailingEvents());
-
-        System.out.println("Performing transition cancel");
-        ea.step("cancel");
-        System.out.println("Current state: " + ea.getCurrentState());
-        System.out.println("Current state value: " + ea.currentRVTruthValue());
-        System.out.println("outgoing good transition: ");
-        System.out.println(ea.notFailingOutgoingTransitions(ea.getCurrentState()));
-        //System.out.println(ea.declareNotFailingEvents());
-
-        System.out.println("Performing transition EmptyTrace");
-        ea.step("EmptyTrace");
-        System.out.println("Current state: " + ea.getCurrentState());
-        System.out.println("Current state value: " + ea.currentRVTruthValue());
-//
-//        System.out.println("Performing transition c");
-//        ea.step("c");
-//        System.out.println(ea.getCurrentState());
-//        System.out.println(ea.currentRVTruthValue());
-//
-//        System.out.println("Performing transition c");
-//        ea.step("c");
-//        System.out.println(ea.getCurrentState());
-//        System.out.println(ea.currentRVTruthValue());
     }
 }

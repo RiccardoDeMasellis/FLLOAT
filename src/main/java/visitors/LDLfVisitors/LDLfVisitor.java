@@ -12,7 +12,6 @@ import antlr4_generated.*;
 import formula.ldlf.*;
 import formula.regExp.RegExp;
 import formula.regExp.RegExpLocalTrue;
-import formula.regExp.RegExpTest;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -36,10 +35,10 @@ public class LDLfVisitor extends LDLfFormulaParserBaseVisitor<LDLfFormula> {
                 return new LDLfffFormula();
             } else {
                 if ((ctx.getText().equals("END")) || (ctx.getText().equals("end")) || (ctx.getText().equals("End"))) {
-                    return new LDLfBoxFormula(new RegExpTest(new LDLfLocalTrueFormula()), new LDLfffFormula());
+                    return new LDLfBoxFormula(new RegExpLocalTrue(), new LDLfffFormula());
                 } else {
                     if ((ctx.getText().equals("LAST")) || (ctx.getText().equals("Last")) || (ctx.getText().equals("last"))) {
-                        return new LDLfDiamondFormula(new RegExpLocalTrue(), new LDLfBoxFormula(new RegExpTest(new LDLfLocalTrueFormula()), new LDLfffFormula()));
+                        return new LDLfDiamondFormula(new RegExpLocalTrue(), new LDLfBoxFormula(new RegExpLocalTrue(), new LDLfffFormula()));
                     } else {
                         PropFormulaParserLexer lexer = new PropFormulaParserLexer(new ANTLRInputStream(ctx.getChild(0).getText()));
                         PropFormulaParserParser parser = new PropFormulaParserParser(new CommonTokenStream(lexer));

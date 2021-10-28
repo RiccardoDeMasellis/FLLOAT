@@ -24,19 +24,19 @@ public class MainInterface {
           If you want to change the signature! These are propositions that are ADDED to the signature of the formula!
         */
         PropositionalSignature signature = new PropositionalSignature();
-        //Proposition other = new Proposition("tau");
-      Proposition a = new Proposition("a");
-      Proposition b = new Proposition("b");
-      Proposition c = new Proposition("c");
-//      signature.add(other);
+        Proposition other = new Proposition("tau");
+        Proposition a = new Proposition("a");
+        Proposition b = new Proposition("b");
+        Proposition c = new Proposition("c");
+        signature.add(other);
 //      signature.add(x);
 //      signature.add(y);
 //      signature.add(z);
 
-        boolean declare = false;
+        boolean declare = true;
         boolean minimize = true;
         boolean trim = false;
-        boolean printing = true;
+        boolean printing = false;
 
 
         //String input = "<((a&(!b)))>tt";
@@ -59,7 +59,7 @@ public class MainInterface {
         //String input = "<a;b;c>([true]ff)";
         //String input = "<(a || b) ; (!c)*>(tt)";
 
-        String input = "<(eps)*>end";
+        String input = "<false>end";
 
 
 //        signature = new PropositionalSignature();
@@ -85,29 +85,16 @@ public class MainInterface {
         //String input2 = "true & (WX (a -> (WX b)))";
 //        String input = "X(true)";
         //String input2 = "(F pay) -> (F acc)";
+        //String input2 = "X true && (G(last -> a))";,
+        String input2 = "! (F a)";
 
 
-
-/*
         LTLfAutomatonResultWrapper ltlfARW = Main.ltlfString2Aut(input2, signature, declare, minimize, trim, printing);
         AutomatonUtils.printAutomaton(ltlfARW.getAutomaton(), "ltlfAutomaton.gv");
         //ltlfARW.getAutomaton().terminals().isEmpty();
-*/
 
 
 
-//        String ltlf = "((!a) U (!b))";
-//        LTLfFormula ltlfFormula = ParserUtils.parseLTLfFormula(ltlf);
-//        LDLfFormula ldLfFormula = ltlfFormula.toLDLf();
-//        LDLfTempNotFormula notLDLf = new LDLfTempNotFormula(ldLfFormula);
-//
-//        LDLfAutomatonResultWrapper ldlfARW = Main.ldlfFormula2Aut(notLDLf, signature, declare, minimize, trim, noEmptyTrace, printing);
-//        AutomatonUtils.printAutomaton(ldlfARW.getAutomaton(), "ldlfNotAutomaton.gv");
-//        System.out.println("Input formula:");
-//        System.out.println(notLDLf);
-//
-//        String releaseLTL = "(a R b)";
-//        LTLfAutomatonResultWrapper ltlfARW = Main.ltlfString2Aut(releaseLTL, signature, declare, minimize, trim, noEmptyTrace, printing);
-//        AutomatonUtils.printAutomaton(ltlfARW.getAutomaton(), "ltlfReleaseAutomaton.gv");
+
     }
 }

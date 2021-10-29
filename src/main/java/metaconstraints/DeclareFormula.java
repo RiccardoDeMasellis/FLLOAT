@@ -256,24 +256,24 @@ public class DeclareFormula {
                 break;
             }
 
-            /*
-            case NEGATED_ALTERNATING_SUCCESSION -> {
 
-               //stringFormula = ?
+            case NEGATED_CHAIN_SUCCESSION -> {
+
+               stringFormula = "G( ("+act1+") <-> (X("+notAct2+")) )";
 
                 //TempTrue
-                this.rvTempTrueRE = " (( "+notAct1+"  + ( "+act1+" ; "+notAct2+" ) )*)  ;  (( \"+notAct1+\"  + ( \"+act1+\" ; \"+notAct2+\" ) )*)  ; "+act1+" ";
+                this.rvTempTrueRE = "( "+notAct1+" + ( "+act1+" ; "+notAct2+" ) )*";
 
                 //TempFalse
-                this.rvTempFalseRE = "ff";
+                this.rvTempFalseRE = "false";
 
                 //PermTrue
-                this.rvPermTrueRE = "ff";
+                this.rvPermTrueRE = "false";
 
                 //PermFalse
-                this.rvPermFalseRE = " (( "+notAct1+" + ( "+act1+" ; "+notAct2+" )  )*)  ; "+act1+"  ; "+act2+"  ; (true*) ";
+                this.rvPermFalseRE = " ("+notAct1+"*) ; "+act1+" ; "+act2+" ; (true*)";
 
-            }*/
+            }
 
             case INITIAL -> {
                 stringFormula = act1;

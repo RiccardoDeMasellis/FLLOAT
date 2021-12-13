@@ -15,4 +15,9 @@ public abstract class MetaConFormula {
 
     LDLfFormula metacon;
 
+
+    public LDLfFormula getMetacon() {
+        return metacon;
+    }
+
 }

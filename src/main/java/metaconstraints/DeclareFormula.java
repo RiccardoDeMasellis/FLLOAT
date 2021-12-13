@@ -25,6 +25,12 @@ public class DeclareFormula {
     private String rvPermFalseRE;
 
 
+    /**
+     *
+     * @param name name of the declare constraint
+     * @param act1 first activity of the declare constraint, always not null
+     * @param act2 first activity of the declare constraint, USE NULL FOR UNARY DECLARE ACTIVITIES!
+     */
   public DeclareFormula(DeclareNames name, String act1, String act2) {
       String stringFormula="";
 
@@ -32,11 +38,17 @@ public class DeclareFormula {
 
       // Shortcut for all tasks different from act1;
       String notAct1 = "(!"+act1+")";
-      // Shortcut for all tasks different from act2;
-      String notAct2 = "(!"+act2+")";
-      // Shortcut for all tasks different from act1 and act2;
-      String allOthers = "(! ("+act1+" && "+act2+" ))";
-
+      String allOthers = null;
+      String notAct2 = null;
+      if (!(act2 == null)) {
+          // Shortcut for all tasks different from act2;
+          notAct2 = "(!" + act2 + ")";
+          // Shortcut for all tasks different from act1 and act2;
+          allOthers = "(! (" + act1 + " && " + act2 + " ))";
+      }
+      else {
+          allOthers = "!(" + act1 + ")";
+      }
 
         switch(name) {
 
@@ -233,7 +245,7 @@ public class DeclareFormula {
                 this.rvPermTrueRE = "false";
 
                 //PermFalse
-                this.rvPermFalseRE = "( ("+allOthers+"*) ; "+act1+" ; ("+notAct2+"*)  ; "+act2+"  ; (true*) ) + ()";
+                this.rvPermFalseRE = "( ("+allOthers+"*) ; "+act1+" ; ("+notAct2+"*)  ; "+act2+"  ; (true*) ) + (("+allOthers+"*) ; "+act2+" ; ("+notAct1+"*)  ; "+act1+"  ; (true*))";
 
                 break;
             }
